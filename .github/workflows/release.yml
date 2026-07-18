@@ -1,0 +1,118 @@
+name: Release
+
+# Spec-driven release: regenerates the client from the backend OpenAPI spec,
+# gates it on `go build`/`go vet`, commits the regenerated code, and pushes a
+# `vX.Y.Z` git tag — which is how a Go module is "published" (consumers resolve
+# it via `go get ...@vX.Y.Z`; there is no registry).
+#
+# Normally triggered automatically: when the OpenAPI spec changes on `main` in
+# vibexp/vibexp, that repo's "Publish api-client" automation dispatches this
+# workflow (via the VibeXP Bot GitHub App). It can also be run manually.
+#
+# Versioning: auto next-minor from the latest `v*` tag (v0.1.0 -> v0.2.0). The
+# project stays on v0.x on purpose — Go's semantic import versioning forces a
+# `/vN` module-path suffix at v2+, which an auto-minor scheme would eventually
+# cross and break every importer.
+#
+# The push uses the in-repo GITHUB_TOKEN (contents: write) — no external token
+# is needed to commit + tag within this repo.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without the v (e.g. 0.2.0). Default: auto next-minor from the latest tag.'
+        required: false
+      backend_ref:
+        description: 'vibexp/vibexp git ref to generate from (default: main)'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: write   # commit regenerated code + push the tag
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Generate, gate & tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout api-client-go
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        with:
+          fetch-depth: 0   # need all tags to compute the next version
+
+      - name: Checkout backend spec source
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+        with:
+          repository: vibexp/vibexp
+          ref: ${{ inputs.backend_ref || 'main' }}
+          path: spec-src
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+        with:
+          node-version: '22'
+
+      - name: Set up Go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5  # v5.5.0
+        with:
+          go-version: '1.24'
+
+      - name: Resolve version
+        id: version
+        env:
+          IN_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ -n "${IN_VERSION}" ]; then
+            version="${IN_VERSION#v}"
+          else
+            latest="$(git tag -l 'v*' --sort=-v:refname | head -n1)"
+            if [ -z "${latest}" ]; then
+              version="0.1.0"
+            else
+              ver="${latest#v}"
+              major="$(echo "${ver}" | cut -d. -f1)"
+              minor="$(echo "${ver}" | cut -d. -f2)"
+              version="${major}.$((minor + 1)).0"
+            fi
+          fi
+          if git rev-parse -q --verify "refs/tags/v${version}" >/dev/null; then
+            echo "::error::tag v${version} already exists"
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Releasing v${version} (spec from ${{ inputs.backend_ref || 'main' }})"
+
+      # Regenerate the client and gate it — a broken/empty spec fails here and
+      # nothing is committed or tagged.
+      - name: Generate & gate
+        run: |
+          make generate
+          go build ./...
+          go vet ./...
+        env:
+          VIBEXP_SPEC: spec-src/backend/openapi.yaml
+
+      - name: Commit & tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name  "vibexp-bot"
+          git config user.email "bot@vibexp.io"
+          git add -A ':!spec-src'
+          if git diff --cached --quiet; then
+            echo "No changes from the last release; tagging the current tree at v${VERSION}."
+          else
+            git commit -m "chore: regenerate client for v${VERSION} (spec from ${{ inputs.backend_ref || 'main' }})"
+            git push origin HEAD:main
+          fi
+          git tag "v${VERSION}"
+          git push origin "v${VERSION}"
+          echo "Released v${VERSION}."
