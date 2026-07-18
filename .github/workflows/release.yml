@@ -106,7 +106,8 @@ jobs:
           set -euo pipefail
           git config user.name  "vibexp-bot"
           git config user.email "bot@vibexp.io"
-          git add -A ':!spec-src'
+          # spec-src/ and openapi.bundled.yaml are gitignored, so -A skips them.
+          git add -A
           if git diff --cached --quiet; then
             echo "No changes from the last release; tagging the current tree at v${VERSION}."
           else
