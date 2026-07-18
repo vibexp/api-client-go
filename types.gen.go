@@ -2304,6 +2304,87 @@ type ActivityTypesResponse struct {
 	EntityTypes   []string `json:"entity_types"`
 }
 
+// AdminInstanceCounts Instance-wide totals for the top-level entities (unscoped counts).
+type AdminInstanceCounts struct {
+	// Artifacts Total number of artifacts.
+	Artifacts int64 `json:"artifacts"`
+
+	// Memories Total number of memories.
+	Memories int64 `json:"memories"`
+
+	// Prompts Total number of prompts.
+	Prompts int64 `json:"prompts"`
+
+	// Teams Total number of teams.
+	Teams int64 `json:"teams"`
+
+	// Users Total number of user accounts.
+	Users int64 `json:"users"`
+}
+
+// AdminStatsResponse Instance statistics returned by GET /api/v1/admin/stats.
+type AdminStatsResponse struct {
+	// Counts Instance-wide totals for the top-level entities (unscoped counts).
+	Counts AdminInstanceCounts `json:"counts"`
+
+	// Version The running backend application version (config server.service_version; "dev" when unset).
+	Version string `json:"version"`
+}
+
+// AdminTeamMembership A team the user belongs to, with the user's role in that team.
+type AdminTeamMembership struct {
+	// Role The user's role in the team (owner, admin, or member).
+	Role     string             `json:"role"`
+	TeamId   openapi_types.UUID `json:"team_id"`
+	TeamName string             `json:"team_name"`
+}
+
+// AdminUserDetail A single user with their team memberships (GET /api/v1/admin/users/{id}).
+type AdminUserDetail struct {
+	CreatedAt time.Time           `json:"created_at"`
+	Email     openapi_types.Email `json:"email"`
+	Id        openapi_types.UUID  `json:"id"`
+
+	// IdpProvider Identity provider name (e.g. "google", "oidc"); null for accounts without one.
+	IdpProvider *string `json:"idp_provider,omitempty"`
+
+	// Memberships Teams the user belongs to.
+	Memberships []AdminTeamMembership `json:"memberships"`
+	Name        string                `json:"name"`
+}
+
+// AdminUserListItem One user in the instance-wide admin user listing.
+type AdminUserListItem struct {
+	CreatedAt time.Time           `json:"created_at"`
+	Email     openapi_types.Email `json:"email"`
+	Id        openapi_types.UUID  `json:"id"`
+
+	// IdpProvider Identity provider name (e.g. "google", "oidc"); null for accounts without one.
+	IdpProvider *string `json:"idp_provider,omitempty"`
+	Name        string  `json:"name"`
+
+	// TeamCount Number of teams the user belongs to.
+	TeamCount int64 `json:"team_count"`
+}
+
+// AdminUserListResponse A page of the instance-wide user listing, newest first.
+type AdminUserListResponse struct {
+	// Page Current page number.
+	Page int `json:"page"`
+
+	// PerPage Number of items per page.
+	PerPage int `json:"per_page"`
+
+	// TotalCount Total number of users across the instance.
+	TotalCount int `json:"total_count"`
+
+	// TotalPages Total number of pages.
+	TotalPages int `json:"total_pages"`
+
+	// Users Users on this page, newest first.
+	Users []AdminUserListItem `json:"users"`
+}
+
 // Agent defines model for Agent.
 type Agent struct {
 	// AgentCard A2A agent card fetched from card_url
@@ -5765,6 +5846,15 @@ type ListActivitiesParams struct {
 
 	// DateTo Include activities up to this date (YYYY-MM-DD, inclusive end of day)
 	DateTo *openapi_types.Date `form:"date_to,omitempty" json:"date_to,omitempty"`
+}
+
+// ListAdminUsersParams defines parameters for ListAdminUsers.
+type ListAdminUsersParams struct {
+	// Page 1-based page number
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Items per page
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // ListClaudeCodeHooksParams defines parameters for ListClaudeCodeHooks.
