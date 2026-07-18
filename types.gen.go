@@ -2331,12 +2331,69 @@ type AdminStatsResponse struct {
 	Version string `json:"version"`
 }
 
+// AdminTeamDetail A single team with its owner and member list (GET /api/v1/admin/teams/{id}).
+type AdminTeamDetail struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// Members The team's members.
+	Members []AdminTeamMember `json:"members"`
+	Name    string            `json:"name"`
+
+	// Owner The owning user of a team.
+	Owner AdminTeamOwner `json:"owner"`
+}
+
+// AdminTeamListItem One team in the instance-wide admin team listing.
+type AdminTeamListItem struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// MemberCount Number of members in the team.
+	MemberCount int64  `json:"member_count"`
+	Name        string `json:"name"`
+
+	// Owner The owning user of a team.
+	Owner AdminTeamOwner `json:"owner"`
+}
+
+// AdminTeamListResponse A page of the instance-wide team listing, newest first.
+type AdminTeamListResponse struct {
+	Page    int `json:"page"`
+	PerPage int `json:"per_page"`
+
+	// Teams Teams on this page, newest first.
+	Teams []AdminTeamListItem `json:"teams"`
+
+	// TotalCount Total number of teams across the instance.
+	TotalCount int `json:"total_count"`
+	TotalPages int `json:"total_pages"`
+}
+
+// AdminTeamMember One member of a team, with the member's role and join time.
+type AdminTeamMember struct {
+	Email    openapi_types.Email `json:"email"`
+	JoinedAt time.Time           `json:"joined_at"`
+	Name     string              `json:"name"`
+
+	// Role The member's role in the team (owner, admin, or member).
+	Role   string             `json:"role"`
+	UserId openapi_types.UUID `json:"user_id"`
+}
+
 // AdminTeamMembership A team the user belongs to, with the user's role in that team.
 type AdminTeamMembership struct {
 	// Role The user's role in the team (owner, admin, or member).
 	Role     string             `json:"role"`
 	TeamId   openapi_types.UUID `json:"team_id"`
 	TeamName string             `json:"team_name"`
+}
+
+// AdminTeamOwner The owning user of a team.
+type AdminTeamOwner struct {
+	Email openapi_types.Email `json:"email"`
+	Id    openapi_types.UUID  `json:"id"`
+	Name  string              `json:"name"`
 }
 
 // AdminUserDetail A single user with their team memberships (GET /api/v1/admin/users/{id}).
@@ -5846,6 +5903,15 @@ type ListActivitiesParams struct {
 
 	// DateTo Include activities up to this date (YYYY-MM-DD, inclusive end of day)
 	DateTo *openapi_types.Date `form:"date_to,omitempty" json:"date_to,omitempty"`
+}
+
+// ListAdminTeamsParams defines parameters for ListAdminTeams.
+type ListAdminTeamsParams struct {
+	// Page 1-based page number
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Items per page
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // ListAdminUsersParams defines parameters for ListAdminUsers.
