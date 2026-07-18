@@ -32,11 +32,15 @@ fi
 echo "📦 Bundling spec: $SPEC"
 npx --yes "@redocly/cli@${REDOCLY_VERSION}" bundle "$SPEC" -o openapi.bundled.yaml
 
-echo "⚙️  Generating client (oapi-codegen ${OAPI_CODEGEN_VERSION})"
+echo "⚙️  Generating models (oapi-codegen ${OAPI_CODEGEN_VERSION}) -> types.gen.go"
 go run "github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@${OAPI_CODEGEN_VERSION}" \
-  -config oapi-codegen.yaml openapi.bundled.yaml
+  -config oapi-codegen-types.yaml openapi.bundled.yaml
+
+echo "⚙️  Generating client -> client.gen.go"
+go run "github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@${OAPI_CODEGEN_VERSION}" \
+  -config oapi-codegen-client.yaml openapi.bundled.yaml
 
 echo "🧹 go mod tidy"
 go mod tidy
 
-echo "✅ Generated vibexp.gen.go"
+echo "✅ Generated types.gen.go + client.gen.go"

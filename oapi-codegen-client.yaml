@@ -1,0 +1,13 @@
+# oapi-codegen config — CLIENT only (net/http Client + ClientWithResponses) →
+# client.gen.go. The schema models it references are generated separately into
+# types.gen.go (oapi-codegen-types.yaml), same `vibexp` package.
+# Regenerate with: ./scripts/generate.sh  (or `make generate`)
+package: vibexp
+output: client.gen.go
+generate:
+  client: true
+output-options:
+  # Suffix the ClientWithResponses wrapper types so they don't collide with
+  # schema models of the same name (e.g. the `LoginResponse`/`HealthResponse`
+  # components clash with the `Login`/`Health` operation response wrappers).
+  response-type-suffix: HTTPResponse

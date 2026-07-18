@@ -28,9 +28,10 @@ go.work.sum
 .env
 
 # Transient generation artifacts (see scripts/generate.sh).
-# NOTE: vibexp.gen.go IS committed — Go resolves modules from source at a git
-# tag, so the generated client must be checked in (unlike the JS client, which
-# ships a compiled npm package). Only these inputs/scratch are ignored.
+# NOTE: types.gen.go + client.gen.go ARE committed — Go resolves modules from
+# source at a git tag, so the generated client must be checked in (unlike the JS
+# client, which ships a compiled npm package). Only these inputs/scratch are
+# ignored.
 /openapi.bundled.yaml
 /spec-src/
 

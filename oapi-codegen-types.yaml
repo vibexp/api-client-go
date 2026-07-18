@@ -1,0 +1,10 @@
+# oapi-codegen config — MODELS only (schema types) → types.gen.go.
+#
+# Split from the client (oapi-codegen-client.yaml) so the ~40k lines of
+# generated code live in two navigable files instead of one. Both emit into the
+# same `vibexp` package, so the client file references these types directly with
+# no import. Regenerate with: ./scripts/generate.sh  (or `make generate`)
+package: vibexp
+output: types.gen.go
+generate:
+  models: true

@@ -11,8 +11,8 @@ Typed Go client for the VibeXP REST API.
 > from the VibeXP OpenAPI specification
 > ([`backend/openapi.yaml`](https://github.com/vibexp/vibexp) → Redocly bundle).
 > Every tagged release is regenerated from a pinned backend ref, so a client
-> version always reflects a real API contract. Hand edits to `vibexp.gen.go`
-> will be overwritten on the next release — change the spec in
+> version always reflects a real API contract. Hand edits to the `*.gen.go`
+> files will be overwritten on the next release — change the spec in
 > [`vibexp/vibexp`](https://github.com/vibexp/vibexp) instead.
 
 Unlike the JS client ([`@vibexp/api-client`](https://github.com/vibexp/api-client-js)),
@@ -108,9 +108,10 @@ VIBEXP_SPEC=/path/to/vibexp/backend/openapi.yaml make generate
 make check   # generate + go build + go vet (the same gate CI/release enforce)
 ```
 
-The only hand-written sources are `doc.go`, `oapi-codegen.yaml`,
-`scripts/generate.sh` and the `Makefile`; `vibexp.gen.go` is generated (but
-committed).
+The only hand-written sources are `doc.go`, the `oapi-codegen-*.yaml` configs,
+`scripts/generate.sh` and the `Makefile`. `types.gen.go` (schema models) and
+`client.gen.go` (the client) are generated — split into two files for
+navigability — but committed.
 
 ## License
 
