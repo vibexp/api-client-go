@@ -3001,6 +3001,13 @@ type BlueprintDetailSubtype string
 // BlueprintDetailType Type category of the spec library
 type BlueprintDetailType string
 
+// BlueprintImportConflict A blueprint left untouched during re-import because it was edited in VibeXP
+type BlueprintImportConflict struct {
+	BlueprintId string `json:"blueprint_id"`
+	FilePath    string `json:"file_path"`
+	Reason      string `json:"reason"`
+}
+
 // BlueprintImportFailed Details of a file that failed to be imported as a blueprint
 type BlueprintImportFailed struct {
 	// Error Generic error message (internal details are not exposed)
@@ -3012,6 +3019,9 @@ type BlueprintImportFailed struct {
 
 // BlueprintImportReport Summary report of a blueprint import operation
 type BlueprintImportReport struct {
+	// ConflictItems Details of blueprints left untouched due to a VibeXP edit
+	ConflictItems []BlueprintImportConflict `json:"conflict_items"`
+
 	// FailedItems Details of files that failed to import
 	FailedItems []BlueprintImportFailed `json:"failed_items"`
 
@@ -3020,6 +3030,9 @@ type BlueprintImportReport struct {
 
 	// SuccessfulItems Details of files successfully imported
 	SuccessfulItems []BlueprintImportSuccess `json:"successful_items"`
+
+	// TotalConflicts Number of blueprints left untouched because they were edited in VibeXP
+	TotalConflicts int `json:"total_conflicts"`
 
 	// TotalFailed Number of files that failed to import
 	TotalFailed int `json:"total_failed"`
@@ -3032,6 +3045,18 @@ type BlueprintImportReport struct {
 
 	// TotalSuccessful Number of files successfully imported as blueprints
 	TotalSuccessful int `json:"total_successful"`
+
+	// TotalUpToDate Number of blueprints whose repo file was unchanged (no-op)
+	TotalUpToDate int `json:"total_up_to_date"`
+
+	// TotalUpdated Number of blueprints refreshed from a changed repo file (unedited in VibeXP)
+	TotalUpdated int `json:"total_updated"`
+
+	// UpToDateItems Details of blueprints whose repo file was unchanged
+	UpToDateItems []BlueprintImportUpToDate `json:"up_to_date_items"`
+
+	// UpdatedItems Details of blueprints refreshed from a changed repo file
+	UpdatedItems []BlueprintImportUpdated `json:"updated_items"`
 }
 
 // BlueprintImportSkipped Details of a file that was skipped during blueprint import
@@ -3059,6 +3084,21 @@ type BlueprintImportSuccess struct {
 
 	// Type Blueprint type
 	Type string `json:"type"`
+}
+
+// BlueprintImportUpToDate A blueprint whose repo file was unchanged since import (re-import no-op)
+type BlueprintImportUpToDate struct {
+	BlueprintId string `json:"blueprint_id"`
+	FilePath    string `json:"file_path"`
+}
+
+// BlueprintImportUpdated A blueprint refreshed from a changed repo file during re-import
+type BlueprintImportUpdated struct {
+	BlueprintId string  `json:"blueprint_id"`
+	FilePath    string  `json:"file_path"`
+	Subtype     *string `json:"subtype,omitempty"`
+	Title       string  `json:"title"`
+	Type        string  `json:"type"`
 }
 
 // BlueprintListResponse defines model for BlueprintListResponse.
