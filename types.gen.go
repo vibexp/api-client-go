@@ -2830,7 +2830,7 @@ type Attachment struct {
 	// CreatedAt Timestamp when the attachment was uploaded
 	CreatedAt time.Time `json:"created_at"`
 
-	// FileName Original file name
+	// FileName Original file name (basename only)
 	FileName string `json:"file_name"`
 
 	// Id Unique identifier for the attachment
@@ -2841,6 +2841,9 @@ type Attachment struct {
 
 	// OwnerType Polymorphic owner type (currently always "artifact")
 	OwnerType string `json:"owner_type"`
+
+	// RelativePath Optional path relative to the owner's directory (e.g. "scripts/helper.py" for a multi-file skill companion). Absent for a plain attachment. Unique per owner.
+	RelativePath *string `json:"relative_path,omitempty"`
 
 	// SizeBytes Size of the file in bytes
 	SizeBytes int64 `json:"size_bytes"`
@@ -6501,6 +6504,9 @@ type ListArtifactsByProjectParamsSortOrder string
 type UploadArtifactAttachmentMultipartBody struct {
 	// File The file to attach
 	File openapi_types.File `json:"file"`
+
+	// RelativePath Optional path relative to the owner's directory (e.g. "scripts/helper.py"). Must be relative — no leading "/", no "..", no backslashes. Unique per owner. file_name stays the basename.
+	RelativePath *string `json:"relative_path,omitempty"`
 }
 
 // ListAttachmentsParams defines parameters for ListAttachments.
@@ -6522,6 +6528,9 @@ type UploadAttachmentMultipartBody struct {
 
 	// OwnerType Type of the owning resource (e.g. "artifact")
 	OwnerType string `json:"owner_type"`
+
+	// RelativePath Optional path relative to the owner's directory (e.g. "scripts/helper.py"). Must be relative — no leading "/", no "..", no backslashes. Unique per owner. file_name stays the basename.
+	RelativePath *string `json:"relative_path,omitempty"`
 }
 
 // ListSpecLibrariesParams defines parameters for ListSpecLibraries.
