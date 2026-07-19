@@ -20298,7 +20298,7 @@ func (r DeleteBlueprintHTTPResponse) ContentType() string {
 type GetBlueprintHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *Blueprint
+	JSON200                   *BlueprintDetail
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
@@ -31813,7 +31813,7 @@ func ParseGetBlueprintHTTPResponse(rsp *http.Response) (*GetBlueprintHTTPRespons
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Blueprint
+		var dest BlueprintDetail
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

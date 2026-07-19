@@ -292,6 +292,93 @@ func (e BlueprintType) Valid() bool {
 	}
 }
 
+// Defines values for BlueprintDetailStatus.
+const (
+	BlueprintDetailStatusActive  BlueprintDetailStatus = "active"
+	BlueprintDetailStatusExpired BlueprintDetailStatus = "expired"
+)
+
+// Valid indicates whether the value is a known member of the BlueprintDetailStatus enum.
+func (e BlueprintDetailStatus) Valid() bool {
+	switch e {
+	case BlueprintDetailStatusActive:
+		return true
+	case BlueprintDetailStatusExpired:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for BlueprintDetailSubtype.
+const (
+	BlueprintDetailSubtypeAgents        BlueprintDetailSubtype = "agents"
+	BlueprintDetailSubtypeAgentsMd      BlueprintDetailSubtype = "agents-md"
+	BlueprintDetailSubtypeClaudeMd      BlueprintDetailSubtype = "claude-md"
+	BlueprintDetailSubtypeCommands      BlueprintDetailSubtype = "commands"
+	BlueprintDetailSubtypeCursorMd      BlueprintDetailSubtype = "cursor-md"
+	BlueprintDetailSubtypeOthers        BlueprintDetailSubtype = "others"
+	BlueprintDetailSubtypeRules         BlueprintDetailSubtype = "rules"
+	BlueprintDetailSubtypeSkills        BlueprintDetailSubtype = "skills"
+	BlueprintDetailSubtypeSlashCommands BlueprintDetailSubtype = "slash-commands"
+	BlueprintDetailSubtypeSubAgents     BlueprintDetailSubtype = "sub-agents"
+)
+
+// Valid indicates whether the value is a known member of the BlueprintDetailSubtype enum.
+func (e BlueprintDetailSubtype) Valid() bool {
+	switch e {
+	case BlueprintDetailSubtypeAgents:
+		return true
+	case BlueprintDetailSubtypeAgentsMd:
+		return true
+	case BlueprintDetailSubtypeClaudeMd:
+		return true
+	case BlueprintDetailSubtypeCommands:
+		return true
+	case BlueprintDetailSubtypeCursorMd:
+		return true
+	case BlueprintDetailSubtypeOthers:
+		return true
+	case BlueprintDetailSubtypeRules:
+		return true
+	case BlueprintDetailSubtypeSkills:
+		return true
+	case BlueprintDetailSubtypeSlashCommands:
+		return true
+	case BlueprintDetailSubtypeSubAgents:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for BlueprintDetailType.
+const (
+	BlueprintDetailTypeClaude     BlueprintDetailType = "claude"
+	BlueprintDetailTypeClaudeCode BlueprintDetailType = "claude-code"
+	BlueprintDetailTypeCodex      BlueprintDetailType = "codex"
+	BlueprintDetailTypeCursor     BlueprintDetailType = "cursor"
+	BlueprintDetailTypeGeneral    BlueprintDetailType = "general"
+)
+
+// Valid indicates whether the value is a known member of the BlueprintDetailType enum.
+func (e BlueprintDetailType) Valid() bool {
+	switch e {
+	case BlueprintDetailTypeClaude:
+		return true
+	case BlueprintDetailTypeClaudeCode:
+		return true
+	case BlueprintDetailTypeCodex:
+		return true
+	case BlueprintDetailTypeCursor:
+		return true
+	case BlueprintDetailTypeGeneral:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ContentVersionActorType.
 const (
 	Human  ContentVersionActorType = "human"
@@ -1797,13 +1884,13 @@ func (e ListSpecLibrariesByProjectParamsStatus) Valid() bool {
 
 // Defines values for ListSpecLibrariesByProjectParamsType.
 const (
-	General ListSpecLibrariesByProjectParamsType = "general"
+	ListSpecLibrariesByProjectParamsTypeGeneral ListSpecLibrariesByProjectParamsType = "general"
 )
 
 // Valid indicates whether the value is a known member of the ListSpecLibrariesByProjectParamsType enum.
 func (e ListSpecLibrariesByProjectParamsType) Valid() bool {
 	switch e {
-	case General:
+	case ListSpecLibrariesByProjectParamsTypeGeneral:
 		return true
 	default:
 		return false
@@ -1812,40 +1899,40 @@ func (e ListSpecLibrariesByProjectParamsType) Valid() bool {
 
 // Defines values for ListSpecLibrariesByProjectParamsSubtype.
 const (
-	Agents        ListSpecLibrariesByProjectParamsSubtype = "agents"
-	AgentsMd      ListSpecLibrariesByProjectParamsSubtype = "agents-md"
-	ClaudeMd      ListSpecLibrariesByProjectParamsSubtype = "claude-md"
-	Commands      ListSpecLibrariesByProjectParamsSubtype = "commands"
-	CursorMd      ListSpecLibrariesByProjectParamsSubtype = "cursor-md"
-	Others        ListSpecLibrariesByProjectParamsSubtype = "others"
-	Rules         ListSpecLibrariesByProjectParamsSubtype = "rules"
-	Skills        ListSpecLibrariesByProjectParamsSubtype = "skills"
-	SlashCommands ListSpecLibrariesByProjectParamsSubtype = "slash-commands"
-	SubAgents     ListSpecLibrariesByProjectParamsSubtype = "sub-agents"
+	ListSpecLibrariesByProjectParamsSubtypeAgents        ListSpecLibrariesByProjectParamsSubtype = "agents"
+	ListSpecLibrariesByProjectParamsSubtypeAgentsMd      ListSpecLibrariesByProjectParamsSubtype = "agents-md"
+	ListSpecLibrariesByProjectParamsSubtypeClaudeMd      ListSpecLibrariesByProjectParamsSubtype = "claude-md"
+	ListSpecLibrariesByProjectParamsSubtypeCommands      ListSpecLibrariesByProjectParamsSubtype = "commands"
+	ListSpecLibrariesByProjectParamsSubtypeCursorMd      ListSpecLibrariesByProjectParamsSubtype = "cursor-md"
+	ListSpecLibrariesByProjectParamsSubtypeOthers        ListSpecLibrariesByProjectParamsSubtype = "others"
+	ListSpecLibrariesByProjectParamsSubtypeRules         ListSpecLibrariesByProjectParamsSubtype = "rules"
+	ListSpecLibrariesByProjectParamsSubtypeSkills        ListSpecLibrariesByProjectParamsSubtype = "skills"
+	ListSpecLibrariesByProjectParamsSubtypeSlashCommands ListSpecLibrariesByProjectParamsSubtype = "slash-commands"
+	ListSpecLibrariesByProjectParamsSubtypeSubAgents     ListSpecLibrariesByProjectParamsSubtype = "sub-agents"
 )
 
 // Valid indicates whether the value is a known member of the ListSpecLibrariesByProjectParamsSubtype enum.
 func (e ListSpecLibrariesByProjectParamsSubtype) Valid() bool {
 	switch e {
-	case Agents:
+	case ListSpecLibrariesByProjectParamsSubtypeAgents:
 		return true
-	case AgentsMd:
+	case ListSpecLibrariesByProjectParamsSubtypeAgentsMd:
 		return true
-	case ClaudeMd:
+	case ListSpecLibrariesByProjectParamsSubtypeClaudeMd:
 		return true
-	case Commands:
+	case ListSpecLibrariesByProjectParamsSubtypeCommands:
 		return true
-	case CursorMd:
+	case ListSpecLibrariesByProjectParamsSubtypeCursorMd:
 		return true
-	case Others:
+	case ListSpecLibrariesByProjectParamsSubtypeOthers:
 		return true
-	case Rules:
+	case ListSpecLibrariesByProjectParamsSubtypeRules:
 		return true
-	case Skills:
+	case ListSpecLibrariesByProjectParamsSubtypeSkills:
 		return true
-	case SlashCommands:
+	case ListSpecLibrariesByProjectParamsSubtypeSlashCommands:
 		return true
-	case SubAgents:
+	case ListSpecLibrariesByProjectParamsSubtypeSubAgents:
 		return true
 	default:
 		return false
@@ -2046,16 +2133,16 @@ func (e GetProjectResourceCreationMetricsParamsRange) Valid() bool {
 
 // Defines values for ListPromptsParamsStatus.
 const (
-	Draft     ListPromptsParamsStatus = "draft"
-	Published ListPromptsParamsStatus = "published"
+	ListPromptsParamsStatusDraft     ListPromptsParamsStatus = "draft"
+	ListPromptsParamsStatusPublished ListPromptsParamsStatus = "published"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsStatus enum.
 func (e ListPromptsParamsStatus) Valid() bool {
 	switch e {
-	case Draft:
+	case ListPromptsParamsStatusDraft:
 		return true
-	case Published:
+	case ListPromptsParamsStatusPublished:
 		return true
 	default:
 		return false
@@ -2793,6 +2880,9 @@ type Blueprint struct {
 	// Content The actual content/specification of the spec library
 	Content string `json:"content"`
 
+	// ContentSha SHA-256 (lowercase hex) of the raw content.
+	ContentSha *string `json:"content_sha,omitempty"`
+
 	// CreatedAt Timestamp when the spec library was created
 	CreatedAt time.Time `json:"created_at"`
 
@@ -2805,11 +2895,17 @@ type Blueprint struct {
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
+	// Path Canonical repo-relative path this blueprint materializes to. Derived from (type, subtype, slug) for VibeXP-authored blueprints, or the verbatim source path for imported ones.
+	Path string `json:"path"`
+
 	// ProjectId UUID of the project this spec library belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
 
 	// Slug Unique slug for the spec library within the project
 	Slug string `json:"slug"`
+
+	// Source Read-only import provenance; present only for imported blueprints.
+	Source *BlueprintSource `json:"source,omitempty"`
 
 	// Status Current status of the spec library
 	Status BlueprintStatus `json:"status"`
@@ -2838,6 +2934,69 @@ type BlueprintSubtype string
 
 // BlueprintType Type category of the spec library
 type BlueprintType string
+
+// BlueprintDetail defines model for BlueprintDetail.
+type BlueprintDetail struct {
+	// Content The actual content/specification of the spec library
+	Content string `json:"content"`
+
+	// ContentSha SHA-256 (lowercase hex) of the raw content.
+	ContentSha *string `json:"content_sha,omitempty"`
+
+	// CreatedAt Timestamp when the spec library was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// Description Optional description of the spec library
+	Description *string `json:"description,omitempty"`
+
+	// Id Unique identifier for the spec library
+	Id string `json:"id"`
+
+	// Metadata Additional metadata as key-value pairs
+	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
+	// Path Canonical repo-relative path this blueprint materializes to. Derived from (type, subtype, slug) for VibeXP-authored blueprints, or the verbatim source path for imported ones.
+	Path string `json:"path"`
+
+	// ProjectId UUID of the project this spec library belongs to
+	ProjectId openapi_types.UUID `json:"project_id"`
+
+	// RawContent Original raw bytes of the blueprint (frontmatter + body). Returned only on the detail GET, never in list responses.
+	RawContent *string `json:"raw_content,omitempty"`
+
+	// Slug Unique slug for the spec library within the project
+	Slug string `json:"slug"`
+
+	// Source Read-only import provenance; present only for imported blueprints.
+	Source *BlueprintSource `json:"source,omitempty"`
+
+	// Status Current status of the spec library
+	Status BlueprintDetailStatus `json:"status"`
+
+	// Subtype Subtype category for specific type spec libraries
+	Subtype *BlueprintDetailSubtype `json:"subtype,omitempty"`
+
+	// Title Human-readable title for the spec library
+	Title string `json:"title"`
+
+	// Type Type category of the spec library
+	Type BlueprintDetailType `json:"type"`
+
+	// UpdatedAt Timestamp when the spec library was last updated
+	UpdatedAt time.Time `json:"updated_at"`
+
+	// UserId ID of the user who owns this spec library
+	UserId string `json:"user_id"`
+}
+
+// BlueprintDetailStatus Current status of the spec library
+type BlueprintDetailStatus string
+
+// BlueprintDetailSubtype Subtype category for specific type spec libraries
+type BlueprintDetailSubtype string
+
+// BlueprintDetailType Type category of the spec library
+type BlueprintDetailType string
 
 // BlueprintImportFailed Details of a file that failed to be imported as a blueprint
 type BlueprintImportFailed struct {
@@ -2915,6 +3074,21 @@ type BlueprintListResponse struct {
 
 	// TotalPages Total number of pages
 	TotalPages int `json:"total_pages"`
+}
+
+// BlueprintSource Read-only import provenance; present only for imported blueprints.
+type BlueprintSource struct {
+	// BlobSha Git blob SHA of the source file at import time.
+	BlobSha *string `json:"blob_sha,omitempty"`
+
+	// CommitSha Head commit SHA of the branch at import time.
+	CommitSha *string `json:"commit_sha,omitempty"`
+
+	// ImportedAt Timestamp when the blueprint was imported.
+	ImportedAt *time.Time `json:"imported_at,omitempty"`
+
+	// Repo Source repository URL the blueprint was imported from.
+	Repo *string `json:"repo,omitempty"`
 }
 
 // BlueprintStatsResponse defines model for BlueprintStatsResponse.
@@ -3224,6 +3398,9 @@ type CreateBlueprintRequest struct {
 
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
+	// Path Optional repo-relative path to freeze for this blueprint. When omitted a default is derived from (type, subtype, slug). Must be relative — no leading "/", no "..", no backslashes.
+	Path *string `json:"path,omitempty"`
 
 	// ProjectId UUID of the project this spec library belongs to
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
@@ -5506,6 +5683,9 @@ type UpdateBlueprintRequest struct {
 
 	// Metadata Updated metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
+	// Path Optional repo-relative path override; freezes the blueprint's path. Must be relative — no leading "/", no "..", no backslashes.
+	Path *string `json:"path,omitempty"`
 
 	// ProjectId New project UUID for the spec library
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
