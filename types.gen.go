@@ -3010,6 +3010,9 @@ type Artifact struct {
 	// ProjectId UUID of the project this artifact belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
 
+	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
+	Related []RelatedResource `json:"related"`
+
 	// Slug Unique slug for the artifact within the project
 	Slug string `json:"slug"`
 
@@ -3156,6 +3159,9 @@ type Blueprint struct {
 	// ProjectId UUID of the project this spec library belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
 
+	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
+	Related []RelatedResource `json:"related"`
+
 	// Slug Unique slug for the spec library within the project
 	Slug string `json:"slug"`
 
@@ -3218,6 +3224,9 @@ type BlueprintDetail struct {
 
 	// RawContent Original raw bytes of the blueprint (frontmatter + body). Returned only on the detail GET, never in list responses.
 	RawContent *string `json:"raw_content,omitempty"`
+
+	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
+	Related []RelatedResource `json:"related"`
 
 	// Slug Unique slug for the spec library within the project
 	Slug string `json:"slug"`
@@ -4797,6 +4806,9 @@ type Memory struct {
 	// ProjectId ID of the project this memory belongs to
 	ProjectId string `json:"project_id"`
 
+	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
+	Related []RelatedResource `json:"related"`
+
 	// Status Current lifecycle status of the memory
 	Status MemoryStatus `json:"status"`
 
@@ -5225,8 +5237,11 @@ type Prompt struct {
 
 	// ProjectId Project identifier that this prompt belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
-	Slug      string             `json:"slug"`
-	Status    PromptStatus       `json:"status"`
+
+	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
+	Related []RelatedResource `json:"related"`
+	Slug    string            `json:"slug"`
+	Status  PromptStatus      `json:"status"`
 
 	// TeamId Team identifier that owns this prompt
 	TeamId    openapi_types.UUID `json:"team_id"`
