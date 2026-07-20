@@ -405,16 +405,16 @@ func (e BlueprintImportCompanionOutcome) Valid() bool {
 
 // Defines values for ContentVersionActorType.
 const (
-	Human  ContentVersionActorType = "human"
-	System ContentVersionActorType = "system"
+	ContentVersionActorTypeHuman  ContentVersionActorType = "human"
+	ContentVersionActorTypeSystem ContentVersionActorType = "system"
 )
 
 // Valid indicates whether the value is a known member of the ContentVersionActorType enum.
 func (e ContentVersionActorType) Valid() bool {
 	switch e {
-	case Human:
+	case ContentVersionActorTypeHuman:
 		return true
-	case System:
+	case ContentVersionActorTypeSystem:
 		return true
 	default:
 		return false
@@ -601,6 +601,96 @@ func (e CreatePromptRequestStatus) Valid() bool {
 	case CreatePromptRequestStatusDraft:
 		return true
 	case CreatePromptRequestStatusPublished:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateRelationRequestFromType.
+const (
+	CreateRelationRequestFromTypeArtifact  CreateRelationRequestFromType = "artifact"
+	CreateRelationRequestFromTypeBlueprint CreateRelationRequestFromType = "blueprint"
+	CreateRelationRequestFromTypeMemory    CreateRelationRequestFromType = "memory"
+	CreateRelationRequestFromTypePrompt    CreateRelationRequestFromType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the CreateRelationRequestFromType enum.
+func (e CreateRelationRequestFromType) Valid() bool {
+	switch e {
+	case CreateRelationRequestFromTypeArtifact:
+		return true
+	case CreateRelationRequestFromTypeBlueprint:
+		return true
+	case CreateRelationRequestFromTypeMemory:
+		return true
+	case CreateRelationRequestFromTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateRelationRequestOrigin.
+const (
+	CreateRelationRequestOriginAi    CreateRelationRequestOrigin = "ai"
+	CreateRelationRequestOriginHuman CreateRelationRequestOrigin = "human"
+)
+
+// Valid indicates whether the value is a known member of the CreateRelationRequestOrigin enum.
+func (e CreateRelationRequestOrigin) Valid() bool {
+	switch e {
+	case CreateRelationRequestOriginAi:
+		return true
+	case CreateRelationRequestOriginHuman:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateRelationRequestRelationType.
+const (
+	CreateRelationRequestRelationTypeBuiltFrom   CreateRelationRequestRelationType = "built-from"
+	CreateRelationRequestRelationTypeExplainedBy CreateRelationRequestRelationType = "explained-by"
+	CreateRelationRequestRelationTypeGovernedBy  CreateRelationRequestRelationType = "governed-by"
+	CreateRelationRequestRelationTypeSupersedes  CreateRelationRequestRelationType = "supersedes"
+)
+
+// Valid indicates whether the value is a known member of the CreateRelationRequestRelationType enum.
+func (e CreateRelationRequestRelationType) Valid() bool {
+	switch e {
+	case CreateRelationRequestRelationTypeBuiltFrom:
+		return true
+	case CreateRelationRequestRelationTypeExplainedBy:
+		return true
+	case CreateRelationRequestRelationTypeGovernedBy:
+		return true
+	case CreateRelationRequestRelationTypeSupersedes:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateRelationRequestToType.
+const (
+	CreateRelationRequestToTypeArtifact  CreateRelationRequestToType = "artifact"
+	CreateRelationRequestToTypeBlueprint CreateRelationRequestToType = "blueprint"
+	CreateRelationRequestToTypeMemory    CreateRelationRequestToType = "memory"
+	CreateRelationRequestToTypePrompt    CreateRelationRequestToType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the CreateRelationRequestToType enum.
+func (e CreateRelationRequestToType) Valid() bool {
+	switch e {
+	case CreateRelationRequestToTypeArtifact:
+		return true
+	case CreateRelationRequestToTypeBlueprint:
+		return true
+	case CreateRelationRequestToTypeMemory:
+		return true
+	case CreateRelationRequestToTypePrompt:
 		return true
 	default:
 		return false
@@ -868,6 +958,144 @@ const (
 func (e RegisterDeviceTokenRequestPlatform) Valid() bool {
 	switch e {
 	case Web:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelatedResourceDirection.
+const (
+	Incoming RelatedResourceDirection = "incoming"
+	Outgoing RelatedResourceDirection = "outgoing"
+)
+
+// Valid indicates whether the value is a known member of the RelatedResourceDirection enum.
+func (e RelatedResourceDirection) Valid() bool {
+	switch e {
+	case Incoming:
+		return true
+	case Outgoing:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelatedResourceOrigin.
+const (
+	RelatedResourceOriginAi    RelatedResourceOrigin = "ai"
+	RelatedResourceOriginHuman RelatedResourceOrigin = "human"
+)
+
+// Valid indicates whether the value is a known member of the RelatedResourceOrigin enum.
+func (e RelatedResourceOrigin) Valid() bool {
+	switch e {
+	case RelatedResourceOriginAi:
+		return true
+	case RelatedResourceOriginHuman:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelatedResourceRelationType.
+const (
+	RelatedResourceRelationTypeBuiltFrom   RelatedResourceRelationType = "built-from"
+	RelatedResourceRelationTypeExplainedBy RelatedResourceRelationType = "explained-by"
+	RelatedResourceRelationTypeGovernedBy  RelatedResourceRelationType = "governed-by"
+	RelatedResourceRelationTypeSupersedes  RelatedResourceRelationType = "supersedes"
+)
+
+// Valid indicates whether the value is a known member of the RelatedResourceRelationType enum.
+func (e RelatedResourceRelationType) Valid() bool {
+	switch e {
+	case RelatedResourceRelationTypeBuiltFrom:
+		return true
+	case RelatedResourceRelationTypeExplainedBy:
+		return true
+	case RelatedResourceRelationTypeGovernedBy:
+		return true
+	case RelatedResourceRelationTypeSupersedes:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelatedResourceStatus.
+const (
+	RelatedResourceStatusConfirmed RelatedResourceStatus = "confirmed"
+	RelatedResourceStatusSuggested RelatedResourceStatus = "suggested"
+)
+
+// Valid indicates whether the value is a known member of the RelatedResourceStatus enum.
+func (e RelatedResourceStatus) Valid() bool {
+	switch e {
+	case RelatedResourceStatusConfirmed:
+		return true
+	case RelatedResourceStatusSuggested:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelationOrigin.
+const (
+	RelationOriginAi    RelationOrigin = "ai"
+	RelationOriginHuman RelationOrigin = "human"
+)
+
+// Valid indicates whether the value is a known member of the RelationOrigin enum.
+func (e RelationOrigin) Valid() bool {
+	switch e {
+	case RelationOriginAi:
+		return true
+	case RelationOriginHuman:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelationRelationType.
+const (
+	BuiltFrom   RelationRelationType = "built-from"
+	ExplainedBy RelationRelationType = "explained-by"
+	GovernedBy  RelationRelationType = "governed-by"
+	Supersedes  RelationRelationType = "supersedes"
+)
+
+// Valid indicates whether the value is a known member of the RelationRelationType enum.
+func (e RelationRelationType) Valid() bool {
+	switch e {
+	case BuiltFrom:
+		return true
+	case ExplainedBy:
+		return true
+	case GovernedBy:
+		return true
+	case Supersedes:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelationStatus.
+const (
+	RelationStatusConfirmed RelationStatus = "confirmed"
+	RelationStatusSuggested RelationStatus = "suggested"
+)
+
+// Valid indicates whether the value is a known member of the RelationStatus enum.
+func (e RelationStatus) Valid() bool {
+	switch e {
+	case RelationStatusConfirmed:
+		return true
+	case RelationStatusSuggested:
 		return true
 	default:
 		return false
@@ -3673,6 +3901,39 @@ type CreatePromptRequest struct {
 // CreatePromptRequestStatus defines model for CreatePromptRequest.Status.
 type CreatePromptRequestStatus string
 
+// CreateRelationRequest Request body for creating a typed relation between two resources.
+type CreateRelationRequest struct {
+	// FromId Subject resource identifier
+	FromId openapi_types.UUID `json:"from_id"`
+
+	// FromType Subject resource type (artifact, memory, prompt, or blueprint)
+	FromType CreateRelationRequestFromType `json:"from_type"`
+
+	// Origin Whether a human or the AI proposed the edge
+	Origin CreateRelationRequestOrigin `json:"origin"`
+
+	// RelationType The edge's intent. The object type is constrained per relation type: governed-by -> blueprint, built-from -> prompt, explained-by -> memory, supersedes -> same type as the subject.
+	RelationType CreateRelationRequestRelationType `json:"relation_type"`
+
+	// ToId Object resource identifier
+	ToId openapi_types.UUID `json:"to_id"`
+
+	// ToType Object resource type (artifact, memory, prompt, or blueprint)
+	ToType CreateRelationRequestToType `json:"to_type"`
+}
+
+// CreateRelationRequestFromType Subject resource type (artifact, memory, prompt, or blueprint)
+type CreateRelationRequestFromType string
+
+// CreateRelationRequestOrigin Whether a human or the AI proposed the edge
+type CreateRelationRequestOrigin string
+
+// CreateRelationRequestRelationType The edge's intent. The object type is constrained per relation type: governed-by -> blueprint, built-from -> prompt, explained-by -> memory, supersedes -> same type as the subject.
+type CreateRelationRequestRelationType string
+
+// CreateRelationRequestToType Object resource type (artifact, memory, prompt, or blueprint)
+type CreateRelationRequestToType string
+
 // CreateShareRequest defines model for CreateShareRequest.
 type CreateShareRequest struct {
 	// Emails List of email addresses allowed to access the shared prompt (required for 'restricted' shares)
@@ -5131,6 +5392,126 @@ type RegisterDeviceTokenRequest struct {
 
 // RegisterDeviceTokenRequestPlatform Push notification platform; currently only "web" (Web Push / FCM browser push) is supported
 type RegisterDeviceTokenRequestPlatform string
+
+// RelatedResource One endpoint of a relation as seen from the other endpoint, enriched with the related resource's resolved title and link fields. project_id is present for every type; slug is present for artifact/blueprint/prompt and absent for memory.
+type RelatedResource struct {
+	// CreatedAt When the edge was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// Direction Whether the queried resource is the subject (outgoing) or object (incoming) of the edge
+	Direction RelatedResourceDirection `json:"direction"`
+
+	// Origin Whether a human or the AI proposed the edge
+	Origin RelatedResourceOrigin `json:"origin"`
+
+	// ProjectId Project the related resource belongs to
+	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
+
+	// RelationId The relation this entry came from
+	RelationId openapi_types.UUID `json:"relation_id"`
+
+	// RelationType The edge's intent
+	RelationType RelatedResourceRelationType `json:"relation_type"`
+
+	// ResourceId Identifier of the related (other) resource
+	ResourceId openapi_types.UUID `json:"resource_id"`
+
+	// ResourceType Type of the related (other) resource
+	ResourceType string `json:"resource_type"`
+
+	// Slug Related resource slug for the detail link (absent for memories)
+	Slug *string `json:"slug,omitempty"`
+
+	// Status Tiered-trust lifecycle state
+	Status RelatedResourceStatus `json:"status"`
+
+	// Title Resolved display title of the related resource
+	Title string `json:"title"`
+}
+
+// RelatedResourceDirection Whether the queried resource is the subject (outgoing) or object (incoming) of the edge
+type RelatedResourceDirection string
+
+// RelatedResourceOrigin Whether a human or the AI proposed the edge
+type RelatedResourceOrigin string
+
+// RelatedResourceRelationType The edge's intent
+type RelatedResourceRelationType string
+
+// RelatedResourceStatus Tiered-trust lifecycle state
+type RelatedResourceStatus string
+
+// Relation A directed, typed edge between two resources within a project.
+type Relation struct {
+	// ConfirmedBy User who confirmed the edge (absent while suggested or if that user was deleted)
+	ConfirmedBy *openapi_types.UUID `json:"confirmed_by,omitempty"`
+
+	// CreatedAt When the edge was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedBy User who created the edge (absent if that user was deleted)
+	CreatedBy *openapi_types.UUID `json:"created_by,omitempty"`
+
+	// FromId Subject resource identifier
+	FromId openapi_types.UUID `json:"from_id"`
+
+	// FromType Subject resource type (artifact, memory, prompt, or blueprint)
+	FromType string `json:"from_type"`
+
+	// Id Unique relation identifier
+	Id openapi_types.UUID `json:"id"`
+
+	// Origin Whether a human or the AI proposed the edge
+	Origin RelationOrigin `json:"origin"`
+
+	// ProjectId Project both endpoints belong to
+	ProjectId openapi_types.UUID `json:"project_id"`
+
+	// RelationType The edge's intent
+	RelationType RelationRelationType `json:"relation_type"`
+
+	// Status Tiered-trust lifecycle state
+	Status RelationStatus `json:"status"`
+
+	// TeamId Owning team
+	TeamId openapi_types.UUID `json:"team_id"`
+
+	// ToId Object resource identifier
+	ToId openapi_types.UUID `json:"to_id"`
+
+	// ToType Object resource type (artifact, memory, prompt, or blueprint)
+	ToType string `json:"to_type"`
+
+	// UpdatedAt When the edge was last updated (e.g. confirmed)
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// RelationOrigin Whether a human or the AI proposed the edge
+type RelationOrigin string
+
+// RelationRelationType The edge's intent
+type RelationRelationType string
+
+// RelationStatus Tiered-trust lifecycle state
+type RelationStatus string
+
+// RelationListResponse A page of the relations touching a resource (both directions), newest first.
+type RelationListResponse struct {
+	// Page Current page number
+	Page int `json:"page"`
+
+	// PerPage Number of items per page
+	PerPage int `json:"per_page"`
+
+	// Relations Relations touching the resource, newest first
+	Relations []RelatedResource `json:"relations"`
+
+	// TotalCount Total number of relations touching the resource
+	TotalCount int `json:"total_count"`
+
+	// TotalPages Total number of pages
+	TotalPages int `json:"total_pages"`
+}
 
 // RenderPromptRequest defines model for RenderPromptRequest.
 type RenderPromptRequest struct {
@@ -6963,6 +7344,21 @@ type ListPromptsParamsSortBy string
 // ListPromptsParamsSortOrder defines parameters for ListPrompts.
 type ListPromptsParamsSortOrder string
 
+// ListRelationsParams defines parameters for ListRelations.
+type ListRelationsParams struct {
+	// ResourceType Type of the resource whose relations to list (artifact, memory, prompt, or blueprint)
+	ResourceType string `form:"resource_type" json:"resource_type"`
+
+	// ResourceId Identifier of the resource whose relations to list
+	ResourceId openapi_types.UUID `form:"resource_id" json:"resource_id"`
+
+	// Page Page number (1-based)
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Items per page
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // GetResourceAccessMetricsParams defines parameters for GetResourceAccessMetrics.
 type GetResourceAccessMetricsParams struct {
 	// ResourceType The resource type to report on (singular form).
@@ -7151,6 +7547,9 @@ type RenderPromptJSONRequestBody = RenderPromptRequest
 
 // CreatePromptShareJSONRequestBody defines body for CreatePromptShare for application/json ContentType.
 type CreatePromptShareJSONRequestBody = CreateShareRequest
+
+// CreateRelationJSONRequestBody defines body for CreateRelation for application/json ContentType.
+type CreateRelationJSONRequestBody = CreateRelationRequest
 
 // SearchTeamResourcesJSONRequestBody defines body for SearchTeamResources for application/json ContentType.
 type SearchTeamResourcesJSONRequestBody = SearchRequest
