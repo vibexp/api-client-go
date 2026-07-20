@@ -780,6 +780,9 @@ type ClientInterface interface {
 
 	CreateRelation(ctx context.Context, teamId openapi_types.UUID, body CreateRelationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SeedRelations request
+	SeedRelations(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteRelation request
 	DeleteRelation(ctx context.Context, teamId openapi_types.UUID, relationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3826,6 +3829,18 @@ func (c *Client) CreateRelationWithBody(ctx context.Context, teamId openapi_type
 
 func (c *Client) CreateRelation(ctx context.Context, teamId openapi_types.UUID, body CreateRelationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateRelationRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SeedRelations(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSeedRelationsRequest(c.Server, teamId)
 	if err != nil {
 		return nil, err
 	}
@@ -14806,6 +14821,40 @@ func NewCreateRelationRequestWithBody(server string, teamId openapi_types.UUID, 
 	return req, nil
 }
 
+// NewSeedRelationsRequest generates requests for SeedRelations
+func NewSeedRelationsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/relations/seed", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteRelationRequest generates requests for DeleteRelation
 func NewDeleteRelationRequest(server string, teamId openapi_types.UUID, relationId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -16646,6 +16695,9 @@ type ClientWithResponsesInterface interface {
 	CreateRelationWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateRelationHTTPResponse, error)
 
 	CreateRelationWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateRelationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateRelationHTTPResponse, error)
+
+	// SeedRelationsWithResponse request
+	SeedRelationsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*SeedRelationsHTTPResponse, error)
 
 	// DeleteRelationWithResponse request
 	DeleteRelationWithResponse(ctx context.Context, teamId openapi_types.UUID, relationId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteRelationHTTPResponse, error)
@@ -23310,6 +23362,38 @@ func (r CreateRelationHTTPResponse) ContentType() string {
 	return ""
 }
 
+type SeedRelationsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r SeedRelationsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SeedRelationsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SeedRelationsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DeleteRelationHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -26307,6 +26391,15 @@ func (c *ClientWithResponses) CreateRelationWithResponse(ctx context.Context, te
 		return nil, err
 	}
 	return ParseCreateRelationHTTPResponse(rsp)
+}
+
+// SeedRelationsWithResponse request returning *SeedRelationsHTTPResponse
+func (c *ClientWithResponses) SeedRelationsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*SeedRelationsHTTPResponse, error) {
+	rsp, err := c.SeedRelations(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSeedRelationsHTTPResponse(rsp)
 }
 
 // DeleteRelationWithResponse request returning *DeleteRelationHTTPResponse
@@ -36416,6 +36509,46 @@ func ParseCreateRelationHTTPResponse(rsp *http.Response) (*CreateRelationHTTPRes
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSeedRelationsHTTPResponse parses an HTTP response from a SeedRelationsWithResponse call
+func ParseSeedRelationsHTTPResponse(rsp *http.Response) (*SeedRelationsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SeedRelationsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
