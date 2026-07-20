@@ -379,6 +379,30 @@ func (e BlueprintDetailType) Valid() bool {
 	}
 }
 
+// Defines values for BlueprintImportCompanionOutcome.
+const (
+	Imported BlueprintImportCompanionOutcome = "imported"
+	Removed  BlueprintImportCompanionOutcome = "removed"
+	Skipped  BlueprintImportCompanionOutcome = "skipped"
+	Updated  BlueprintImportCompanionOutcome = "updated"
+)
+
+// Valid indicates whether the value is a known member of the BlueprintImportCompanionOutcome enum.
+func (e BlueprintImportCompanionOutcome) Valid() bool {
+	switch e {
+	case Imported:
+		return true
+	case Removed:
+		return true
+	case Skipped:
+		return true
+	case Updated:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ContentVersionActorType.
 const (
 	Human  ContentVersionActorType = "human"
@@ -3001,6 +3025,24 @@ type BlueprintDetailSubtype string
 // BlueprintDetailType Type category of the spec library
 type BlueprintDetailType string
 
+// BlueprintImportCompanion Per-file outcome of importing one Agent Skill companion file (a sibling of a SKILL.md) as a blueprint-owned attachment.
+type BlueprintImportCompanion struct {
+	// BlueprintId ID of the blueprint (imported SKILL.md) that owns this companion
+	BlueprintId string `json:"blueprint_id"`
+
+	// Outcome What happened to the companion file during import
+	Outcome BlueprintImportCompanionOutcome `json:"outcome"`
+
+	// Reason Why the companion was skipped (present only when outcome is "skipped")
+	Reason *string `json:"reason,omitempty"`
+
+	// RelativePath Path of the companion file relative to the skill directory
+	RelativePath string `json:"relative_path"`
+}
+
+// BlueprintImportCompanionOutcome What happened to the companion file during import
+type BlueprintImportCompanionOutcome string
+
 // BlueprintImportConflict A blueprint left untouched during re-import because it was edited in VibeXP
 type BlueprintImportConflict struct {
 	BlueprintId string `json:"blueprint_id"`
@@ -3019,6 +3061,9 @@ type BlueprintImportFailed struct {
 
 // BlueprintImportReport Summary report of a blueprint import operation
 type BlueprintImportReport struct {
+	// CompanionItems Per-file outcomes for Agent Skill companion files, distinct from the blueprint (SKILL.md) outcomes
+	CompanionItems []BlueprintImportCompanion `json:"companion_items"`
+
 	// ConflictItems Details of blueprints left untouched due to a VibeXP edit
 	ConflictItems []BlueprintImportConflict `json:"conflict_items"`
 
@@ -3030,6 +3075,15 @@ type BlueprintImportReport struct {
 
 	// SuccessfulItems Details of files successfully imported
 	SuccessfulItems []BlueprintImportSuccess `json:"successful_items"`
+
+	// TotalCompanionsImported Number of Agent Skill companion files stored as attachments (newly imported or replaced on re-import)
+	TotalCompanionsImported int `json:"total_companions_imported"`
+
+	// TotalCompanionsRemoved Number of companion files deleted during re-import reconciliation (absent from the re-imported skill)
+	TotalCompanionsRemoved int `json:"total_companions_removed"`
+
+	// TotalCompanionsSkipped Number of companion files rejected by the attachment service (oversized, over the per-owner budget, disallowed type, or storage unconfigured)
+	TotalCompanionsSkipped int `json:"total_companions_skipped"`
 
 	// TotalConflicts Number of blueprints left untouched because they were edited in VibeXP
 	TotalConflicts int `json:"total_conflicts"`
