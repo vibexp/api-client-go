@@ -3193,6 +3193,9 @@ type BlueprintStatsResponse struct {
 	// AddedThisWeek Number of spec libraries added in the current week
 	AddedThisWeek int `json:"added_this_week"`
 
+	// TotalBlueprints Total number of blueprints
+	TotalBlueprints int `json:"total_blueprints"`
+
 	// TotalByStatus Count of spec libraries by status
 	TotalByStatus map[string]int `json:"total_by_status"`
 
@@ -3201,9 +3204,6 @@ type BlueprintStatsResponse struct {
 
 	// TotalProjects Total number of projects with spec libraries
 	TotalProjects int `json:"total_projects"`
-
-	// TotalSpecLibraries Total number of spec libraries
-	TotalSpecLibraries int `json:"total_spec_libraries"`
 }
 
 // BlueprintVersionListResponse defines model for BlueprintVersionListResponse.
