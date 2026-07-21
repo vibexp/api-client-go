@@ -3013,6 +3013,9 @@ type Artifact struct {
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
 	Related []RelatedResource `json:"related"`
 
+	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
+	Similar *[]SimilarResource `json:"similar,omitempty"`
+
 	// Slug Unique slug for the artifact within the project
 	Slug string `json:"slug"`
 
@@ -3162,6 +3165,9 @@ type Blueprint struct {
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
 	Related []RelatedResource `json:"related"`
 
+	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
+	Similar *[]SimilarResource `json:"similar,omitempty"`
+
 	// Slug Unique slug for the spec library within the project
 	Slug string `json:"slug"`
 
@@ -3227,6 +3233,9 @@ type BlueprintDetail struct {
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
 	Related []RelatedResource `json:"related"`
+
+	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
+	Similar *[]SimilarResource `json:"similar,omitempty"`
 
 	// Slug Unique slug for the spec library within the project
 	Slug string `json:"slug"`
@@ -4809,6 +4818,9 @@ type Memory struct {
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
 	Related []RelatedResource `json:"related"`
 
+	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
+	Similar *[]SimilarResource `json:"similar,omitempty"`
+
 	// Status Current lifecycle status of the memory
 	Status MemoryStatus `json:"status"`
 
@@ -5240,8 +5252,11 @@ type Prompt struct {
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
 	Related []RelatedResource `json:"related"`
-	Slug    string            `json:"slug"`
-	Status  PromptStatus      `json:"status"`
+
+	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
+	Similar *[]SimilarResource `json:"similar,omitempty"`
+	Slug    string             `json:"slug"`
+	Status  PromptStatus       `json:"status"`
 
 	// TeamId Team identifier that owns this prompt
 	TeamId    openapi_types.UUID `json:"team_id"`
@@ -5819,6 +5834,21 @@ type SharedPromptResponse struct {
 
 // SharedPromptResponseShareType defines model for SharedPromptResponse.ShareType.
 type SharedPromptResponseShareType string
+
+// SimilarResource An embedding-similarity neighbor of a resource, COMPUTED live at read time from vector similarity — never a stored edge, and kept strictly distinct from the typed `related` edges. Score is 1 - cosine_distance (higher is closer).
+type SimilarResource struct {
+	// Id Identifier of the similar resource
+	Id openapi_types.UUID `json:"id"`
+
+	// Score Similarity score, 1 - cosine_distance (higher is closer)
+	Score float64 `json:"score"`
+
+	// Title Resolved display title of the similar resource
+	Title string `json:"title"`
+
+	// Type Type of the similar resource (artifact, memory, prompt, or blueprint)
+	Type string `json:"type"`
+}
 
 // SuccessResponse defines model for SuccessResponse.
 type SuccessResponse struct {
