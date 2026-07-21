@@ -3011,7 +3011,7 @@ type Artifact struct {
 	ProjectId openapi_types.UUID `json:"project_id"`
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
-	Related []RelatedResource `json:"related"`
+	Related *[]RelatedResource `json:"related,omitempty"`
 
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
@@ -3163,7 +3163,7 @@ type Blueprint struct {
 	ProjectId openapi_types.UUID `json:"project_id"`
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
-	Related []RelatedResource `json:"related"`
+	Related *[]RelatedResource `json:"related,omitempty"`
 
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
@@ -3232,7 +3232,7 @@ type BlueprintDetail struct {
 	RawContent *string `json:"raw_content,omitempty"`
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
-	Related []RelatedResource `json:"related"`
+	Related *[]RelatedResource `json:"related,omitempty"`
 
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
@@ -4816,7 +4816,7 @@ type Memory struct {
 	ProjectId string `json:"project_id"`
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
-	Related []RelatedResource `json:"related"`
+	Related *[]RelatedResource `json:"related,omitempty"`
 
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
@@ -5251,7 +5251,7 @@ type Prompt struct {
 	ProjectId openapi_types.UUID `json:"project_id"`
 
 	// Related Depth-1 typed neighborhood of this resource — the relations touching it in both directions, newest first, capped at 20. Typed summaries only, never bodies. Populated on the detail GET; empty in list responses.
-	Related []RelatedResource `json:"related"`
+	Related *[]RelatedResource `json:"related,omitempty"`
 
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
