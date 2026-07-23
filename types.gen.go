@@ -7175,6 +7175,9 @@ type ListFeedItemsParams struct {
 	// AiAssistantName Filter by AI assistant name
 	AiAssistantName *string `form:"ai_assistant_name,omitempty" json:"ai_assistant_name,omitempty"`
 
+	// Search Search in feed item title and content (case-insensitive substring)
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
 	// Archived Filter by archived status: 'true' (archived only), 'false' (active only, default), 'all'
 	Archived *ListFeedItemsParamsArchived `form:"archived,omitempty" json:"archived,omitempty"`
 
@@ -7216,6 +7219,9 @@ type ListFeedItemsByFeedParams struct {
 
 	// AiAssistantName Filter by AI assistant name
 	AiAssistantName *string `form:"ai_assistant_name,omitempty" json:"ai_assistant_name,omitempty"`
+
+	// Search Search in feed item title and content (case-insensitive substring)
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
 	// Archived Filter by archived status: 'true' (archived only), 'false' (active only, default), 'all'
 	Archived *ListFeedItemsByFeedParamsArchived `form:"archived,omitempty" json:"archived,omitempty"`
