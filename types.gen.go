@@ -7585,6 +7585,9 @@ type ListFeedItemsByFeedParamsArchived string
 
 // HandleGitHubCallbackJSONBody defines parameters for HandleGitHubCallback.
 type HandleGitHubCallbackJSONBody struct {
+	// Code OAuth authorization code from GitHub's post-install redirect. Exchanged server-side for a user access token to verify the caller has access to the installation on GitHub.
+	Code string `json:"code"`
+
 	// InstallationId GitHub App installation ID from the callback URL
 	InstallationId int64 `json:"installation_id"`
 

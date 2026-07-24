@@ -22115,6 +22115,7 @@ type HandleGitHubCallbackHTTPResponse struct {
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
+	ApplicationproblemJSON503 *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -34582,6 +34583,13 @@ func ParseHandleGitHubCallbackHTTPResponse(rsp *http.Response) (*HandleGitHubCal
 			return nil, err
 		}
 		response.ApplicationproblemJSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
 
 	}
 
