@@ -1666,6 +1666,87 @@ func (e UpdateTeamMemberRoleRequestRole) Valid() bool {
 	}
 }
 
+// Defines values for ListAdminTeamsParamsSortBy.
+const (
+	ListAdminTeamsParamsSortByCreatedAt   ListAdminTeamsParamsSortBy = "created_at"
+	ListAdminTeamsParamsSortByMemberCount ListAdminTeamsParamsSortBy = "member_count"
+	ListAdminTeamsParamsSortByName        ListAdminTeamsParamsSortBy = "name"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminTeamsParamsSortBy enum.
+func (e ListAdminTeamsParamsSortBy) Valid() bool {
+	switch e {
+	case ListAdminTeamsParamsSortByCreatedAt:
+		return true
+	case ListAdminTeamsParamsSortByMemberCount:
+		return true
+	case ListAdminTeamsParamsSortByName:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListAdminTeamsParamsSortOrder.
+const (
+	ListAdminTeamsParamsSortOrderAsc  ListAdminTeamsParamsSortOrder = "asc"
+	ListAdminTeamsParamsSortOrderDesc ListAdminTeamsParamsSortOrder = "desc"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminTeamsParamsSortOrder enum.
+func (e ListAdminTeamsParamsSortOrder) Valid() bool {
+	switch e {
+	case ListAdminTeamsParamsSortOrderAsc:
+		return true
+	case ListAdminTeamsParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListAdminUsersParamsSortBy.
+const (
+	ListAdminUsersParamsSortByCreatedAt ListAdminUsersParamsSortBy = "created_at"
+	ListAdminUsersParamsSortByEmail     ListAdminUsersParamsSortBy = "email"
+	ListAdminUsersParamsSortByName      ListAdminUsersParamsSortBy = "name"
+	ListAdminUsersParamsSortByTeamCount ListAdminUsersParamsSortBy = "team_count"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminUsersParamsSortBy enum.
+func (e ListAdminUsersParamsSortBy) Valid() bool {
+	switch e {
+	case ListAdminUsersParamsSortByCreatedAt:
+		return true
+	case ListAdminUsersParamsSortByEmail:
+		return true
+	case ListAdminUsersParamsSortByName:
+		return true
+	case ListAdminUsersParamsSortByTeamCount:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListAdminUsersParamsSortOrder.
+const (
+	ListAdminUsersParamsSortOrderAsc  ListAdminUsersParamsSortOrder = "asc"
+	ListAdminUsersParamsSortOrderDesc ListAdminUsersParamsSortOrder = "desc"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminUsersParamsSortOrder enum.
+func (e ListAdminUsersParamsSortOrder) Valid() bool {
+	switch e {
+	case ListAdminUsersParamsSortOrderAsc:
+		return true
+	case ListAdminUsersParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetTeamFeedCreationMetricsParamsRange.
 const (
 	GetTeamFeedCreationMetricsParamsRangeN14d  GetTeamFeedCreationMetricsParamsRange = "14d"
@@ -2675,12 +2756,18 @@ type AdminTeamDetail struct {
 	CreatedAt time.Time          `json:"created_at"`
 	Id        openapi_types.UUID `json:"id"`
 
+	// IsPersonal True for a user's default personal workspace, false for a shared team workspace.
+	IsPersonal bool `json:"is_personal"`
+
 	// Members The team's members.
 	Members []AdminTeamMember `json:"members"`
 	Name    string            `json:"name"`
 
 	// Owner The owning user of a team.
 	Owner AdminTeamOwner `json:"owner"`
+
+	// Slug URL-safe team identifier.
+	Slug string `json:"slug"`
 }
 
 // AdminTeamListItem One team in the instance-wide admin team listing.
@@ -2688,12 +2775,18 @@ type AdminTeamListItem struct {
 	CreatedAt time.Time          `json:"created_at"`
 	Id        openapi_types.UUID `json:"id"`
 
+	// IsPersonal True for a user's default personal workspace, false for a shared team workspace.
+	IsPersonal bool `json:"is_personal"`
+
 	// MemberCount Number of members in the team.
 	MemberCount int64  `json:"member_count"`
 	Name        string `json:"name"`
 
 	// Owner The owning user of a team.
 	Owner AdminTeamOwner `json:"owner"`
+
+	// Slug URL-safe team identifier.
+	Slug string `json:"slug"`
 }
 
 // AdminTeamListResponse A page of the instance-wide team listing, newest first.
@@ -6615,7 +6708,31 @@ type ListAdminTeamsParams struct {
 
 	// Limit Items per page
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Search Case-insensitive substring match over the team name, team slug, and the owner's email.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// IsPersonal Narrow to personal workspaces (true) or shared team workspaces (false).
+	IsPersonal *bool `form:"is_personal,omitempty" json:"is_personal,omitempty"`
+
+	// CreatedFrom Only teams created at or after this instant (inclusive).
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Only teams created at or before this instant (inclusive).
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// SortBy Column to sort by. Ties are always broken by team id so paging is stable.
+	SortBy *ListAdminTeamsParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+
+	// SortOrder Sort direction.
+	SortOrder *ListAdminTeamsParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
 }
+
+// ListAdminTeamsParamsSortBy defines parameters for ListAdminTeams.
+type ListAdminTeamsParamsSortBy string
+
+// ListAdminTeamsParamsSortOrder defines parameters for ListAdminTeams.
+type ListAdminTeamsParamsSortOrder string
 
 // ListAdminUsersParams defines parameters for ListAdminUsers.
 type ListAdminUsersParams struct {
@@ -6624,7 +6741,31 @@ type ListAdminUsersParams struct {
 
 	// Limit Items per page
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Search Case-insensitive substring match over the user's email and name.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// IdpProvider Exact match on the user's identity-provider name (e.g. "google", "oidc").
+	IdpProvider *string `form:"idp_provider,omitempty" json:"idp_provider,omitempty"`
+
+	// CreatedFrom Only users created at or after this instant (inclusive).
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Only users created at or before this instant (inclusive).
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// SortBy Column to sort by. Ties are always broken by user id so paging is stable.
+	SortBy *ListAdminUsersParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+
+	// SortOrder Sort direction.
+	SortOrder *ListAdminUsersParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
 }
+
+// ListAdminUsersParamsSortBy defines parameters for ListAdminUsers.
+type ListAdminUsersParamsSortBy string
+
+// ListAdminUsersParamsSortOrder defines parameters for ListAdminUsers.
+type ListAdminUsersParamsSortOrder string
 
 // ListClaudeCodeHooksParams defines parameters for ListClaudeCodeHooks.
 type ListClaudeCodeHooksParams struct {
