@@ -64,6 +64,27 @@ func (e APIKeyUsageType) Valid() bool {
 	}
 }
 
+// Defines values for AdminTimeseriesResponseGranularity.
+const (
+	AdminTimeseriesResponseGranularityDay   AdminTimeseriesResponseGranularity = "day"
+	AdminTimeseriesResponseGranularityMonth AdminTimeseriesResponseGranularity = "month"
+	AdminTimeseriesResponseGranularityWeek  AdminTimeseriesResponseGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the AdminTimeseriesResponseGranularity enum.
+func (e AdminTimeseriesResponseGranularity) Valid() bool {
+	switch e {
+	case AdminTimeseriesResponseGranularityDay:
+		return true
+	case AdminTimeseriesResponseGranularityMonth:
+		return true
+	case AdminTimeseriesResponseGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AgentStatus.
 const (
 	AgentStatusActive AgentStatus = "active"
@@ -1666,6 +1687,27 @@ func (e UpdateTeamMemberRoleRequestRole) Valid() bool {
 	}
 }
 
+// Defines values for GetAdminDashboardTimeseriesParamsGranularity.
+const (
+	GetAdminDashboardTimeseriesParamsGranularityDay   GetAdminDashboardTimeseriesParamsGranularity = "day"
+	GetAdminDashboardTimeseriesParamsGranularityMonth GetAdminDashboardTimeseriesParamsGranularity = "month"
+	GetAdminDashboardTimeseriesParamsGranularityWeek  GetAdminDashboardTimeseriesParamsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the GetAdminDashboardTimeseriesParamsGranularity enum.
+func (e GetAdminDashboardTimeseriesParamsGranularity) Valid() bool {
+	switch e {
+	case GetAdminDashboardTimeseriesParamsGranularityDay:
+		return true
+	case GetAdminDashboardTimeseriesParamsGranularityMonth:
+		return true
+	case GetAdminDashboardTimeseriesParamsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListAdminTeamsParamsSortBy.
 const (
 	ListAdminTeamsParamsSortByCreatedAt   ListAdminTeamsParamsSortBy = "created_at"
@@ -2724,6 +2766,89 @@ type ActivityTypesResponse struct {
 	EntityTypes   []string `json:"entity_types"`
 }
 
+// AdminBreakdownBucket One value of a grouped column plus how many rows carry it.
+type AdminBreakdownBucket struct {
+	Count int64 `json:"count"`
+
+	// Value The column value. NULL values are reported as an empty string.
+	Value string `json:"value"`
+}
+
+// AdminCountPoint A single count within one time bucket.
+type AdminCountPoint struct {
+	// Bucket Start of the bucket, in UTC.
+	Bucket time.Time `json:"bucket"`
+	Count  int64     `json:"count"`
+}
+
+// AdminDashboardOverview Totals, breakdowns and system health (GET /api/v1/admin/dashboard/overview).
+type AdminDashboardOverview struct {
+	// Breakdowns One entry per entity/column pair that has a status or type column.
+	Breakdowns []AdminEntityBreakdown `json:"breakdowns"`
+
+	// Counts Instance-wide totals for every top-level entity. A superset of
+	// AdminInstanceCounts, which stays as-is for the legacy stats endpoint.
+	Counts AdminExtendedCounts `json:"counts"`
+
+	// SystemHealth Instance storage health.
+	SystemHealth AdminSystemHealth `json:"system_health"`
+
+	// Version The running backend application version ("dev" when unset).
+	Version string `json:"version"`
+}
+
+// AdminDataWindow Earliest instant for which event data still exists. Both source tables are
+// TTL-pruned (config retention.activity_days / retention.access_event_days),
+// so a chart asking for a range older than these values will legitimately show
+// zeros rather than missing data.
+type AdminDataWindow struct {
+	// AccessBySourceEarliestRetainedAt now() - retention.access_event_days.
+	AccessBySourceEarliestRetainedAt time.Time `json:"access_by_source_earliest_retained_at"`
+
+	// SignInsEarliestRetainedAt now() - retention.activity_days.
+	SignInsEarliestRetainedAt time.Time `json:"sign_ins_earliest_retained_at"`
+}
+
+// AdminEntityBreakdown A GROUP BY over one status/type column of one entity table.
+type AdminEntityBreakdown struct {
+	// Buckets One entry per distinct value, most frequent first.
+	Buckets []AdminBreakdownBucket `json:"buckets"`
+
+	// Entity The entity table the breakdown covers.
+	Entity string `json:"entity"`
+
+	// Field The grouped column.
+	Field string `json:"field"`
+}
+
+// AdminExtendedCounts Instance-wide totals for every top-level entity. A superset of
+// AdminInstanceCounts, which stays as-is for the legacy stats endpoint.
+type AdminExtendedCounts struct {
+	Agents     int64 `json:"agents"`
+	ApiKeys    int64 `json:"api_keys"`
+	Artifacts  int64 `json:"artifacts"`
+	Blueprints int64 `json:"blueprints"`
+	Feeds      int64 `json:"feeds"`
+	Memories   int64 `json:"memories"`
+	Projects   int64 `json:"projects"`
+	Prompts    int64 `json:"prompts"`
+	Teams      int64 `json:"teams"`
+	Users      int64 `json:"users"`
+}
+
+// AdminGrowthPoint New rows created per entity within one time bucket.
+type AdminGrowthPoint struct {
+	Artifacts int64 `json:"artifacts"`
+
+	// Bucket Start of the bucket, in UTC.
+	Bucket   time.Time `json:"bucket"`
+	Memories int64     `json:"memories"`
+	Projects int64     `json:"projects"`
+	Prompts  int64     `json:"prompts"`
+	Teams    int64     `json:"teams"`
+	Users    int64     `json:"users"`
+}
+
 // AdminInstanceCounts Instance-wide totals for the top-level entities (unscoped counts).
 type AdminInstanceCounts struct {
 	// Artifacts Total number of artifacts.
@@ -2742,6 +2867,16 @@ type AdminInstanceCounts struct {
 	Users int64 `json:"users"`
 }
 
+// AdminSourcePoint A count for one access source within one time bucket.
+type AdminSourcePoint struct {
+	// Bucket Start of the bucket, in UTC.
+	Bucket time.Time `json:"bucket"`
+	Count  int64     `json:"count"`
+
+	// Source Access source (e.g. "web", "cli", "mcp").
+	Source string `json:"source"`
+}
+
 // AdminStatsResponse Instance statistics returned by GET /api/v1/admin/stats.
 type AdminStatsResponse struct {
 	// Counts Instance-wide totals for the top-level entities (unscoped counts).
@@ -2749,6 +2884,24 @@ type AdminStatsResponse struct {
 
 	// Version The running backend application version (config server.service_version; "dev" when unset).
 	Version string `json:"version"`
+}
+
+// AdminSystemHealth Instance storage health.
+type AdminSystemHealth struct {
+	// DatabaseSizeBytes pg_database_size(current_database()).
+	DatabaseSizeBytes int64 `json:"database_size_bytes"`
+
+	// Tables Per-table estimated row counts, largest first.
+	Tables []AdminTableStat `json:"tables"`
+}
+
+// AdminTableStat Approximate row count for one table.
+type AdminTableStat struct {
+	// EstimatedRows ESTIMATE from pg_stat_user_tables.n_live_tup, not an exact COUNT(*) —
+	// an exact per-table count does not scale and this figure is only meant
+	// for relative sizing. Freshness depends on autovacuum/ANALYZE.
+	EstimatedRows int64  `json:"estimated_rows"`
+	Table         string `json:"table"`
 }
 
 // AdminTeamDetail A single team with its owner and member list (GET /api/v1/admin/teams/{id}).
@@ -2827,6 +2980,44 @@ type AdminTeamOwner struct {
 	Id    openapi_types.UUID  `json:"id"`
 	Name  string              `json:"name"`
 }
+
+// AdminTimeseriesResponse Bucketed metrics over a time range (GET /api/v1/admin/dashboard/timeseries).
+// Every bucket in the requested range is present in every series with an
+// explicit 0 — the series are gap-filled, never sparse.
+type AdminTimeseriesResponse struct {
+	// AccessBySource Resource accesses per bucket per source, ascending by bucket then source.
+	// Only sources actually observed in the range appear; a source with no
+	// events in a bucket is gap-filled to 0 for the sources that do appear.
+	AccessBySource []AdminSourcePoint `json:"access_by_source"`
+
+	// DataWindow Earliest instant for which event data still exists. Both source tables are
+	// TTL-pruned (config retention.activity_days / retention.access_event_days),
+	// so a chart asking for a range older than these values will legitimately show
+	// zeros rather than missing data.
+	DataWindow AdminDataWindow `json:"data_window"`
+
+	// From Inclusive start of the range actually used. This is snapped DOWN to the
+	// start of its bucket, so it may precede the requested `from` (asking for
+	// 2026-07-15 at month granularity reports and queries 2026-07-01). Buckets
+	// are therefore always whole, never partial at the head.
+	From time.Time `json:"from"`
+
+	// Granularity Bucket size actually used.
+	Granularity AdminTimeseriesResponseGranularity `json:"granularity"`
+
+	// Growth New entities per bucket, ascending by bucket.
+	Growth []AdminGrowthPoint `json:"growth"`
+
+	// SignIns Successful sign-ins per bucket (activities.auth_login), ascending.
+	SignIns []AdminCountPoint `json:"sign_ins"`
+
+	// To Exclusive end of the range actually used (after defaulting). This is NOT
+	// snapped, so the final bucket may cover only part of its period.
+	To time.Time `json:"to"`
+}
+
+// AdminTimeseriesResponseGranularity Bucket size actually used.
+type AdminTimeseriesResponseGranularity string
 
 // AdminUserDetail A single user with their team memberships (GET /api/v1/admin/users/{id}).
 type AdminUserDetail struct {
@@ -6700,6 +6891,21 @@ type ListActivitiesParams struct {
 	// DateTo Include activities up to this date (YYYY-MM-DD, inclusive end of day)
 	DateTo *openapi_types.Date `form:"date_to,omitempty" json:"date_to,omitempty"`
 }
+
+// GetAdminDashboardTimeseriesParams defines parameters for GetAdminDashboardTimeseries.
+type GetAdminDashboardTimeseriesParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Granularity Bucket size.
+	Granularity *GetAdminDashboardTimeseriesParamsGranularity `form:"granularity,omitempty" json:"granularity,omitempty"`
+}
+
+// GetAdminDashboardTimeseriesParamsGranularity defines parameters for GetAdminDashboardTimeseries.
+type GetAdminDashboardTimeseriesParamsGranularity string
 
 // ListAdminTeamsParams defines parameters for ListAdminTeams.
 type ListAdminTeamsParams struct {
