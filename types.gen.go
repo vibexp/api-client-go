@@ -85,6 +85,42 @@ func (e AdminTimeseriesResponseGranularity) Valid() bool {
 	}
 }
 
+// Defines values for AdminUserDetailStatus.
+const (
+	AdminUserDetailStatusActive    AdminUserDetailStatus = "active"
+	AdminUserDetailStatusSuspended AdminUserDetailStatus = "suspended"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserDetailStatus enum.
+func (e AdminUserDetailStatus) Valid() bool {
+	switch e {
+	case AdminUserDetailStatusActive:
+		return true
+	case AdminUserDetailStatusSuspended:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserListItemStatus.
+const (
+	AdminUserListItemStatusActive    AdminUserListItemStatus = "active"
+	AdminUserListItemStatusSuspended AdminUserListItemStatus = "suspended"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserListItemStatus enum.
+func (e AdminUserListItemStatus) Valid() bool {
+	switch e {
+	case AdminUserListItemStatusActive:
+		return true
+	case AdminUserListItemStatusSuspended:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AgentStatus.
 const (
 	AgentStatusActive AgentStatus = "active"
@@ -1747,6 +1783,24 @@ func (e ListAdminTeamsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for ListAdminUsersParamsStatus.
+const (
+	ListAdminUsersParamsStatusActive    ListAdminUsersParamsStatus = "active"
+	ListAdminUsersParamsStatusSuspended ListAdminUsersParamsStatus = "suspended"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminUsersParamsStatus enum.
+func (e ListAdminUsersParamsStatus) Valid() bool {
+	switch e {
+	case ListAdminUsersParamsStatusActive:
+		return true
+	case ListAdminUsersParamsStatusSuspended:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListAdminUsersParamsSortBy.
 const (
 	ListAdminUsersParamsSortByCreatedAt ListAdminUsersParamsSortBy = "created_at"
@@ -2508,16 +2562,16 @@ func (e GetProjectResourceCreationMetricsParamsRange) Valid() bool {
 
 // Defines values for ListPromptsParamsStatus.
 const (
-	ListPromptsParamsStatusDraft     ListPromptsParamsStatus = "draft"
-	ListPromptsParamsStatusPublished ListPromptsParamsStatus = "published"
+	Draft     ListPromptsParamsStatus = "draft"
+	Published ListPromptsParamsStatus = "published"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsStatus enum.
 func (e ListPromptsParamsStatus) Valid() bool {
 	switch e {
-	case ListPromptsParamsStatusDraft:
+	case Draft:
 		return true
-	case ListPromptsParamsStatusPublished:
+	case Published:
 		return true
 	default:
 		return false
@@ -3031,7 +3085,19 @@ type AdminUserDetail struct {
 	// Memberships Teams the user belongs to.
 	Memberships []AdminTeamMembership `json:"memberships"`
 	Name        string                `json:"name"`
+
+	// Status Account lifecycle. A suspended account is rejected at every
+	// authentication entry point — existing sessions, API keys and MCP/OAuth
+	// tokens stop working immediately, not at expiry. Instance-local: it does
+	// not disable the account at the upstream identity provider.
+	Status AdminUserDetailStatus `json:"status"`
 }
+
+// AdminUserDetailStatus Account lifecycle. A suspended account is rejected at every
+// authentication entry point — existing sessions, API keys and MCP/OAuth
+// tokens stop working immediately, not at expiry. Instance-local: it does
+// not disable the account at the upstream identity provider.
+type AdminUserDetailStatus string
 
 // AdminUserListItem One user in the instance-wide admin user listing.
 type AdminUserListItem struct {
@@ -3043,9 +3109,21 @@ type AdminUserListItem struct {
 	IdpProvider *string `json:"idp_provider,omitempty"`
 	Name        string  `json:"name"`
 
+	// Status Account lifecycle. A suspended account is rejected at every
+	// authentication entry point — existing sessions, API keys and MCP/OAuth
+	// tokens stop working immediately, not at expiry. Instance-local: it does
+	// not disable the account at the upstream identity provider.
+	Status AdminUserListItemStatus `json:"status"`
+
 	// TeamCount Number of teams the user belongs to.
 	TeamCount int64 `json:"team_count"`
 }
+
+// AdminUserListItemStatus Account lifecycle. A suspended account is rejected at every
+// authentication entry point — existing sessions, API keys and MCP/OAuth
+// tokens stop working immediately, not at expiry. Instance-local: it does
+// not disable the account at the upstream identity provider.
+type AdminUserListItemStatus string
 
 // AdminUserListResponse A page of the instance-wide user listing, newest first.
 type AdminUserListResponse struct {
@@ -6960,12 +7038,18 @@ type ListAdminUsersParams struct {
 	// CreatedTo Only users created at or before this instant (inclusive).
 	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
 
+	// Status Narrow to accounts in this lifecycle state.
+	Status *ListAdminUsersParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+
 	// SortBy Column to sort by. Ties are always broken by user id so paging is stable.
 	SortBy *ListAdminUsersParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
 
 	// SortOrder Sort direction.
 	SortOrder *ListAdminUsersParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
 }
+
+// ListAdminUsersParamsStatus defines parameters for ListAdminUsers.
+type ListAdminUsersParamsStatus string
 
 // ListAdminUsersParamsSortBy defines parameters for ListAdminUsers.
 type ListAdminUsersParamsSortBy string
