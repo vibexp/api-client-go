@@ -21593,6 +21593,7 @@ type CreateEmbeddingProviderHTTPResponse struct {
 	JSON200                   *EmbeddingProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -21659,6 +21660,7 @@ type ValidateEmbeddingProviderHTTPResponse struct {
 	JSON200                   *ValidateEmbeddingProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -21691,6 +21693,7 @@ type DeleteEmbeddingProviderHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -21758,6 +21761,7 @@ type UpdateEmbeddingProviderHTTPResponse struct {
 	JSON200                   *EmbeddingProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -21791,6 +21795,7 @@ type ReprocessEmbeddingProviderHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON202                   *SuccessResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -22865,6 +22870,7 @@ type CreateModelProviderHTTPResponse struct {
 	JSON200                   *ModelProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -22899,6 +22905,7 @@ type ValidateModelProviderHTTPResponse struct {
 	JSON200                   *ValidateModelProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -22931,6 +22938,7 @@ type DeleteModelProviderHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -22998,6 +23006,7 @@ type UpdateModelProviderHTTPResponse struct {
 	JSON200                   *ModelProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24129,6 +24138,7 @@ type CreateEmbeddingProviderSettingsHTTPResponse struct {
 	JSON200                   *EmbeddingProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24194,6 +24204,7 @@ type ClearEmbeddingsSettingsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ClearEmbeddingsResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -24227,6 +24238,7 @@ type ValidateEmbeddingProviderSettingsHTTPResponse struct {
 	JSON200                   *ValidateEmbeddingProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -24259,6 +24271,7 @@ type DeleteEmbeddingProviderSettingsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24326,6 +24339,7 @@ type UpdateEmbeddingProviderSettingsHTTPResponse struct {
 	JSON200                   *EmbeddingProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24359,6 +24373,7 @@ type ReprocessEmbeddingProviderSettingsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON202                   *SuccessResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24425,6 +24440,7 @@ type CreateModelProviderSettingsHTTPResponse struct {
 	JSON200                   *ModelProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24459,6 +24475,7 @@ type ValidateModelProviderSettingsHTTPResponse struct {
 	JSON200                   *ValidateModelProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -24491,6 +24508,7 @@ type DeleteModelProviderSettingsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -24558,6 +24576,7 @@ type UpdateModelProviderSettingsHTTPResponse struct {
 	JSON200                   *ModelProviderResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -33815,6 +33834,13 @@ func ParseCreateEmbeddingProviderHTTPResponse(rsp *http.Response) (*CreateEmbedd
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33909,6 +33935,13 @@ func ParseValidateEmbeddingProviderHTTPResponse(rsp *http.Response) (*ValidateEm
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33948,6 +33981,13 @@ func ParseDeleteEmbeddingProviderHTTPResponse(rsp *http.Response) (*DeleteEmbedd
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -34050,6 +34090,13 @@ func ParseUpdateEmbeddingProviderHTTPResponse(rsp *http.Response) (*UpdateEmbedd
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -34096,6 +34143,13 @@ func ParseReprocessEmbeddingProviderHTTPResponse(rsp *http.Response) (*Reprocess
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -35685,6 +35739,13 @@ func ParseCreateModelProviderHTTPResponse(rsp *http.Response) (*CreateModelProvi
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -35739,6 +35800,13 @@ func ParseValidateModelProviderHTTPResponse(rsp *http.Response) (*ValidateModelP
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -35778,6 +35846,13 @@ func ParseDeleteModelProviderHTTPResponse(rsp *http.Response) (*DeleteModelProvi
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -35879,6 +35954,13 @@ func ParseUpdateModelProviderHTTPResponse(rsp *http.Response) (*UpdateModelProvi
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -37665,6 +37747,13 @@ func ParseCreateEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*Crea
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37752,6 +37841,13 @@ func ParseClearEmbeddingsSettingsHTTPResponse(rsp *http.Response) (*ClearEmbeddi
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37799,6 +37895,13 @@ func ParseValidateEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*Va
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37838,6 +37941,13 @@ func ParseDeleteEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*Dele
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -37940,6 +38050,13 @@ func ParseUpdateEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*Upda
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37986,6 +38103,13 @@ func ParseReprocessEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*R
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -38081,6 +38205,13 @@ func ParseCreateModelProviderSettingsHTTPResponse(rsp *http.Response) (*CreateMo
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -38135,6 +38266,13 @@ func ParseValidateModelProviderSettingsHTTPResponse(rsp *http.Response) (*Valida
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -38174,6 +38312,13 @@ func ParseDeleteModelProviderSettingsHTTPResponse(rsp *http.Response) (*DeleteMo
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -38275,6 +38420,13 @@ func ParseUpdateModelProviderSettingsHTTPResponse(rsp *http.Response) (*UpdateMo
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
