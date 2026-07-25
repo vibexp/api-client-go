@@ -2704,27 +2704,6 @@ func (e ListMemoriesParamsSortOrder) Valid() bool {
 	}
 }
 
-// Defines values for SearchMemoriesByMetadataParamsStatus.
-const (
-	SearchMemoriesByMetadataParamsStatusActive   SearchMemoriesByMetadataParamsStatus = "active"
-	SearchMemoriesByMetadataParamsStatusArchived SearchMemoriesByMetadataParamsStatus = "archived"
-	SearchMemoriesByMetadataParamsStatusDraft    SearchMemoriesByMetadataParamsStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the SearchMemoriesByMetadataParamsStatus enum.
-func (e SearchMemoriesByMetadataParamsStatus) Valid() bool {
-	switch e {
-	case SearchMemoriesByMetadataParamsStatusActive:
-		return true
-	case SearchMemoriesByMetadataParamsStatusArchived:
-		return true
-	case SearchMemoriesByMetadataParamsStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for GetMetadataKeysParamsResourceType.
 const (
 	GetMetadataKeysParamsResourceTypeArtifacts  GetMetadataKeysParamsResourceType = "artifacts"
@@ -2799,16 +2778,16 @@ func (e GetProjectResourceCreationMetricsParamsRange) Valid() bool {
 
 // Defines values for ListPromptsParamsStatus.
 const (
-	Draft     ListPromptsParamsStatus = "draft"
-	Published ListPromptsParamsStatus = "published"
+	ListPromptsParamsStatusDraft     ListPromptsParamsStatus = "draft"
+	ListPromptsParamsStatusPublished ListPromptsParamsStatus = "published"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsStatus enum.
 func (e ListPromptsParamsStatus) Valid() bool {
 	switch e {
-	case Draft:
+	case ListPromptsParamsStatusDraft:
 		return true
-	case Published:
+	case ListPromptsParamsStatusPublished:
 		return true
 	default:
 		return false
@@ -8490,12 +8469,6 @@ type ListMemoriesParams struct {
 	// Search Search in memory text
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
-	// MetadataKey Filter by metadata key
-	MetadataKey *string `form:"metadata_key,omitempty" json:"metadata_key,omitempty"`
-
-	// MetadataValue Filter by metadata value (requires metadata_key)
-	MetadataValue *string `form:"metadata_value,omitempty" json:"metadata_value,omitempty"`
-
 	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
@@ -8523,33 +8496,6 @@ type ListMemoriesParamsSortBy string
 
 // ListMemoriesParamsSortOrder defines parameters for ListMemories.
 type ListMemoriesParamsSortOrder string
-
-// SearchMemoriesByMetadataParams defines parameters for SearchMemoriesByMetadata.
-type SearchMemoriesByMetadataParams struct {
-	// ProjectId Filter memories by project ID
-	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
-
-	// MetadataKey Metadata key to search for
-	MetadataKey string `form:"metadata_key" json:"metadata_key"`
-
-	// MetadataValue Metadata value to search for
-	MetadataValue string `form:"metadata_value" json:"metadata_value"`
-
-	// Search Additional text search in memory content
-	Search *string `form:"search,omitempty" json:"search,omitempty"`
-
-	// Status Filter by lifecycle status. When omitted, archived memories are hidden (active and draft are returned); an explicit value returns only that status. Returns 400 for unknown values.
-	Status *SearchMemoriesByMetadataParamsStatus `form:"status,omitempty" json:"status,omitempty"`
-
-	// Page Page number
-	Page *int `form:"page,omitempty" json:"page,omitempty"`
-
-	// Limit Items per page
-	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
-}
-
-// SearchMemoriesByMetadataParamsStatus defines parameters for SearchMemoriesByMetadata.
-type SearchMemoriesByMetadataParamsStatus string
 
 // GetMetadataKeysParams defines parameters for GetMetadataKeys.
 type GetMetadataKeysParams struct {

@@ -713,9 +713,6 @@ type ClientInterface interface {
 
 	CreateMemory(ctx context.Context, teamId openapi_types.UUID, body CreateMemoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// SearchMemoriesByMetadata request
-	SearchMemoriesByMetadata(ctx context.Context, teamId openapi_types.UUID, params *SearchMemoriesByMetadataParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// DeleteMemory request
 	DeleteMemory(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -3670,18 +3667,6 @@ func (c *Client) CreateMemoryWithBody(ctx context.Context, teamId openapi_types.
 
 func (c *Client) CreateMemory(ctx context.Context, teamId openapi_types.UUID, body CreateMemoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateMemoryRequest(c.Server, teamId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) SearchMemoriesByMetadata(ctx context.Context, teamId openapi_types.UUID, params *SearchMemoriesByMetadataParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewSearchMemoriesByMetadataRequest(c.Server, teamId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -14413,30 +14398,6 @@ func NewListMemoriesRequest(server string, teamId openapi_types.UUID, params *Li
 
 		}
 
-		if params.MetadataKey != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata_key", *params.MetadataKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
-		if params.MetadataValue != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata_value", *params.MetadataValue, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
 		if params.Metadata != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -14566,131 +14527,6 @@ func NewCreateMemoryRequestWithBody(server string, teamId openapi_types.UUID, co
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewSearchMemoriesByMetadataRequest generates requests for SearchMemoriesByMetadata
-func NewSearchMemoriesByMetadataRequest(server string, teamId openapi_types.UUID, params *SearchMemoriesByMetadataParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/%s/memories/search", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		// queryValues collects non-styled parameters (passthrough, JSON)
-		// that are safe to round-trip through url.Values.Encode().
-		queryValues := queryURL.Query()
-		// rawQueryFragments collects pre-encoded query fragments from
-		// styled parameters, preserving literal commas as delimiters
-		// per the OpenAPI spec (e.g. "color=blue,black,brown").
-		var rawQueryFragments []string
-
-		if params.ProjectId != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_id", *params.ProjectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
-		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata_key", params.MetadataKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-			return nil, err
-		} else {
-			for _, qp := range strings.Split(queryFrag, "&") {
-				rawQueryFragments = append(rawQueryFragments, qp)
-			}
-		}
-
-		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata_value", params.MetadataValue, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-			return nil, err
-		} else {
-			for _, qp := range strings.Split(queryFrag, "&") {
-				rawQueryFragments = append(rawQueryFragments, qp)
-			}
-		}
-
-		if params.Search != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
-		if params.Status != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
-		if params.Page != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
-		if params.Limit != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
-				return nil, err
-			} else {
-				for _, qp := range strings.Split(queryFrag, "&") {
-					rawQueryFragments = append(rawQueryFragments, qp)
-				}
-			}
-
-		}
-
-		if encoded := queryValues.Encode(); encoded != "" {
-			rawQueryFragments = append(rawQueryFragments, encoded)
-		}
-		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
-	}
-
-	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
 
 	return req, nil
 }
@@ -19155,9 +18991,6 @@ type ClientWithResponsesInterface interface {
 	CreateMemoryWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateMemoryHTTPResponse, error)
 
 	CreateMemoryWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateMemoryJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateMemoryHTTPResponse, error)
-
-	// SearchMemoriesByMetadataWithResponse request
-	SearchMemoriesByMetadataWithResponse(ctx context.Context, teamId openapi_types.UUID, params *SearchMemoriesByMetadataParams, reqEditors ...RequestEditorFn) (*SearchMemoriesByMetadataHTTPResponse, error)
 
 	// DeleteMemoryWithResponse request
 	DeleteMemoryWithResponse(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*DeleteMemoryHTTPResponse, error)
@@ -25364,38 +25197,6 @@ func (r CreateMemoryHTTPResponse) ContentType() string {
 	return ""
 }
 
-type SearchMemoriesByMetadataHTTPResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	JSON200                   *MemoryListResponse
-	ApplicationproblemJSON400 *ErrorResponse
-	ApplicationproblemJSON401 *ErrorResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r SearchMemoriesByMetadataHTTPResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r SearchMemoriesByMetadataHTTPResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r SearchMemoriesByMetadataHTTPResponse) ContentType() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Header.Get("Content-Type")
-	}
-	return ""
-}
-
 type DeleteMemoryHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -30015,15 +29816,6 @@ func (c *ClientWithResponses) CreateMemoryWithResponse(ctx context.Context, team
 		return nil, err
 	}
 	return ParseCreateMemoryHTTPResponse(rsp)
-}
-
-// SearchMemoriesByMetadataWithResponse request returning *SearchMemoriesByMetadataHTTPResponse
-func (c *ClientWithResponses) SearchMemoriesByMetadataWithResponse(ctx context.Context, teamId openapi_types.UUID, params *SearchMemoriesByMetadataParams, reqEditors ...RequestEditorFn) (*SearchMemoriesByMetadataHTTPResponse, error) {
-	rsp, err := c.SearchMemoriesByMetadata(ctx, teamId, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseSearchMemoriesByMetadataHTTPResponse(rsp)
 }
 
 // DeleteMemoryWithResponse request returning *DeleteMemoryHTTPResponse
@@ -39726,46 +39518,6 @@ func ParseCreateMemoryHTTPResponse(rsp *http.Response) (*CreateMemoryHTTPRespons
 			return nil, err
 		}
 		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON401 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseSearchMemoriesByMetadataHTTPResponse parses an HTTP response from a SearchMemoriesByMetadataWithResponse call
-func ParseSearchMemoriesByMetadataHTTPResponse(rsp *http.Response) (*SearchMemoriesByMetadataHTTPResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &SearchMemoriesByMetadataHTTPResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest MemoryListResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest ErrorResponse
