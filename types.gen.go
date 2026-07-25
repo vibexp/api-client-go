@@ -2863,6 +2863,16 @@ type AdminDataWindow struct {
 	SignInsEarliestRetainedAt time.Time `json:"sign_ins_earliest_retained_at"`
 }
 
+// AdminDeleteBlocker One reason a user cannot be deleted: a shared team they own that still has
+// other members. Ownership must be transferred before the account can be
+// removed.
+type AdminDeleteBlocker struct {
+	// MemberCount How many members the team has, including the owner.
+	MemberCount int64              `json:"member_count"`
+	TeamId      openapi_types.UUID `json:"team_id"`
+	TeamName    string             `json:"team_name"`
+}
+
 // AdminEntityBreakdown A GROUP BY over one status/type column of one entity table.
 type AdminEntityBreakdown struct {
 	// Buckets One entry per distinct value, most frequent first.
@@ -3073,6 +3083,16 @@ type AdminTimeseriesResponse struct {
 // AdminTimeseriesResponseGranularity Bucket size actually used.
 type AdminTimeseriesResponseGranularity string
 
+// AdminUserDeleteBlockedResponse Returned with 409 when a hard delete is refused. NOTHING was deleted: the
+// user and every listed team still exist.
+type AdminUserDeleteBlockedResponse struct {
+	// Blockers Every shared team blocking the delete.
+	Blockers []AdminDeleteBlocker `json:"blockers"`
+
+	// Message Human-readable summary of why the delete was refused.
+	Message string `json:"message"`
+}
+
 // AdminUserDetail A single user with their team memberships (GET /api/v1/admin/users/{id}).
 type AdminUserDetail struct {
 	CreatedAt time.Time           `json:"created_at"`
@@ -3141,6 +3161,15 @@ type AdminUserListResponse struct {
 
 	// Users Users on this page, newest first.
 	Users []AdminUserListItem `json:"users"`
+}
+
+// AdminUserUpdateRequest Fields an instance admin may change on a user. Deliberately minimal: email
+// and the identity-provider fields (idp_provider, idp_subject) are owned by the
+// upstream IdP and are not editable here — sending them is a 400 rather than a
+// silent no-op.
+type AdminUserUpdateRequest struct {
+	// Name The user's display name.
+	Name string `json:"name"`
 }
 
 // Agent defines model for Agent.
@@ -7879,6 +7908,9 @@ type GetUsageAndGrowthParams struct {
 
 // CreateActivityJSONRequestBody defines body for CreateActivity for application/json ContentType.
 type CreateActivityJSONRequestBody = CreateActivityRequest
+
+// UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
+type UpdateAdminUserJSONRequestBody = AdminUserUpdateRequest
 
 // CreateAPIKeyJSONRequestBody defines body for CreateAPIKey for application/json ContentType.
 type CreateAPIKeyJSONRequestBody = CreateAPIKeyRequest

@@ -128,8 +128,16 @@ type ClientInterface interface {
 	// ListAdminUsers request
 	ListAdminUsers(ctx context.Context, params *ListAdminUsersParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteAdminUser request
+	DeleteAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminUser request
 	GetAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAdminUserWithBody request with any body
+	UpdateAdminUserWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAdminUser(ctx context.Context, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ReactivateAdminUser request
 	ReactivateAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1043,8 +1051,44 @@ func (c *Client) ListAdminUsers(ctx context.Context, params *ListAdminUsersParam
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAdminUserRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAdminUserRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminUserWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminUserRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminUser(ctx context.Context, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminUserRequest(c.Server, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -5078,6 +5122,40 @@ func NewListAdminUsersRequest(server string, params *ListAdminUsersParams) (*htt
 	return req, nil
 }
 
+// NewDeleteAdminUserRequest generates requests for DeleteAdminUser
+func NewDeleteAdminUserRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAdminUserRequest generates requests for GetAdminUser
 func NewGetAdminUserRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -5108,6 +5186,53 @@ func NewGetAdminUserRequest(server string, id openapi_types.UUID) (*http.Request
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewUpdateAdminUserRequest calls the generic UpdateAdminUser builder with application/json body
+func NewUpdateAdminUserRequest(server string, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAdminUserRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewUpdateAdminUserRequestWithBody generates requests for UpdateAdminUser with any type of body
+func NewUpdateAdminUserRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -16457,8 +16582,16 @@ type ClientWithResponsesInterface interface {
 	// ListAdminUsersWithResponse request
 	ListAdminUsersWithResponse(ctx context.Context, params *ListAdminUsersParams, reqEditors ...RequestEditorFn) (*ListAdminUsersHTTPResponse, error)
 
+	// DeleteAdminUserWithResponse request
+	DeleteAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAdminUserHTTPResponse, error)
+
 	// GetAdminUserWithResponse request
 	GetAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserHTTPResponse, error)
+
+	// UpdateAdminUserWithBodyWithResponse request with any body
+	UpdateAdminUserWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminUserHTTPResponse, error)
+
+	UpdateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminUserHTTPResponse, error)
 
 	// ReactivateAdminUserWithResponse request
 	ReactivateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReactivateAdminUserHTTPResponse, error)
@@ -17609,6 +17742,39 @@ func (r ListAdminUsersHTTPResponse) ContentType() string {
 	return ""
 }
 
+type DeleteAdminUserHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	JSON409                   *AdminUserDeleteBlockedResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAdminUserHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAdminUserHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteAdminUserHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetAdminUserHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -17635,6 +17801,39 @@ func (r GetAdminUserHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetAdminUserHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAdminUserHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserDetail
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAdminUserHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAdminUserHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAdminUserHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -24916,6 +25115,15 @@ func (c *ClientWithResponses) ListAdminUsersWithResponse(ctx context.Context, pa
 	return ParseListAdminUsersHTTPResponse(rsp)
 }
 
+// DeleteAdminUserWithResponse request returning *DeleteAdminUserHTTPResponse
+func (c *ClientWithResponses) DeleteAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAdminUserHTTPResponse, error) {
+	rsp, err := c.DeleteAdminUser(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAdminUserHTTPResponse(rsp)
+}
+
 // GetAdminUserWithResponse request returning *GetAdminUserHTTPResponse
 func (c *ClientWithResponses) GetAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserHTTPResponse, error) {
 	rsp, err := c.GetAdminUser(ctx, id, reqEditors...)
@@ -24923,6 +25131,23 @@ func (c *ClientWithResponses) GetAdminUserWithResponse(ctx context.Context, id o
 		return nil, err
 	}
 	return ParseGetAdminUserHTTPResponse(rsp)
+}
+
+// UpdateAdminUserWithBodyWithResponse request with arbitrary body returning *UpdateAdminUserHTTPResponse
+func (c *ClientWithResponses) UpdateAdminUserWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminUserHTTPResponse, error) {
+	rsp, err := c.UpdateAdminUserWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminUserHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminUserHTTPResponse, error) {
+	rsp, err := c.UpdateAdminUser(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminUserHTTPResponse(rsp)
 }
 
 // ReactivateAdminUserWithResponse request returning *ReactivateAdminUserHTTPResponse
@@ -27849,6 +28074,53 @@ func ParseListAdminUsersHTTPResponse(rsp *http.Response) (*ListAdminUsersHTTPRes
 	return response, nil
 }
 
+// ParseDeleteAdminUserHTTPResponse parses an HTTP response from a DeleteAdminUserWithResponse call
+func ParseDeleteAdminUserHTTPResponse(rsp *http.Response) (*DeleteAdminUserHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteAdminUserHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest AdminUserDeleteBlockedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAdminUserHTTPResponse parses an HTTP response from a GetAdminUserWithResponse call
 func ParseGetAdminUserHTTPResponse(rsp *http.Response) (*GetAdminUserHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -27869,6 +28141,53 @@ func ParseGetAdminUserHTTPResponse(rsp *http.Response) (*GetAdminUserHTTPRespons
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAdminUserHTTPResponse parses an HTTP response from a UpdateAdminUserWithResponse call
+func ParseUpdateAdminUserHTTPResponse(rsp *http.Response) (*UpdateAdminUserHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAdminUserHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
