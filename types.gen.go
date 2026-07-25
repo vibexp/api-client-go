@@ -3083,6 +3083,20 @@ type AdminTimeseriesResponse struct {
 // AdminTimeseriesResponseGranularity Bucket size actually used.
 type AdminTimeseriesResponseGranularity string
 
+// AdminUserCreateRequest A user to create directly, without waiting for them to complete an
+// identity-provider sign-in. No password is set: VibeXP has no password
+// provider, and the account's owner still signs in through the configured IdP.
+type AdminUserCreateRequest struct {
+	// Email Must be unique across the instance; a duplicate is a 409.
+	Email openapi_types.Email `json:"email"`
+
+	// IdpProvider Optional label recording which identity provider this account is expected
+	// to sign in with (e.g. "google", "oidc"). Informational only — it does not
+	// pre-link an IdP identity, which is established on first sign-in.
+	IdpProvider *string `json:"idp_provider,omitempty"`
+	Name        string  `json:"name"`
+}
+
 // AdminUserDeleteBlockedResponse Returned with 409 when a hard delete is refused. NOTHING was deleted: the
 // user and every listed team still exist.
 type AdminUserDeleteBlockedResponse struct {
@@ -7908,6 +7922,9 @@ type GetUsageAndGrowthParams struct {
 
 // CreateActivityJSONRequestBody defines body for CreateActivity for application/json ContentType.
 type CreateActivityJSONRequestBody = CreateActivityRequest
+
+// CreateAdminUserJSONRequestBody defines body for CreateAdminUser for application/json ContentType.
+type CreateAdminUserJSONRequestBody = AdminUserCreateRequest
 
 // UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
 type UpdateAdminUserJSONRequestBody = AdminUserUpdateRequest
