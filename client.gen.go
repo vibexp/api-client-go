@@ -378,6 +378,11 @@ type ClientInterface interface {
 
 	HandleGitHubWebhook(ctx context.Context, body HandleGitHubWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// HandleGitHubWebhookByTokenWithBody request with any body
+	HandleGitHubWebhookByTokenWithBody(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	HandleGitHubWebhookByToken(ctx context.Context, token string, body HandleGitHubWebhookByTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListAgents request
 	ListAgents(ctx context.Context, teamId openapi_types.UUID, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -557,6 +562,22 @@ type ClientInterface interface {
 
 	UpdateComment(ctx context.Context, teamId openapi_types.UUID, commentId openapi_types.UUID, body UpdateCommentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteTeamEmailProvider request
+	DeleteTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTeamEmailProvider request
+	GetTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpsertTeamEmailProviderWithBody request with any body
+	UpsertTeamEmailProviderWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpsertTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TestTeamEmailProviderWithBody request with any body
+	TestTeamEmailProviderWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TestTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListEmbeddingProviders request
 	ListEmbeddingProviders(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -637,6 +658,28 @@ type ClientInterface interface {
 
 	CreateFeedItem(ctx context.Context, teamId openapi_types.UUID, feedId openapi_types.UUID, body CreateFeedItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteGitHubAppConfig request
+	DeleteGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetGitHubAppConfig request
+	GetGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateGitHubAppConfigWithBody request with any body
+	CreateGitHubAppConfigWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateGitHubAppConfigWithBody request with any body
+	UpdateGitHubAppConfigWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RotateGitHubAppWebhookToken request
+	RotateGitHubAppWebhookToken(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ValidateGitHubAppConfig request
+	ValidateGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// HandleGitHubCallbackWithBody request with any body
 	HandleGitHubCallbackWithBody(ctx context.Context, teamId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -692,6 +735,12 @@ type ClientInterface interface {
 
 	// RestoreMemoryVersion request
 	RestoreMemoryVersion(ctx context.Context, teamId openapi_types.UUID, id string, versionNumber int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetMetadataKeys request
+	GetMetadataKeys(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetMetadataValues request
+	GetMetadataValues(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataValuesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModelProviders request
 	ListModelProviders(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -828,6 +877,22 @@ type ClientInterface interface {
 
 	SearchTeamResources(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteTeamEmailProviderSettings request
+	DeleteTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTeamEmailProviderSettings request
+	GetTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpsertTeamEmailProviderSettingsWithBody request with any body
+	UpsertTeamEmailProviderSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpsertTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TestTeamEmailProviderSettingsWithBody request with any body
+	TestTeamEmailProviderSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TestTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListEmbeddingProvidersSettings request
 	ListEmbeddingProvidersSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -861,6 +926,28 @@ type ClientInterface interface {
 	// ReprocessEmbeddingProviderSettings request
 	ReprocessEmbeddingProviderSettings(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteGitHubAppConfigSettings request
+	DeleteGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetGitHubAppConfigSettings request
+	GetGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateGitHubAppConfigSettingsWithBody request with any body
+	CreateGitHubAppConfigSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateGitHubAppConfigSettingsWithBody request with any body
+	UpdateGitHubAppConfigSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RotateGitHubAppWebhookTokenSettings request
+	RotateGitHubAppWebhookTokenSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ValidateGitHubAppConfigSettings request
+	ValidateGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListModelProvidersSettings request
 	ListModelProvidersSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -884,6 +971,17 @@ type ClientInterface interface {
 	UpdateModelProviderSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateModelProviderSettings(ctx context.Context, teamId openapi_types.UUID, id string, body UpdateModelProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ResetTeamSearchSettings request
+	ResetTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTeamSearchSettings request
+	GetTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateTeamSearchSettingsWithBody request with any body
+	UpdateTeamSearchSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListTypes request
 	ListTypes(ctx context.Context, teamId openapi_types.UUID, params *ListTypesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2130,6 +2228,30 @@ func (c *Client) HandleGitHubWebhook(ctx context.Context, body HandleGitHubWebho
 	return c.Client.Do(req)
 }
 
+func (c *Client) HandleGitHubWebhookByTokenWithBody(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHandleGitHubWebhookByTokenRequestWithBody(c.Server, token, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) HandleGitHubWebhookByToken(ctx context.Context, token string, body HandleGitHubWebhookByTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHandleGitHubWebhookByTokenRequest(c.Server, token, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListAgents(ctx context.Context, teamId openapi_types.UUID, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAgentsRequest(c.Server, teamId, params)
 	if err != nil {
@@ -2898,6 +3020,78 @@ func (c *Client) UpdateComment(ctx context.Context, teamId openapi_types.UUID, c
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteTeamEmailProviderRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTeamEmailProviderRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpsertTeamEmailProviderWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpsertTeamEmailProviderRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpsertTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpsertTeamEmailProviderRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestTeamEmailProviderWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestTeamEmailProviderRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestTeamEmailProvider(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestTeamEmailProviderRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListEmbeddingProviders(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListEmbeddingProvidersRequest(c.Server, teamId)
 	if err != nil {
@@ -3246,6 +3440,102 @@ func (c *Client) CreateFeedItem(ctx context.Context, teamId openapi_types.UUID, 
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteGitHubAppConfigRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetGitHubAppConfigRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateGitHubAppConfigWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateGitHubAppConfigRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateGitHubAppConfigRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateGitHubAppConfigWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateGitHubAppConfigRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateGitHubAppConfigRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RotateGitHubAppWebhookToken(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRotateGitHubAppWebhookTokenRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ValidateGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewValidateGitHubAppConfigRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) HandleGitHubCallbackWithBody(ctx context.Context, teamId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewHandleGitHubCallbackRequestWithBody(c.Server, teamId, contentType, body)
 	if err != nil {
@@ -3476,6 +3766,30 @@ func (c *Client) GetMemoryVersion(ctx context.Context, teamId openapi_types.UUID
 
 func (c *Client) RestoreMemoryVersion(ctx context.Context, teamId openapi_types.UUID, id string, versionNumber int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRestoreMemoryVersionRequest(c.Server, teamId, id, versionNumber)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetMetadataKeys(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMetadataKeysRequest(c.Server, teamId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetMetadataValues(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataValuesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMetadataValuesRequest(c.Server, teamId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -4074,6 +4388,78 @@ func (c *Client) SearchTeamResources(ctx context.Context, teamId openapi_types.U
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteTeamEmailProviderSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTeamEmailProviderSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpsertTeamEmailProviderSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpsertTeamEmailProviderSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpsertTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpsertTeamEmailProviderSettingsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestTeamEmailProviderSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestTeamEmailProviderSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestTeamEmailProviderSettingsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListEmbeddingProvidersSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListEmbeddingProvidersSettingsRequest(c.Server, teamId)
 	if err != nil {
@@ -4218,6 +4604,102 @@ func (c *Client) ReprocessEmbeddingProviderSettings(ctx context.Context, teamId 
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteGitHubAppConfigSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetGitHubAppConfigSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateGitHubAppConfigSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateGitHubAppConfigSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateGitHubAppConfigSettingsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateGitHubAppConfigSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateGitHubAppConfigSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateGitHubAppConfigSettingsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RotateGitHubAppWebhookTokenSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRotateGitHubAppWebhookTokenSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ValidateGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewValidateGitHubAppConfigSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListModelProvidersSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListModelProvidersSettingsRequest(c.Server, teamId)
 	if err != nil {
@@ -4316,6 +4798,54 @@ func (c *Client) UpdateModelProviderSettingsWithBody(ctx context.Context, teamId
 
 func (c *Client) UpdateModelProviderSettings(ctx context.Context, teamId openapi_types.UUID, id string, body UpdateModelProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateModelProviderSettingsRequest(c.Server, teamId, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResetTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetTeamSearchSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTeamSearchSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTeamSearchSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTeamSearchSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTeamSearchSettingsRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -8646,6 +9176,53 @@ func NewHandleGitHubWebhookRequestWithBody(server string, contentType string, bo
 	return req, nil
 }
 
+// NewHandleGitHubWebhookByTokenRequest calls the generic HandleGitHubWebhookByToken builder with application/json body
+func NewHandleGitHubWebhookByTokenRequest(server string, token string, body HandleGitHubWebhookByTokenJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewHandleGitHubWebhookByTokenRequestWithBody(server, token, "application/json", bodyReader)
+}
+
+// NewHandleGitHubWebhookByTokenRequestWithBody generates requests for HandleGitHubWebhookByToken with any type of body
+func NewHandleGitHubWebhookByTokenRequestWithBody(server string, token string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "token", token, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/webhooks/github/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListAgentsRequest generates requests for ListAgents
 func NewListAgentsRequest(server string, teamId openapi_types.UUID, params *ListAgentsParams) (*http.Request, error) {
 	var err error
@@ -9821,6 +10398,18 @@ func NewListArtifactsRequest(server string, teamId openapi_types.UUID, params *L
 
 		}
 
+		if params.Metadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.SortBy != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_by", *params.SortBy, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -10033,6 +10622,18 @@ func NewListArtifactsByProjectRequest(server string, teamId openapi_types.UUID, 
 		if params.Search != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Metadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
@@ -10917,6 +11518,18 @@ func NewListSpecLibrariesRequest(server string, teamId openapi_types.UUID, param
 
 		}
 
+		if params.Metadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.SortBy != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_by", *params.SortBy, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -11141,6 +11754,18 @@ func NewListSpecLibrariesByProjectRequest(server string, teamId openapi_types.UU
 		if params.Search != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Metadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
@@ -11810,6 +12435,168 @@ func NewUpdateCommentRequestWithBody(server string, teamId openapi_types.UUID, c
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteTeamEmailProviderRequest generates requests for DeleteTeamEmailProvider
+func NewDeleteTeamEmailProviderRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetTeamEmailProviderRequest generates requests for GetTeamEmailProvider
+func NewGetTeamEmailProviderRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpsertTeamEmailProviderRequest calls the generic UpsertTeamEmailProvider builder with application/json body
+func NewUpsertTeamEmailProviderRequest(server string, teamId openapi_types.UUID, body UpsertTeamEmailProviderJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpsertTeamEmailProviderRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpsertTeamEmailProviderRequestWithBody generates requests for UpsertTeamEmailProvider with any type of body
+func NewUpsertTeamEmailProviderRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTestTeamEmailProviderRequest calls the generic TestTeamEmailProvider builder with application/json body
+func NewTestTeamEmailProviderRequest(server string, teamId openapi_types.UUID, body TestTeamEmailProviderJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTestTeamEmailProviderRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewTestTeamEmailProviderRequestWithBody generates requests for TestTeamEmailProvider with any type of body
+func NewTestTeamEmailProviderRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/email-provider/test", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -13039,6 +13826,236 @@ func NewCreateFeedItemRequestWithBody(server string, teamId openapi_types.UUID, 
 	return req, nil
 }
 
+// NewDeleteGitHubAppConfigRequest generates requests for DeleteGitHubAppConfig
+func NewDeleteGitHubAppConfigRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/integrations/github/app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetGitHubAppConfigRequest generates requests for GetGitHubAppConfig
+func NewGetGitHubAppConfigRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/integrations/github/app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateGitHubAppConfigRequest calls the generic CreateGitHubAppConfig builder with application/json body
+func NewCreateGitHubAppConfigRequest(server string, teamId openapi_types.UUID, body CreateGitHubAppConfigJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateGitHubAppConfigRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewCreateGitHubAppConfigRequestWithBody generates requests for CreateGitHubAppConfig with any type of body
+func NewCreateGitHubAppConfigRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/integrations/github/app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewUpdateGitHubAppConfigRequest calls the generic UpdateGitHubAppConfig builder with application/json body
+func NewUpdateGitHubAppConfigRequest(server string, teamId openapi_types.UUID, body UpdateGitHubAppConfigJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateGitHubAppConfigRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpdateGitHubAppConfigRequestWithBody generates requests for UpdateGitHubAppConfig with any type of body
+func NewUpdateGitHubAppConfigRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/integrations/github/app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRotateGitHubAppWebhookTokenRequest generates requests for RotateGitHubAppWebhookToken
+func NewRotateGitHubAppWebhookTokenRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/integrations/github/app/rotate-webhook-token", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewValidateGitHubAppConfigRequest generates requests for ValidateGitHubAppConfig
+func NewValidateGitHubAppConfigRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/integrations/github/app/validate", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewHandleGitHubCallbackRequest calls the generic HandleGitHubCallback builder with application/json body
 func NewHandleGitHubCallbackRequest(server string, teamId string, body HandleGitHubCallbackJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -13411,6 +14428,18 @@ func NewListMemoriesRequest(server string, teamId openapi_types.UUID, params *Li
 		if params.MetadataValue != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata_value", *params.MetadataValue, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Metadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
@@ -13932,6 +14961,188 @@ func NewRestoreMemoryVersionRequest(server string, teamId openapi_types.UUID, id
 	}
 
 	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetMetadataKeysRequest generates requests for GetMetadataKeys
+func NewGetMetadataKeysRequest(server string, teamId openapi_types.UUID, params *GetMetadataKeysParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/metadata/keys", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "resource_type", params.ResourceType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else {
+			for _, qp := range strings.Split(queryFrag, "&") {
+				rawQueryFragments = append(rawQueryFragments, qp)
+			}
+		}
+
+		if params.ProjectId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_id", *params.ProjectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetMetadataValuesRequest generates requests for GetMetadataValues
+func NewGetMetadataValuesRequest(server string, teamId openapi_types.UUID, params *GetMetadataValuesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/metadata/values", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "resource_type", params.ResourceType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else {
+			for _, qp := range strings.Split(queryFrag, "&") {
+				rawQueryFragments = append(rawQueryFragments, qp)
+			}
+		}
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "key", params.Key, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else {
+			for _, qp := range strings.Split(queryFrag, "&") {
+				rawQueryFragments = append(rawQueryFragments, qp)
+			}
+		}
+
+		if params.ProjectId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_id", *params.ProjectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Q != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "q", *params.Q, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -15870,6 +17081,168 @@ func NewSearchTeamResourcesRequestWithBody(server string, teamId openapi_types.U
 	return req, nil
 }
 
+// NewDeleteTeamEmailProviderSettingsRequest generates requests for DeleteTeamEmailProviderSettings
+func NewDeleteTeamEmailProviderSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetTeamEmailProviderSettingsRequest generates requests for GetTeamEmailProviderSettings
+func NewGetTeamEmailProviderSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpsertTeamEmailProviderSettingsRequest calls the generic UpsertTeamEmailProviderSettings builder with application/json body
+func NewUpsertTeamEmailProviderSettingsRequest(server string, teamId openapi_types.UUID, body UpsertTeamEmailProviderSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpsertTeamEmailProviderSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpsertTeamEmailProviderSettingsRequestWithBody generates requests for UpsertTeamEmailProviderSettings with any type of body
+func NewUpsertTeamEmailProviderSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTestTeamEmailProviderSettingsRequest calls the generic TestTeamEmailProviderSettings builder with application/json body
+func NewTestTeamEmailProviderSettingsRequest(server string, teamId openapi_types.UUID, body TestTeamEmailProviderSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTestTeamEmailProviderSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewTestTeamEmailProviderSettingsRequestWithBody generates requests for TestTeamEmailProviderSettings with any type of body
+func NewTestTeamEmailProviderSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/email-provider/test", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListEmbeddingProvidersSettingsRequest generates requests for ListEmbeddingProvidersSettings
 func NewListEmbeddingProvidersSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -16243,6 +17616,236 @@ func NewReprocessEmbeddingProviderSettingsRequest(server string, teamId openapi_
 	return req, nil
 }
 
+// NewDeleteGitHubAppConfigSettingsRequest generates requests for DeleteGitHubAppConfigSettings
+func NewDeleteGitHubAppConfigSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/github-app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetGitHubAppConfigSettingsRequest generates requests for GetGitHubAppConfigSettings
+func NewGetGitHubAppConfigSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/github-app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateGitHubAppConfigSettingsRequest calls the generic CreateGitHubAppConfigSettings builder with application/json body
+func NewCreateGitHubAppConfigSettingsRequest(server string, teamId openapi_types.UUID, body CreateGitHubAppConfigSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateGitHubAppConfigSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewCreateGitHubAppConfigSettingsRequestWithBody generates requests for CreateGitHubAppConfigSettings with any type of body
+func NewCreateGitHubAppConfigSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/github-app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewUpdateGitHubAppConfigSettingsRequest calls the generic UpdateGitHubAppConfigSettings builder with application/json body
+func NewUpdateGitHubAppConfigSettingsRequest(server string, teamId openapi_types.UUID, body UpdateGitHubAppConfigSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateGitHubAppConfigSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpdateGitHubAppConfigSettingsRequestWithBody generates requests for UpdateGitHubAppConfigSettings with any type of body
+func NewUpdateGitHubAppConfigSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/github-app", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRotateGitHubAppWebhookTokenSettingsRequest generates requests for RotateGitHubAppWebhookTokenSettings
+func NewRotateGitHubAppWebhookTokenSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/github-app/rotate-webhook-token", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewValidateGitHubAppConfigSettingsRequest generates requests for ValidateGitHubAppConfigSettings
+func NewValidateGitHubAppConfigSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/github-app/validate", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListModelProvidersSettingsRequest generates requests for ListModelProvidersSettings
 func NewListModelProvidersSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -16488,6 +18091,121 @@ func NewUpdateModelProviderSettingsRequestWithBody(server string, teamId openapi
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/%s/settings/model-providers/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewResetTeamSearchSettingsRequest generates requests for ResetTeamSearchSettings
+func NewResetTeamSearchSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/search", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetTeamSearchSettingsRequest generates requests for GetTeamSearchSettings
+func NewGetTeamSearchSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/search", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateTeamSearchSettingsRequest calls the generic UpdateTeamSearchSettings builder with application/json body
+func NewUpdateTeamSearchSettingsRequest(server string, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateTeamSearchSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpdateTeamSearchSettingsRequestWithBody generates requests for UpdateTeamSearchSettings with any type of body
+func NewUpdateTeamSearchSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/search", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17103,6 +18821,11 @@ type ClientWithResponsesInterface interface {
 
 	HandleGitHubWebhookWithResponse(ctx context.Context, body HandleGitHubWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*HandleGitHubWebhookHTTPResponse, error)
 
+	// HandleGitHubWebhookByTokenWithBodyWithResponse request with any body
+	HandleGitHubWebhookByTokenWithBodyWithResponse(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HandleGitHubWebhookByTokenHTTPResponse, error)
+
+	HandleGitHubWebhookByTokenWithResponse(ctx context.Context, token string, body HandleGitHubWebhookByTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*HandleGitHubWebhookByTokenHTTPResponse, error)
+
 	// ListAgentsWithResponse request
 	ListAgentsWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*ListAgentsHTTPResponse, error)
 
@@ -17282,6 +19005,22 @@ type ClientWithResponsesInterface interface {
 
 	UpdateCommentWithResponse(ctx context.Context, teamId openapi_types.UUID, commentId openapi_types.UUID, body UpdateCommentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateCommentHTTPResponse, error)
 
+	// DeleteTeamEmailProviderWithResponse request
+	DeleteTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTeamEmailProviderHTTPResponse, error)
+
+	// GetTeamEmailProviderWithResponse request
+	GetTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamEmailProviderHTTPResponse, error)
+
+	// UpsertTeamEmailProviderWithBodyWithResponse request with any body
+	UpsertTeamEmailProviderWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderHTTPResponse, error)
+
+	UpsertTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderHTTPResponse, error)
+
+	// TestTeamEmailProviderWithBodyWithResponse request with any body
+	TestTeamEmailProviderWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderHTTPResponse, error)
+
+	TestTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderHTTPResponse, error)
+
 	// ListEmbeddingProvidersWithResponse request
 	ListEmbeddingProvidersWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListEmbeddingProvidersHTTPResponse, error)
 
@@ -17362,6 +19101,28 @@ type ClientWithResponsesInterface interface {
 
 	CreateFeedItemWithResponse(ctx context.Context, teamId openapi_types.UUID, feedId openapi_types.UUID, body CreateFeedItemJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFeedItemHTTPResponse, error)
 
+	// DeleteGitHubAppConfigWithResponse request
+	DeleteGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigHTTPResponse, error)
+
+	// GetGitHubAppConfigWithResponse request
+	GetGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetGitHubAppConfigHTTPResponse, error)
+
+	// CreateGitHubAppConfigWithBodyWithResponse request with any body
+	CreateGitHubAppConfigWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigHTTPResponse, error)
+
+	CreateGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigHTTPResponse, error)
+
+	// UpdateGitHubAppConfigWithBodyWithResponse request with any body
+	UpdateGitHubAppConfigWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigHTTPResponse, error)
+
+	UpdateGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigHTTPResponse, error)
+
+	// RotateGitHubAppWebhookTokenWithResponse request
+	RotateGitHubAppWebhookTokenWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RotateGitHubAppWebhookTokenHTTPResponse, error)
+
+	// ValidateGitHubAppConfigWithResponse request
+	ValidateGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ValidateGitHubAppConfigHTTPResponse, error)
+
 	// HandleGitHubCallbackWithBodyWithResponse request with any body
 	HandleGitHubCallbackWithBodyWithResponse(ctx context.Context, teamId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HandleGitHubCallbackHTTPResponse, error)
 
@@ -17417,6 +19178,12 @@ type ClientWithResponsesInterface interface {
 
 	// RestoreMemoryVersionWithResponse request
 	RestoreMemoryVersionWithResponse(ctx context.Context, teamId openapi_types.UUID, id string, versionNumber int, reqEditors ...RequestEditorFn) (*RestoreMemoryVersionHTTPResponse, error)
+
+	// GetMetadataKeysWithResponse request
+	GetMetadataKeysWithResponse(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataKeysParams, reqEditors ...RequestEditorFn) (*GetMetadataKeysHTTPResponse, error)
+
+	// GetMetadataValuesWithResponse request
+	GetMetadataValuesWithResponse(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataValuesParams, reqEditors ...RequestEditorFn) (*GetMetadataValuesHTTPResponse, error)
 
 	// ListModelProvidersWithResponse request
 	ListModelProvidersWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelProvidersHTTPResponse, error)
@@ -17553,6 +19320,22 @@ type ClientWithResponsesInterface interface {
 
 	SearchTeamResourcesWithResponse(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchTeamResourcesHTTPResponse, error)
 
+	// DeleteTeamEmailProviderSettingsWithResponse request
+	DeleteTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTeamEmailProviderSettingsHTTPResponse, error)
+
+	// GetTeamEmailProviderSettingsWithResponse request
+	GetTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamEmailProviderSettingsHTTPResponse, error)
+
+	// UpsertTeamEmailProviderSettingsWithBodyWithResponse request with any body
+	UpsertTeamEmailProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderSettingsHTTPResponse, error)
+
+	UpsertTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderSettingsHTTPResponse, error)
+
+	// TestTeamEmailProviderSettingsWithBodyWithResponse request with any body
+	TestTeamEmailProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderSettingsHTTPResponse, error)
+
+	TestTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderSettingsHTTPResponse, error)
+
 	// ListEmbeddingProvidersSettingsWithResponse request
 	ListEmbeddingProvidersSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListEmbeddingProvidersSettingsHTTPResponse, error)
 
@@ -17586,6 +19369,28 @@ type ClientWithResponsesInterface interface {
 	// ReprocessEmbeddingProviderSettingsWithResponse request
 	ReprocessEmbeddingProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*ReprocessEmbeddingProviderSettingsHTTPResponse, error)
 
+	// DeleteGitHubAppConfigSettingsWithResponse request
+	DeleteGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigSettingsHTTPResponse, error)
+
+	// GetGitHubAppConfigSettingsWithResponse request
+	GetGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetGitHubAppConfigSettingsHTTPResponse, error)
+
+	// CreateGitHubAppConfigSettingsWithBodyWithResponse request with any body
+	CreateGitHubAppConfigSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigSettingsHTTPResponse, error)
+
+	CreateGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigSettingsHTTPResponse, error)
+
+	// UpdateGitHubAppConfigSettingsWithBodyWithResponse request with any body
+	UpdateGitHubAppConfigSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigSettingsHTTPResponse, error)
+
+	UpdateGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigSettingsHTTPResponse, error)
+
+	// RotateGitHubAppWebhookTokenSettingsWithResponse request
+	RotateGitHubAppWebhookTokenSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RotateGitHubAppWebhookTokenSettingsHTTPResponse, error)
+
+	// ValidateGitHubAppConfigSettingsWithResponse request
+	ValidateGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ValidateGitHubAppConfigSettingsHTTPResponse, error)
+
 	// ListModelProvidersSettingsWithResponse request
 	ListModelProvidersSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelProvidersSettingsHTTPResponse, error)
 
@@ -17609,6 +19414,17 @@ type ClientWithResponsesInterface interface {
 	UpdateModelProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateModelProviderSettingsHTTPResponse, error)
 
 	UpdateModelProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, id string, body UpdateModelProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelProviderSettingsHTTPResponse, error)
+
+	// ResetTeamSearchSettingsWithResponse request
+	ResetTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResetTeamSearchSettingsHTTPResponse, error)
+
+	// GetTeamSearchSettingsWithResponse request
+	GetTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamSearchSettingsHTTPResponse, error)
+
+	// UpdateTeamSearchSettingsWithBodyWithResponse request with any body
+	UpdateTeamSearchSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamSearchSettingsHTTPResponse, error)
+
+	UpdateTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamSearchSettingsHTTPResponse, error)
 
 	// ListTypesWithResponse request
 	ListTypesWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListTypesParams, reqEditors ...RequestEditorFn) (*ListTypesHTTPResponse, error)
@@ -20359,9 +22175,7 @@ func (r CompleteOnboardingHTTPResponse) ContentType() string {
 type HandleGitHubWebhookHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *ErrorResponse
-	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON500 *ErrorResponse
+	ApplicationproblemJSON410 *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -20382,6 +22196,39 @@ func (r HandleGitHubWebhookHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r HandleGitHubWebhookHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type HandleGitHubWebhookByTokenHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r HandleGitHubWebhookByTokenHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r HandleGitHubWebhookByTokenHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r HandleGitHubWebhookByTokenHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -21037,6 +22884,7 @@ type ListArtifactsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *ArtifactListResponse
+	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 }
@@ -21135,6 +22983,7 @@ type ListArtifactsByProjectHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *ArtifactListResponse
+	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 }
@@ -21633,6 +23482,7 @@ type ListSpecLibrariesHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *BlueprintListResponse
+	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -22130,6 +23980,135 @@ func (r UpdateCommentHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateCommentHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteTeamEmailProviderHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteTeamEmailProviderHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteTeamEmailProviderHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteTeamEmailProviderHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetTeamEmailProviderHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderResponse
+	ApplicationproblemJSON401 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTeamEmailProviderHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTeamEmailProviderHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetTeamEmailProviderHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpsertTeamEmailProviderHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpsertTeamEmailProviderHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpsertTeamEmailProviderHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpsertTeamEmailProviderHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type TestTeamEmailProviderHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderTestResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TestTeamEmailProviderHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TestTeamEmailProviderHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r TestTeamEmailProviderHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -22875,6 +24854,204 @@ func (r CreateFeedItemHTTPResponse) ContentType() string {
 	return ""
 }
 
+type DeleteGitHubAppConfigHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteGitHubAppConfigHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteGitHubAppConfigHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteGitHubAppConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetGitHubAppConfigHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubAppConfigResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetGitHubAppConfigHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetGitHubAppConfigHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetGitHubAppConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateGitHubAppConfigHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *CreateGitHubAppConfigResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateGitHubAppConfigHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateGitHubAppConfigHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateGitHubAppConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateGitHubAppConfigHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubAppConfigResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateGitHubAppConfigHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateGitHubAppConfigHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateGitHubAppConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RotateGitHubAppWebhookTokenHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubAppConfigResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r RotateGitHubAppWebhookTokenHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RotateGitHubAppWebhookTokenHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RotateGitHubAppWebhookTokenHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ValidateGitHubAppConfigHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ValidateGitHubAppConfigResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ValidateGitHubAppConfigHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ValidateGitHubAppConfigHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ValidateGitHubAppConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type HandleGitHubCallbackHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -22985,6 +25162,7 @@ type GetGitHubInstallURLHTTPResponse struct {
 	JSON200                   *GitHubInstallURL
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -23126,6 +25304,7 @@ type ListMemoriesHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *MemoryListResponse
+	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 }
 
@@ -23407,6 +25586,74 @@ func (r RestoreMemoryVersionHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r RestoreMemoryVersionHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetMetadataKeysHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *MetadataKeysResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetMetadataKeysHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetMetadataKeysHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetMetadataKeysHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetMetadataValuesHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *MetadataValuesResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetMetadataValuesHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetMetadataValuesHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetMetadataValuesHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -24681,6 +26928,135 @@ func (r SearchTeamResourcesHTTPResponse) ContentType() string {
 	return ""
 }
 
+type DeleteTeamEmailProviderSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteTeamEmailProviderSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteTeamEmailProviderSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteTeamEmailProviderSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetTeamEmailProviderSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderResponse
+	ApplicationproblemJSON401 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTeamEmailProviderSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTeamEmailProviderSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetTeamEmailProviderSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpsertTeamEmailProviderSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpsertTeamEmailProviderSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpsertTeamEmailProviderSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpsertTeamEmailProviderSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type TestTeamEmailProviderSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderTestResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TestTeamEmailProviderSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TestTeamEmailProviderSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r TestTeamEmailProviderSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListEmbeddingProvidersSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -24983,6 +27359,204 @@ func (r ReprocessEmbeddingProviderSettingsHTTPResponse) ContentType() string {
 	return ""
 }
 
+type DeleteGitHubAppConfigSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteGitHubAppConfigSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteGitHubAppConfigSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteGitHubAppConfigSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetGitHubAppConfigSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubAppConfigResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetGitHubAppConfigSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetGitHubAppConfigSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetGitHubAppConfigSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateGitHubAppConfigSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *CreateGitHubAppConfigResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateGitHubAppConfigSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateGitHubAppConfigSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateGitHubAppConfigSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateGitHubAppConfigSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubAppConfigResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateGitHubAppConfigSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateGitHubAppConfigSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateGitHubAppConfigSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RotateGitHubAppWebhookTokenSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubAppConfigResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r RotateGitHubAppWebhookTokenSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RotateGitHubAppWebhookTokenSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RotateGitHubAppWebhookTokenSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ValidateGitHubAppConfigSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ValidateGitHubAppConfigResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ValidateGitHubAppConfigSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ValidateGitHubAppConfigSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ValidateGitHubAppConfigSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListModelProvidersSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -25180,6 +27754,107 @@ func (r UpdateModelProviderSettingsHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateModelProviderSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ResetTeamSearchSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetTeamSearchSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetTeamSearchSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetTeamSearchSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetTeamSearchSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamSearchSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTeamSearchSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTeamSearchSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetTeamSearchSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateTeamSearchSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamSearchSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateTeamSearchSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateTeamSearchSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateTeamSearchSettingsHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -26281,6 +28956,23 @@ func (c *ClientWithResponses) HandleGitHubWebhookWithResponse(ctx context.Contex
 	return ParseHandleGitHubWebhookHTTPResponse(rsp)
 }
 
+// HandleGitHubWebhookByTokenWithBodyWithResponse request with arbitrary body returning *HandleGitHubWebhookByTokenHTTPResponse
+func (c *ClientWithResponses) HandleGitHubWebhookByTokenWithBodyWithResponse(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HandleGitHubWebhookByTokenHTTPResponse, error) {
+	rsp, err := c.HandleGitHubWebhookByTokenWithBody(ctx, token, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHandleGitHubWebhookByTokenHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) HandleGitHubWebhookByTokenWithResponse(ctx context.Context, token string, body HandleGitHubWebhookByTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*HandleGitHubWebhookByTokenHTTPResponse, error) {
+	rsp, err := c.HandleGitHubWebhookByToken(ctx, token, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHandleGitHubWebhookByTokenHTTPResponse(rsp)
+}
+
 // ListAgentsWithResponse request returning *ListAgentsHTTPResponse
 func (c *ClientWithResponses) ListAgentsWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*ListAgentsHTTPResponse, error) {
 	rsp, err := c.ListAgents(ctx, teamId, params, reqEditors...)
@@ -26844,6 +29536,58 @@ func (c *ClientWithResponses) UpdateCommentWithResponse(ctx context.Context, tea
 	return ParseUpdateCommentHTTPResponse(rsp)
 }
 
+// DeleteTeamEmailProviderWithResponse request returning *DeleteTeamEmailProviderHTTPResponse
+func (c *ClientWithResponses) DeleteTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.DeleteTeamEmailProvider(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteTeamEmailProviderHTTPResponse(rsp)
+}
+
+// GetTeamEmailProviderWithResponse request returning *GetTeamEmailProviderHTTPResponse
+func (c *ClientWithResponses) GetTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.GetTeamEmailProvider(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTeamEmailProviderHTTPResponse(rsp)
+}
+
+// UpsertTeamEmailProviderWithBodyWithResponse request with arbitrary body returning *UpsertTeamEmailProviderHTTPResponse
+func (c *ClientWithResponses) UpsertTeamEmailProviderWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.UpsertTeamEmailProviderWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpsertTeamEmailProviderHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpsertTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.UpsertTeamEmailProvider(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpsertTeamEmailProviderHTTPResponse(rsp)
+}
+
+// TestTeamEmailProviderWithBodyWithResponse request with arbitrary body returning *TestTeamEmailProviderHTTPResponse
+func (c *ClientWithResponses) TestTeamEmailProviderWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.TestTeamEmailProviderWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestTeamEmailProviderHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) TestTeamEmailProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.TestTeamEmailProvider(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestTeamEmailProviderHTTPResponse(rsp)
+}
+
 // ListEmbeddingProvidersWithResponse request returning *ListEmbeddingProvidersHTTPResponse
 func (c *ClientWithResponses) ListEmbeddingProvidersWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListEmbeddingProvidersHTTPResponse, error) {
 	rsp, err := c.ListEmbeddingProviders(ctx, teamId, reqEditors...)
@@ -27098,6 +29842,76 @@ func (c *ClientWithResponses) CreateFeedItemWithResponse(ctx context.Context, te
 	return ParseCreateFeedItemHTTPResponse(rsp)
 }
 
+// DeleteGitHubAppConfigWithResponse request returning *DeleteGitHubAppConfigHTTPResponse
+func (c *ClientWithResponses) DeleteGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.DeleteGitHubAppConfig(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteGitHubAppConfigHTTPResponse(rsp)
+}
+
+// GetGitHubAppConfigWithResponse request returning *GetGitHubAppConfigHTTPResponse
+func (c *ClientWithResponses) GetGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.GetGitHubAppConfig(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetGitHubAppConfigHTTPResponse(rsp)
+}
+
+// CreateGitHubAppConfigWithBodyWithResponse request with arbitrary body returning *CreateGitHubAppConfigHTTPResponse
+func (c *ClientWithResponses) CreateGitHubAppConfigWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.CreateGitHubAppConfigWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateGitHubAppConfigHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.CreateGitHubAppConfig(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateGitHubAppConfigHTTPResponse(rsp)
+}
+
+// UpdateGitHubAppConfigWithBodyWithResponse request with arbitrary body returning *UpdateGitHubAppConfigHTTPResponse
+func (c *ClientWithResponses) UpdateGitHubAppConfigWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.UpdateGitHubAppConfigWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateGitHubAppConfigHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.UpdateGitHubAppConfig(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateGitHubAppConfigHTTPResponse(rsp)
+}
+
+// RotateGitHubAppWebhookTokenWithResponse request returning *RotateGitHubAppWebhookTokenHTTPResponse
+func (c *ClientWithResponses) RotateGitHubAppWebhookTokenWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RotateGitHubAppWebhookTokenHTTPResponse, error) {
+	rsp, err := c.RotateGitHubAppWebhookToken(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRotateGitHubAppWebhookTokenHTTPResponse(rsp)
+}
+
+// ValidateGitHubAppConfigWithResponse request returning *ValidateGitHubAppConfigHTTPResponse
+func (c *ClientWithResponses) ValidateGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ValidateGitHubAppConfigHTTPResponse, error) {
+	rsp, err := c.ValidateGitHubAppConfig(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseValidateGitHubAppConfigHTTPResponse(rsp)
+}
+
 // HandleGitHubCallbackWithBodyWithResponse request with arbitrary body returning *HandleGitHubCallbackHTTPResponse
 func (c *ClientWithResponses) HandleGitHubCallbackWithBodyWithResponse(ctx context.Context, teamId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HandleGitHubCallbackHTTPResponse, error) {
 	rsp, err := c.HandleGitHubCallbackWithBody(ctx, teamId, contentType, body, reqEditors...)
@@ -27272,6 +30086,24 @@ func (c *ClientWithResponses) RestoreMemoryVersionWithResponse(ctx context.Conte
 		return nil, err
 	}
 	return ParseRestoreMemoryVersionHTTPResponse(rsp)
+}
+
+// GetMetadataKeysWithResponse request returning *GetMetadataKeysHTTPResponse
+func (c *ClientWithResponses) GetMetadataKeysWithResponse(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataKeysParams, reqEditors ...RequestEditorFn) (*GetMetadataKeysHTTPResponse, error) {
+	rsp, err := c.GetMetadataKeys(ctx, teamId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMetadataKeysHTTPResponse(rsp)
+}
+
+// GetMetadataValuesWithResponse request returning *GetMetadataValuesHTTPResponse
+func (c *ClientWithResponses) GetMetadataValuesWithResponse(ctx context.Context, teamId openapi_types.UUID, params *GetMetadataValuesParams, reqEditors ...RequestEditorFn) (*GetMetadataValuesHTTPResponse, error) {
+	rsp, err := c.GetMetadataValues(ctx, teamId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMetadataValuesHTTPResponse(rsp)
 }
 
 // ListModelProvidersWithResponse request returning *ListModelProvidersHTTPResponse
@@ -27703,6 +30535,58 @@ func (c *ClientWithResponses) SearchTeamResourcesWithResponse(ctx context.Contex
 	return ParseSearchTeamResourcesHTTPResponse(rsp)
 }
 
+// DeleteTeamEmailProviderSettingsWithResponse request returning *DeleteTeamEmailProviderSettingsHTTPResponse
+func (c *ClientWithResponses) DeleteTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTeamEmailProviderSettingsHTTPResponse, error) {
+	rsp, err := c.DeleteTeamEmailProviderSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteTeamEmailProviderSettingsHTTPResponse(rsp)
+}
+
+// GetTeamEmailProviderSettingsWithResponse request returning *GetTeamEmailProviderSettingsHTTPResponse
+func (c *ClientWithResponses) GetTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamEmailProviderSettingsHTTPResponse, error) {
+	rsp, err := c.GetTeamEmailProviderSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTeamEmailProviderSettingsHTTPResponse(rsp)
+}
+
+// UpsertTeamEmailProviderSettingsWithBodyWithResponse request with arbitrary body returning *UpsertTeamEmailProviderSettingsHTTPResponse
+func (c *ClientWithResponses) UpsertTeamEmailProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderSettingsHTTPResponse, error) {
+	rsp, err := c.UpsertTeamEmailProviderSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpsertTeamEmailProviderSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpsertTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpsertTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpsertTeamEmailProviderSettingsHTTPResponse, error) {
+	rsp, err := c.UpsertTeamEmailProviderSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpsertTeamEmailProviderSettingsHTTPResponse(rsp)
+}
+
+// TestTeamEmailProviderSettingsWithBodyWithResponse request with arbitrary body returning *TestTeamEmailProviderSettingsHTTPResponse
+func (c *ClientWithResponses) TestTeamEmailProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderSettingsHTTPResponse, error) {
+	rsp, err := c.TestTeamEmailProviderSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestTeamEmailProviderSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) TestTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body TestTeamEmailProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*TestTeamEmailProviderSettingsHTTPResponse, error) {
+	rsp, err := c.TestTeamEmailProviderSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestTeamEmailProviderSettingsHTTPResponse(rsp)
+}
+
 // ListEmbeddingProvidersSettingsWithResponse request returning *ListEmbeddingProvidersSettingsHTTPResponse
 func (c *ClientWithResponses) ListEmbeddingProvidersSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListEmbeddingProvidersSettingsHTTPResponse, error) {
 	rsp, err := c.ListEmbeddingProvidersSettings(ctx, teamId, reqEditors...)
@@ -27808,6 +30692,76 @@ func (c *ClientWithResponses) ReprocessEmbeddingProviderSettingsWithResponse(ctx
 	return ParseReprocessEmbeddingProviderSettingsHTTPResponse(rsp)
 }
 
+// DeleteGitHubAppConfigSettingsWithResponse request returning *DeleteGitHubAppConfigSettingsHTTPResponse
+func (c *ClientWithResponses) DeleteGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.DeleteGitHubAppConfigSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
+// GetGitHubAppConfigSettingsWithResponse request returning *GetGitHubAppConfigSettingsHTTPResponse
+func (c *ClientWithResponses) GetGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.GetGitHubAppConfigSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
+// CreateGitHubAppConfigSettingsWithBodyWithResponse request with arbitrary body returning *CreateGitHubAppConfigSettingsHTTPResponse
+func (c *ClientWithResponses) CreateGitHubAppConfigSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.CreateGitHubAppConfigSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.CreateGitHubAppConfigSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
+// UpdateGitHubAppConfigSettingsWithBodyWithResponse request with arbitrary body returning *UpdateGitHubAppConfigSettingsHTTPResponse
+func (c *ClientWithResponses) UpdateGitHubAppConfigSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateGitHubAppConfigSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateGitHubAppConfigSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateGitHubAppConfigSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
+// RotateGitHubAppWebhookTokenSettingsWithResponse request returning *RotateGitHubAppWebhookTokenSettingsHTTPResponse
+func (c *ClientWithResponses) RotateGitHubAppWebhookTokenSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*RotateGitHubAppWebhookTokenSettingsHTTPResponse, error) {
+	rsp, err := c.RotateGitHubAppWebhookTokenSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRotateGitHubAppWebhookTokenSettingsHTTPResponse(rsp)
+}
+
+// ValidateGitHubAppConfigSettingsWithResponse request returning *ValidateGitHubAppConfigSettingsHTTPResponse
+func (c *ClientWithResponses) ValidateGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ValidateGitHubAppConfigSettingsHTTPResponse, error) {
+	rsp, err := c.ValidateGitHubAppConfigSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseValidateGitHubAppConfigSettingsHTTPResponse(rsp)
+}
+
 // ListModelProvidersSettingsWithResponse request returning *ListModelProvidersSettingsHTTPResponse
 func (c *ClientWithResponses) ListModelProvidersSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListModelProvidersSettingsHTTPResponse, error) {
 	rsp, err := c.ListModelProvidersSettings(ctx, teamId, reqEditors...)
@@ -27884,6 +30838,41 @@ func (c *ClientWithResponses) UpdateModelProviderSettingsWithResponse(ctx contex
 		return nil, err
 	}
 	return ParseUpdateModelProviderSettingsHTTPResponse(rsp)
+}
+
+// ResetTeamSearchSettingsWithResponse request returning *ResetTeamSearchSettingsHTTPResponse
+func (c *ClientWithResponses) ResetTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResetTeamSearchSettingsHTTPResponse, error) {
+	rsp, err := c.ResetTeamSearchSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetTeamSearchSettingsHTTPResponse(rsp)
+}
+
+// GetTeamSearchSettingsWithResponse request returning *GetTeamSearchSettingsHTTPResponse
+func (c *ClientWithResponses) GetTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamSearchSettingsHTTPResponse, error) {
+	rsp, err := c.GetTeamSearchSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTeamSearchSettingsHTTPResponse(rsp)
+}
+
+// UpdateTeamSearchSettingsWithBodyWithResponse request with arbitrary body returning *UpdateTeamSearchSettingsHTTPResponse
+func (c *ClientWithResponses) UpdateTeamSearchSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamSearchSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateTeamSearchSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTeamSearchSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamSearchSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateTeamSearchSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTeamSearchSettingsHTTPResponse(rsp)
 }
 
 // ListTypesWithResponse request returning *ListTypesHTTPResponse
@@ -31765,6 +34754,32 @@ func ParseHandleGitHubWebhookHTTPResponse(rsp *http.Response) (*HandleGitHubWebh
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 410:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON410 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseHandleGitHubWebhookByTokenHTTPResponse parses an HTTP response from a HandleGitHubWebhookByTokenWithResponse call
+func ParseHandleGitHubWebhookByTokenHTTPResponse(rsp *http.Response) (*HandleGitHubWebhookByTokenHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &HandleGitHubWebhookByTokenHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31778,6 +34793,13 @@ func ParseHandleGitHubWebhookHTTPResponse(rsp *http.Response) (*HandleGitHubWebh
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
@@ -33015,6 +36037,13 @@ func ParseListArtifactsHTTPResponse(rsp *http.Response) (*ListArtifactsHTTPRespo
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33148,6 +36177,13 @@ func ParseListArtifactsByProjectHTTPResponse(rsp *http.Response) (*ListArtifacts
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse
@@ -33874,6 +36910,13 @@ func ParseListSpecLibrariesHTTPResponse(rsp *http.Response) (*ListSpecLibrariesH
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse
@@ -34637,6 +37680,173 @@ func ParseUpdateCommentHTTPResponse(rsp *http.Response) (*UpdateCommentHTTPRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteTeamEmailProviderHTTPResponse parses an HTTP response from a DeleteTeamEmailProviderWithResponse call
+func ParseDeleteTeamEmailProviderHTTPResponse(rsp *http.Response) (*DeleteTeamEmailProviderHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteTeamEmailProviderHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTeamEmailProviderHTTPResponse parses an HTTP response from a GetTeamEmailProviderWithResponse call
+func ParseGetTeamEmailProviderHTTPResponse(rsp *http.Response) (*GetTeamEmailProviderHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTeamEmailProviderHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpsertTeamEmailProviderHTTPResponse parses an HTTP response from a UpsertTeamEmailProviderWithResponse call
+func ParseUpsertTeamEmailProviderHTTPResponse(rsp *http.Response) (*UpsertTeamEmailProviderHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpsertTeamEmailProviderHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTestTeamEmailProviderHTTPResponse parses an HTTP response from a TestTeamEmailProviderWithResponse call
+func ParseTestTeamEmailProviderHTTPResponse(rsp *http.Response) (*TestTeamEmailProviderHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TestTeamEmailProviderHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderTestResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	}
 
@@ -35768,6 +38978,288 @@ func ParseCreateFeedItemHTTPResponse(rsp *http.Response) (*CreateFeedItemHTTPRes
 	return response, nil
 }
 
+// ParseDeleteGitHubAppConfigHTTPResponse parses an HTTP response from a DeleteGitHubAppConfigWithResponse call
+func ParseDeleteGitHubAppConfigHTTPResponse(rsp *http.Response) (*DeleteGitHubAppConfigHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteGitHubAppConfigHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetGitHubAppConfigHTTPResponse parses an HTTP response from a GetGitHubAppConfigWithResponse call
+func ParseGetGitHubAppConfigHTTPResponse(rsp *http.Response) (*GetGitHubAppConfigHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetGitHubAppConfigHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateGitHubAppConfigHTTPResponse parses an HTTP response from a CreateGitHubAppConfigWithResponse call
+func ParseCreateGitHubAppConfigHTTPResponse(rsp *http.Response) (*CreateGitHubAppConfigHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateGitHubAppConfigHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CreateGitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateGitHubAppConfigHTTPResponse parses an HTTP response from a UpdateGitHubAppConfigWithResponse call
+func ParseUpdateGitHubAppConfigHTTPResponse(rsp *http.Response) (*UpdateGitHubAppConfigHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateGitHubAppConfigHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRotateGitHubAppWebhookTokenHTTPResponse parses an HTTP response from a RotateGitHubAppWebhookTokenWithResponse call
+func ParseRotateGitHubAppWebhookTokenHTTPResponse(rsp *http.Response) (*RotateGitHubAppWebhookTokenHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RotateGitHubAppWebhookTokenHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseValidateGitHubAppConfigHTTPResponse parses an HTTP response from a ValidateGitHubAppConfigWithResponse call
+func ParseValidateGitHubAppConfigHTTPResponse(rsp *http.Response) (*ValidateGitHubAppConfigHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ValidateGitHubAppConfigHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ValidateGitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseHandleGitHubCallbackHTTPResponse parses an HTTP response from a HandleGitHubCallbackWithResponse call
 func ParseHandleGitHubCallbackHTTPResponse(rsp *http.Response) (*HandleGitHubCallbackHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -35979,6 +39471,13 @@ func ParseGetGitHubInstallURLHTTPResponse(rsp *http.Response) (*GetGitHubInstall
 		}
 		response.ApplicationproblemJSON403 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -36187,6 +39686,13 @@ func ParseListMemoriesHTTPResponse(rsp *http.Response) (*ListMemoriesHTTPRespons
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse
@@ -36542,6 +40048,114 @@ func ParseRestoreMemoryVersionHTTPResponse(rsp *http.Response) (*RestoreMemoryVe
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetMetadataKeysHTTPResponse parses an HTTP response from a GetMetadataKeysWithResponse call
+func ParseGetMetadataKeysHTTPResponse(rsp *http.Response) (*GetMetadataKeysHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMetadataKeysHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MetadataKeysResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetMetadataValuesHTTPResponse parses an HTTP response from a GetMetadataValuesWithResponse call
+func ParseGetMetadataValuesHTTPResponse(rsp *http.Response) (*GetMetadataValuesHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMetadataValuesHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MetadataValuesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
 
 	}
 
@@ -38556,6 +42170,173 @@ func ParseSearchTeamResourcesHTTPResponse(rsp *http.Response) (*SearchTeamResour
 	return response, nil
 }
 
+// ParseDeleteTeamEmailProviderSettingsHTTPResponse parses an HTTP response from a DeleteTeamEmailProviderSettingsWithResponse call
+func ParseDeleteTeamEmailProviderSettingsHTTPResponse(rsp *http.Response) (*DeleteTeamEmailProviderSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteTeamEmailProviderSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTeamEmailProviderSettingsHTTPResponse parses an HTTP response from a GetTeamEmailProviderSettingsWithResponse call
+func ParseGetTeamEmailProviderSettingsHTTPResponse(rsp *http.Response) (*GetTeamEmailProviderSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTeamEmailProviderSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpsertTeamEmailProviderSettingsHTTPResponse parses an HTTP response from a UpsertTeamEmailProviderSettingsWithResponse call
+func ParseUpsertTeamEmailProviderSettingsHTTPResponse(rsp *http.Response) (*UpsertTeamEmailProviderSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpsertTeamEmailProviderSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTestTeamEmailProviderSettingsHTTPResponse parses an HTTP response from a TestTeamEmailProviderSettingsWithResponse call
+func ParseTestTeamEmailProviderSettingsHTTPResponse(rsp *http.Response) (*TestTeamEmailProviderSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TestTeamEmailProviderSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderTestResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListEmbeddingProvidersSettingsHTTPResponse parses an HTTP response from a ListEmbeddingProvidersSettingsWithResponse call
 func ParseListEmbeddingProvidersSettingsHTTPResponse(rsp *http.Response) (*ListEmbeddingProvidersSettingsHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -39014,6 +42795,288 @@ func ParseReprocessEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*R
 	return response, nil
 }
 
+// ParseDeleteGitHubAppConfigSettingsHTTPResponse parses an HTTP response from a DeleteGitHubAppConfigSettingsWithResponse call
+func ParseDeleteGitHubAppConfigSettingsHTTPResponse(rsp *http.Response) (*DeleteGitHubAppConfigSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteGitHubAppConfigSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetGitHubAppConfigSettingsHTTPResponse parses an HTTP response from a GetGitHubAppConfigSettingsWithResponse call
+func ParseGetGitHubAppConfigSettingsHTTPResponse(rsp *http.Response) (*GetGitHubAppConfigSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetGitHubAppConfigSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateGitHubAppConfigSettingsHTTPResponse parses an HTTP response from a CreateGitHubAppConfigSettingsWithResponse call
+func ParseCreateGitHubAppConfigSettingsHTTPResponse(rsp *http.Response) (*CreateGitHubAppConfigSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateGitHubAppConfigSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CreateGitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateGitHubAppConfigSettingsHTTPResponse parses an HTTP response from a UpdateGitHubAppConfigSettingsWithResponse call
+func ParseUpdateGitHubAppConfigSettingsHTTPResponse(rsp *http.Response) (*UpdateGitHubAppConfigSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateGitHubAppConfigSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRotateGitHubAppWebhookTokenSettingsHTTPResponse parses an HTTP response from a RotateGitHubAppWebhookTokenSettingsWithResponse call
+func ParseRotateGitHubAppWebhookTokenSettingsHTTPResponse(rsp *http.Response) (*RotateGitHubAppWebhookTokenSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RotateGitHubAppWebhookTokenSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseValidateGitHubAppConfigSettingsHTTPResponse parses an HTTP response from a ValidateGitHubAppConfigSettingsWithResponse call
+func ParseValidateGitHubAppConfigSettingsHTTPResponse(rsp *http.Response) (*ValidateGitHubAppConfigSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ValidateGitHubAppConfigSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ValidateGitHubAppConfigResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListModelProvidersSettingsHTTPResponse parses an HTTP response from a ListModelProvidersSettingsWithResponse call
 func ParseListModelProvidersSettingsHTTPResponse(rsp *http.Response) (*ListModelProvidersSettingsHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -39318,6 +43381,161 @@ func ParseUpdateModelProviderSettingsHTTPResponse(rsp *http.Response) (*UpdateMo
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseResetTeamSearchSettingsHTTPResponse parses an HTTP response from a ResetTeamSearchSettingsWithResponse call
+func ParseResetTeamSearchSettingsHTTPResponse(rsp *http.Response) (*ResetTeamSearchSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetTeamSearchSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTeamSearchSettingsHTTPResponse parses an HTTP response from a GetTeamSearchSettingsWithResponse call
+func ParseGetTeamSearchSettingsHTTPResponse(rsp *http.Response) (*GetTeamSearchSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTeamSearchSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamSearchSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateTeamSearchSettingsHTTPResponse parses an HTTP response from a UpdateTeamSearchSettingsWithResponse call
+func ParseUpdateTeamSearchSettingsHTTPResponse(rsp *http.Response) (*UpdateTeamSearchSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateTeamSearchSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamSearchSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

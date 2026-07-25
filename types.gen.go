@@ -1191,22 +1191,22 @@ func (e ResourceAccessMetricsDataRange) Valid() bool {
 
 // Defines values for SearchRequestTypes.
 const (
-	Artifacts  SearchRequestTypes = "artifacts"
-	Blueprints SearchRequestTypes = "blueprints"
-	Memories   SearchRequestTypes = "memories"
-	Prompts    SearchRequestTypes = "prompts"
+	SearchRequestTypesArtifacts  SearchRequestTypes = "artifacts"
+	SearchRequestTypesBlueprints SearchRequestTypes = "blueprints"
+	SearchRequestTypesMemories   SearchRequestTypes = "memories"
+	SearchRequestTypesPrompts    SearchRequestTypes = "prompts"
 )
 
 // Valid indicates whether the value is a known member of the SearchRequestTypes enum.
 func (e SearchRequestTypes) Valid() bool {
 	switch e {
-	case Artifacts:
+	case SearchRequestTypesArtifacts:
 		return true
-	case Blueprints:
+	case SearchRequestTypesBlueprints:
 		return true
-	case Memories:
+	case SearchRequestTypesMemories:
 		return true
-	case Prompts:
+	case SearchRequestTypesPrompts:
 		return true
 	default:
 		return false
@@ -1390,6 +1390,69 @@ func (e TeamDeleteConflictErrorTitle) Valid() bool {
 	}
 }
 
+// Defines values for TeamEmailProviderResponseProviderType.
+const (
+	TeamEmailProviderResponseProviderTypeLessThannil TeamEmailProviderResponseProviderType = "<nil>"
+	TeamEmailProviderResponseProviderTypeMailgun     TeamEmailProviderResponseProviderType = "mailgun"
+	TeamEmailProviderResponseProviderTypePostmark    TeamEmailProviderResponseProviderType = "postmark"
+	TeamEmailProviderResponseProviderTypeSendgrid    TeamEmailProviderResponseProviderType = "sendgrid"
+	TeamEmailProviderResponseProviderTypeSmtp        TeamEmailProviderResponseProviderType = "smtp"
+)
+
+// Valid indicates whether the value is a known member of the TeamEmailProviderResponseProviderType enum.
+func (e TeamEmailProviderResponseProviderType) Valid() bool {
+	switch e {
+	case TeamEmailProviderResponseProviderTypeLessThannil:
+		return true
+	case TeamEmailProviderResponseProviderTypeMailgun:
+		return true
+	case TeamEmailProviderResponseProviderTypePostmark:
+		return true
+	case TeamEmailProviderResponseProviderTypeSendgrid:
+		return true
+	case TeamEmailProviderResponseProviderTypeSmtp:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TeamEmailProviderResponseSource.
+const (
+	TeamEmailProviderResponseSourceInstance TeamEmailProviderResponseSource = "instance"
+	TeamEmailProviderResponseSourceTeam     TeamEmailProviderResponseSource = "team"
+)
+
+// Valid indicates whether the value is a known member of the TeamEmailProviderResponseSource enum.
+func (e TeamEmailProviderResponseSource) Valid() bool {
+	switch e {
+	case TeamEmailProviderResponseSourceInstance:
+		return true
+	case TeamEmailProviderResponseSourceTeam:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TeamEmailProviderTestDetailsErrorDetails.
+const (
+	ConfigurationInvalid TeamEmailProviderTestDetailsErrorDetails = "configuration_invalid"
+	SendFailed           TeamEmailProviderTestDetailsErrorDetails = "send_failed"
+)
+
+// Valid indicates whether the value is a known member of the TeamEmailProviderTestDetailsErrorDetails enum.
+func (e TeamEmailProviderTestDetailsErrorDetails) Valid() bool {
+	switch e {
+	case ConfigurationInvalid:
+		return true
+	case SendFailed:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TeamFeedCreationMetricsDataRange.
 const (
 	TeamFeedCreationMetricsDataRangeN14d  TeamFeedCreationMetricsDataRange = "14d"
@@ -1483,6 +1546,24 @@ func (e TeamResourceCreationMetricsDataRange) Valid() bool {
 	case TeamResourceCreationMetricsDataRangeN7d:
 		return true
 	case TeamResourceCreationMetricsDataRangeN90d:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TeamSearchSettingsSource.
+const (
+	TeamSearchSettingsSourceInstance TeamSearchSettingsSource = "instance"
+	TeamSearchSettingsSourceTeam     TeamSearchSettingsSource = "team"
+)
+
+// Valid indicates whether the value is a known member of the TeamSearchSettingsSource enum.
+func (e TeamSearchSettingsSource) Valid() bool {
+	switch e {
+	case TeamSearchSettingsSourceInstance:
+		return true
+	case TeamSearchSettingsSourceTeam:
 		return true
 	default:
 		return false
@@ -1720,6 +1801,57 @@ func (e UpdateTeamMemberRoleRequestRole) Valid() bool {
 	case UpdateTeamMemberRoleRequestRoleAdmin:
 		return true
 	case UpdateTeamMemberRoleRequestRoleMember:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for UpsertTeamEmailProviderRequestProviderType.
+const (
+	UpsertTeamEmailProviderRequestProviderTypeMailgun  UpsertTeamEmailProviderRequestProviderType = "mailgun"
+	UpsertTeamEmailProviderRequestProviderTypePostmark UpsertTeamEmailProviderRequestProviderType = "postmark"
+	UpsertTeamEmailProviderRequestProviderTypeSendgrid UpsertTeamEmailProviderRequestProviderType = "sendgrid"
+	UpsertTeamEmailProviderRequestProviderTypeSmtp     UpsertTeamEmailProviderRequestProviderType = "smtp"
+)
+
+// Valid indicates whether the value is a known member of the UpsertTeamEmailProviderRequestProviderType enum.
+func (e UpsertTeamEmailProviderRequestProviderType) Valid() bool {
+	switch e {
+	case UpsertTeamEmailProviderRequestProviderTypeMailgun:
+		return true
+	case UpsertTeamEmailProviderRequestProviderTypePostmark:
+		return true
+	case UpsertTeamEmailProviderRequestProviderTypeSendgrid:
+		return true
+	case UpsertTeamEmailProviderRequestProviderTypeSmtp:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ValidateGitHubAppConfigDetailsErrorDetails.
+const (
+	AppNotFound             ValidateGitHubAppConfigDetailsErrorDetails = "app_not_found"
+	ConnectionFailed        ValidateGitHubAppConfigDetailsErrorDetails = "connection_failed"
+	InsufficientPermissions ValidateGitHubAppConfigDetailsErrorDetails = "insufficient_permissions"
+	InvalidCredentials      ValidateGitHubAppConfigDetailsErrorDetails = "invalid_credentials"
+	SlugMismatch            ValidateGitHubAppConfigDetailsErrorDetails = "slug_mismatch"
+)
+
+// Valid indicates whether the value is a known member of the ValidateGitHubAppConfigDetailsErrorDetails enum.
+func (e ValidateGitHubAppConfigDetailsErrorDetails) Valid() bool {
+	switch e {
+	case AppNotFound:
+		return true
+	case ConnectionFailed:
+		return true
+	case InsufficientPermissions:
+		return true
+	case InvalidCredentials:
+		return true
+	case SlugMismatch:
 		return true
 	default:
 		return false
@@ -2238,12 +2370,24 @@ func (e ListSpecLibrariesParamsStatus) Valid() bool {
 
 // Defines values for ListSpecLibrariesParamsType.
 const (
-	ListSpecLibrariesParamsTypeGeneral ListSpecLibrariesParamsType = "general"
+	ListSpecLibrariesParamsTypeClaude     ListSpecLibrariesParamsType = "claude"
+	ListSpecLibrariesParamsTypeClaudeCode ListSpecLibrariesParamsType = "claude-code"
+	ListSpecLibrariesParamsTypeCodex      ListSpecLibrariesParamsType = "codex"
+	ListSpecLibrariesParamsTypeCursor     ListSpecLibrariesParamsType = "cursor"
+	ListSpecLibrariesParamsTypeGeneral    ListSpecLibrariesParamsType = "general"
 )
 
 // Valid indicates whether the value is a known member of the ListSpecLibrariesParamsType enum.
 func (e ListSpecLibrariesParamsType) Valid() bool {
 	switch e {
+	case ListSpecLibrariesParamsTypeClaude:
+		return true
+	case ListSpecLibrariesParamsTypeClaudeCode:
+		return true
+	case ListSpecLibrariesParamsTypeCodex:
+		return true
+	case ListSpecLibrariesParamsTypeCursor:
+		return true
 	case ListSpecLibrariesParamsTypeGeneral:
 		return true
 	default:
@@ -2352,12 +2496,24 @@ func (e ListSpecLibrariesByProjectParamsStatus) Valid() bool {
 
 // Defines values for ListSpecLibrariesByProjectParamsType.
 const (
-	ListSpecLibrariesByProjectParamsTypeGeneral ListSpecLibrariesByProjectParamsType = "general"
+	ListSpecLibrariesByProjectParamsTypeClaude     ListSpecLibrariesByProjectParamsType = "claude"
+	ListSpecLibrariesByProjectParamsTypeClaudeCode ListSpecLibrariesByProjectParamsType = "claude-code"
+	ListSpecLibrariesByProjectParamsTypeCodex      ListSpecLibrariesByProjectParamsType = "codex"
+	ListSpecLibrariesByProjectParamsTypeCursor     ListSpecLibrariesByProjectParamsType = "cursor"
+	ListSpecLibrariesByProjectParamsTypeGeneral    ListSpecLibrariesByProjectParamsType = "general"
 )
 
 // Valid indicates whether the value is a known member of the ListSpecLibrariesByProjectParamsType enum.
 func (e ListSpecLibrariesByProjectParamsType) Valid() bool {
 	switch e {
+	case ListSpecLibrariesByProjectParamsTypeClaude:
+		return true
+	case ListSpecLibrariesByProjectParamsTypeClaudeCode:
+		return true
+	case ListSpecLibrariesByProjectParamsTypeCodex:
+		return true
+	case ListSpecLibrariesByProjectParamsTypeCursor:
+		return true
 	case ListSpecLibrariesByProjectParamsTypeGeneral:
 		return true
 	default:
@@ -2563,6 +2719,48 @@ func (e SearchMemoriesByMetadataParamsStatus) Valid() bool {
 	case SearchMemoriesByMetadataParamsStatusArchived:
 		return true
 	case SearchMemoriesByMetadataParamsStatusDraft:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for GetMetadataKeysParamsResourceType.
+const (
+	GetMetadataKeysParamsResourceTypeArtifacts  GetMetadataKeysParamsResourceType = "artifacts"
+	GetMetadataKeysParamsResourceTypeBlueprints GetMetadataKeysParamsResourceType = "blueprints"
+	GetMetadataKeysParamsResourceTypeMemories   GetMetadataKeysParamsResourceType = "memories"
+)
+
+// Valid indicates whether the value is a known member of the GetMetadataKeysParamsResourceType enum.
+func (e GetMetadataKeysParamsResourceType) Valid() bool {
+	switch e {
+	case GetMetadataKeysParamsResourceTypeArtifacts:
+		return true
+	case GetMetadataKeysParamsResourceTypeBlueprints:
+		return true
+	case GetMetadataKeysParamsResourceTypeMemories:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for GetMetadataValuesParamsResourceType.
+const (
+	Artifacts  GetMetadataValuesParamsResourceType = "artifacts"
+	Blueprints GetMetadataValuesParamsResourceType = "blueprints"
+	Memories   GetMetadataValuesParamsResourceType = "memories"
+)
+
+// Valid indicates whether the value is a known member of the GetMetadataValuesParamsResourceType enum.
+func (e GetMetadataValuesParamsResourceType) Valid() bool {
+	switch e {
+	case Artifacts:
+		return true
+	case Blueprints:
+		return true
+	case Memories:
 		return true
 	default:
 		return false
@@ -4378,6 +4576,63 @@ type CreateFeedRequest struct {
 	Name string `json:"name"`
 }
 
+// CreateGitHubAppConfigRequest Registers a team's GitHub App. There is deliberately no webhook_secret field — the server generates it and returns it once.
+type CreateGitHubAppConfigRequest struct {
+	// AppId GitHub's numeric App id.
+	AppId string `json:"app_id"`
+
+	// AppSlug The App's slug, used to build its install URL.
+	AppSlug string `json:"app_slug"`
+
+	// ClientId The App's OAuth client id.
+	ClientId string `json:"client_id"`
+
+	// ClientSecret The App's OAuth client secret. Encrypted at rest and never returned.
+	ClientSecret string `json:"client_secret"`
+
+	// PrivateKey The App's RSA private key, as raw PEM or base64-encoded PEM. Encrypted at rest and never returned.
+	PrivateKey string `json:"private_key"`
+}
+
+// CreateGitHubAppConfigResponse defines model for CreateGitHubAppConfigResponse.
+type CreateGitHubAppConfigResponse struct {
+	// AppId GitHub's numeric App id, carried as a string.
+	AppId string `json:"app_id"`
+
+	// AppSlug The App's slug, which builds its install URL (https://github.com/apps/{app_slug}/installations/new).
+	AppSlug string `json:"app_slug"`
+
+	// ClientId The App's OAuth client id. Not a secret — GitHub shows it on the App settings page, and it is echoed back so an operator can confirm which App is wired up.
+	ClientId  string    `json:"client_id"`
+	CreatedAt time.Time `json:"created_at"`
+
+	// HasClientSecret Whether a client secret is stored. The secret itself is never returned.
+	HasClientSecret bool `json:"has_client_secret"`
+
+	// HasPrivateKey Whether a private key is stored. The key itself is never returned.
+	HasPrivateKey bool `json:"has_private_key"`
+
+	// HasWebhookSecret Whether a webhook secret is stored. The secret is disclosed only once, when it is generated; recovering a lost one means rotating it.
+	HasWebhookSecret bool               `json:"has_webhook_secret"`
+	Id               openapi_types.UUID `json:"id"`
+
+	// TeamId Team that owns this App registration.
+	TeamId    openapi_types.UUID `json:"team_id"`
+	UpdatedAt time.Time          `json:"updated_at"`
+
+	// UserId Who registered the App. Informational only — the team is the tenancy boundary, and no read is scoped by this field.
+	UserId *openapi_types.UUID `json:"user_id,omitempty"`
+
+	// Version Optimistic-concurrency version counter, incremented on each update.
+	Version int64 `json:"version"`
+
+	// WebhookSecret The generated webhook secret, shown exactly once. Paste it into the App's settings alongside the webhook URL; it cannot be read back.
+	WebhookSecret string `json:"webhook_secret"`
+
+	// WebhookUrl The webhook URL for this App, carrying its opaque routing token. Paste it into the App's settings on GitHub. Empty when the instance has no public base URL configured.
+	WebhookUrl string `json:"webhook_url"`
+}
+
 // CreateMemoryRequest defines model for CreateMemoryRequest.
 type CreateMemoryRequest struct {
 	// Metadata Additional metadata as key-value pairs
@@ -5033,6 +5288,66 @@ type FeedListResponse struct {
 	TotalPages int `json:"total_pages"`
 }
 
+// GitHubAppConfig A team's own GitHub App registration. Never carries secret values.
+type GitHubAppConfig struct {
+	// AppId GitHub's numeric App id, carried as a string.
+	AppId string `json:"app_id"`
+
+	// AppSlug The App's slug, which builds its install URL (https://github.com/apps/{app_slug}/installations/new).
+	AppSlug string `json:"app_slug"`
+
+	// ClientId The App's OAuth client id. Not a secret — GitHub shows it on the App settings page, and it is echoed back so an operator can confirm which App is wired up.
+	ClientId  string             `json:"client_id"`
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+
+	// TeamId Team that owns this App registration.
+	TeamId    openapi_types.UUID `json:"team_id"`
+	UpdatedAt time.Time          `json:"updated_at"`
+
+	// UserId Who registered the App. Informational only — the team is the tenancy boundary, and no read is scoped by this field.
+	UserId *openapi_types.UUID `json:"user_id,omitempty"`
+
+	// Version Optimistic-concurrency version counter, incremented on each update.
+	Version int64 `json:"version"`
+}
+
+// GitHubAppConfigResponse defines model for GitHubAppConfigResponse.
+type GitHubAppConfigResponse struct {
+	// AppId GitHub's numeric App id, carried as a string.
+	AppId string `json:"app_id"`
+
+	// AppSlug The App's slug, which builds its install URL (https://github.com/apps/{app_slug}/installations/new).
+	AppSlug string `json:"app_slug"`
+
+	// ClientId The App's OAuth client id. Not a secret — GitHub shows it on the App settings page, and it is echoed back so an operator can confirm which App is wired up.
+	ClientId  string    `json:"client_id"`
+	CreatedAt time.Time `json:"created_at"`
+
+	// HasClientSecret Whether a client secret is stored. The secret itself is never returned.
+	HasClientSecret bool `json:"has_client_secret"`
+
+	// HasPrivateKey Whether a private key is stored. The key itself is never returned.
+	HasPrivateKey bool `json:"has_private_key"`
+
+	// HasWebhookSecret Whether a webhook secret is stored. The secret is disclosed only once, when it is generated; recovering a lost one means rotating it.
+	HasWebhookSecret bool               `json:"has_webhook_secret"`
+	Id               openapi_types.UUID `json:"id"`
+
+	// TeamId Team that owns this App registration.
+	TeamId    openapi_types.UUID `json:"team_id"`
+	UpdatedAt time.Time          `json:"updated_at"`
+
+	// UserId Who registered the App. Informational only — the team is the tenancy boundary, and no read is scoped by this field.
+	UserId *openapi_types.UUID `json:"user_id,omitempty"`
+
+	// Version Optimistic-concurrency version counter, incremented on each update.
+	Version int64 `json:"version"`
+
+	// WebhookUrl The webhook URL for this App, carrying its opaque routing token. Paste it into the App's settings on GitHub. Empty when the instance has no public base URL configured.
+	WebhookUrl string `json:"webhook_url"`
+}
+
 // GitHubCallbackResponse Response returned after successfully completing the GitHub App installation callback
 type GitHubCallbackResponse struct {
 	// Reconnected Whether this was a reconnection to an existing installation (true) or a new installation (false)
@@ -5333,6 +5648,15 @@ type LogoutResponse struct {
 	Message string `json:"message"`
 }
 
+// MailgunProviderSettings Non-secret Mailgun settings. The sending key is the provider's secret.
+type MailgunProviderSettings struct {
+	// BaseUrl Optional API base URL, to select a non-US region (for example https://api.eu.mailgun.net/v3). A missing /v2|/v3|/v4 suffix is normalised to /v3.
+	BaseUrl *string `json:"base_url,omitempty"`
+
+	// Domain The Mailgun sending domain. Must be a bare domain, not a URL.
+	Domain string `json:"domain"`
+}
+
 // Memory defines model for Memory.
 type Memory struct {
 	// CreatedAt Timestamp when the memory was created
@@ -5397,6 +5721,24 @@ type MemoryListResponse struct {
 type MemoryVersionListResponse struct {
 	// Versions Content-version snapshots for the memory, newest first
 	Versions []ContentVersion `json:"versions"`
+}
+
+// MetadataKeysResponse defines model for MetadataKeysResponse.
+type MetadataKeysResponse struct {
+	// Keys Distinct metadata keys present on the caller's rows of the requested resource type, in ascending order.
+	Keys []string `json:"keys"`
+
+	// Truncated True when more distinct keys exist than the requested limit returned.
+	Truncated bool `json:"truncated"`
+}
+
+// MetadataValuesResponse defines model for MetadataValuesResponse.
+type MetadataValuesResponse struct {
+	// Truncated True when more distinct values exist than the requested limit returned.
+	Truncated bool `json:"truncated"`
+
+	// Values Distinct values stored under the requested key, in ascending order. Values held in an array are flattened, and non-string scalars are rendered in their text form. Keys whose value is a JSON object are skipped, since they have no meaningful value list.
+	Values []string `json:"values"`
 }
 
 // MigrationInventory defines model for MigrationInventory.
@@ -5600,6 +5942,12 @@ type PendingInvitationsListResponse struct {
 	Page        int                  `json:"page"`
 	PageSize    int                  `json:"page_size"`
 	TotalCount  int                  `json:"total_count"`
+}
+
+// PostmarkProviderSettings Non-secret Postmark settings. The server token is the provider's secret.
+type PostmarkProviderSettings struct {
+	// MessageStream Postmark message stream to send on. Defaults to "outbound", the default transactional stream.
+	MessageStream *string `json:"message_stream,omitempty"`
 }
 
 // Preferences defines model for Preferences.
@@ -6209,6 +6557,18 @@ type ResourceUsageResponse struct {
 	UserId *openapi_types.UUID `json:"user_id,omitempty"`
 }
 
+// SMTPProviderSettings Non-secret SMTP settings. The password is the provider's secret.
+type SMTPProviderSettings struct {
+	// Host SMTP server hostname.
+	Host string `json:"host"`
+
+	// Port SMTP port, as a string. Must parse to 1-65535.
+	Port string `json:"port"`
+
+	// Username SMTP username, when the server requires authentication.
+	Username *string `json:"username,omitempty"`
+}
+
 // SearchRequest defines model for SearchRequest.
 type SearchRequest struct {
 	// Page Page number
@@ -6466,6 +6826,91 @@ type TeamDeleteConflictErrorCode string
 // TeamDeleteConflictErrorTitle Short, human-readable summary of the problem type
 type TeamDeleteConflictErrorTitle string
 
+// TeamEmailProviderResponse The email configuration in force for a team — its own provider, or the instance provider it inherits. This is never a 404: a team without its own provider is inheriting one, which is a state the caller needs described.
+// No field here can carry the credential; `has_credential` reports only that one is stored.
+type TeamEmailProviderResponse struct {
+	// Configured Whether the team has its own provider configured.
+	Configured bool `json:"configured"`
+
+	// EffectiveFromAddress The address mail will actually be sent from — the team's when configured, otherwise the instance's.
+	EffectiveFromAddress string `json:"effective_from_address"`
+
+	// FromAddress The team's configured from address. Absent when inheriting the instance provider.
+	FromAddress *string `json:"from_address,omitempty"`
+
+	// FromName The team's configured display name.
+	FromName *string `json:"from_name,omitempty"`
+
+	// HasCredential Whether a credential is stored for the team's provider. The credential itself is never returned.
+	HasCredential bool `json:"has_credential"`
+
+	// IsHealthy Whether the last observed send succeeded. Derived by comparing last_success_at with last_error_at, so a recovered provider is healthy even though last_error is still populated.
+	IsHealthy *bool `json:"is_healthy,omitempty"`
+
+	// LastError The last delivery error. Deliberately retained after recovery for diagnosis, so its presence alone does not mean the provider is broken — use is_healthy.
+	LastError *string `json:"last_error,omitempty"`
+
+	// LastErrorAt When the last delivery error occurred.
+	LastErrorAt *time.Time `json:"last_error_at,omitempty"`
+
+	// LastSuccessAt When a send through the team's provider last succeeded.
+	LastSuccessAt *time.Time `json:"last_success_at,omitempty"`
+
+	// ProviderType The team's provider type, or null when the team inherits the instance provider.
+	ProviderType *TeamEmailProviderResponseProviderType `json:"provider_type"`
+
+	// ReplyTo The team's configured Reply-To address.
+	ReplyTo *string `json:"reply_to,omitempty"`
+
+	// Settings Per-type non-secret settings. Exactly the block matching `provider_type` may be present; a block belonging to another type is rejected rather than ignored. SendGrid has no block — its only configuration is its API key, which is the secret.
+	Settings *TeamEmailProviderSettings `json:"settings,omitempty"`
+
+	// Source Which provider will actually send: the team's own, or the instance provider from the deployment configuration.
+	Source TeamEmailProviderResponseSource `json:"source"`
+}
+
+// TeamEmailProviderResponseProviderType The team's provider type, or null when the team inherits the instance provider.
+type TeamEmailProviderResponseProviderType string
+
+// TeamEmailProviderResponseSource Which provider will actually send: the team's own, or the instance provider from the deployment configuration.
+type TeamEmailProviderResponseSource string
+
+// TeamEmailProviderSettings Per-type non-secret settings. Exactly the block matching `provider_type` may be present; a block belonging to another type is rejected rather than ignored. SendGrid has no block — its only configuration is its API key, which is the secret.
+type TeamEmailProviderSettings struct {
+	// Mailgun Non-secret Mailgun settings. The sending key is the provider's secret.
+	Mailgun *MailgunProviderSettings `json:"mailgun,omitempty"`
+
+	// Postmark Non-secret Postmark settings. The server token is the provider's secret.
+	Postmark *PostmarkProviderSettings `json:"postmark,omitempty"`
+
+	// Smtp Non-secret SMTP settings. The password is the provider's secret.
+	Smtp *SMTPProviderSettings `json:"smtp,omitempty"`
+}
+
+// TeamEmailProviderTestDetails Fixed-category detail for a failed test send. The real upstream error is logged server-side only.
+type TeamEmailProviderTestDetails struct {
+	// ErrorDetails Why the test failed: `configuration_invalid` when the provider could not be built at all (nothing was dialled), `send_failed` when it was built but delivery failed. Absent on success.
+	ErrorDetails *TeamEmailProviderTestDetailsErrorDetails `json:"error_details,omitempty"`
+}
+
+// TeamEmailProviderTestDetailsErrorDetails Why the test failed: `configuration_invalid` when the provider could not be built at all (nothing was dialled), `send_failed` when it was built but delivery failed. Absent on success.
+type TeamEmailProviderTestDetailsErrorDetails string
+
+// TeamEmailProviderTestResponse Outcome of a test send. A failed send is reported here with `is_valid: false`, not as an HTTP error — the caller asked whether the configuration works, and "no, because X" is a successful answer.
+type TeamEmailProviderTestResponse struct {
+	// Details Fixed-category detail for a failed test send. The real upstream error is logged server-side only.
+	Details TeamEmailProviderTestDetails `json:"details"`
+
+	// IsValid Whether the test message was accepted by the provider.
+	IsValid bool `json:"is_valid"`
+
+	// Message Human-readable outcome, safe to show to an admin.
+	Message string `json:"message"`
+
+	// Recipient Where the test message was sent. Always the acting user's own account email — this endpoint never accepts a caller-supplied recipient, so it cannot be used to send mail to third parties.
+	Recipient string `json:"recipient"`
+}
+
 // TeamFeedCreationDailyCount Per-feed-entity creation counts for a single calendar day (UTC), zero-filled.
 type TeamFeedCreationDailyCount struct {
 	Date openapi_types.Date `json:"date"`
@@ -6563,6 +7008,55 @@ type TeamResourceCreationMetricsResponse struct {
 	Data    TeamResourceCreationMetricsData `json:"data"`
 	Message string                          `json:"message"`
 	Status  string                          `json:"status"`
+}
+
+// TeamSearchSettings The search ranking settings in effect for a team, with enough context for a client to render the whole settings surface from this one response: the effective values, where they came from, the instance defaults to preview a reset against, and the instance-owned candidate cap.
+type TeamSearchSettings struct {
+	// InstanceDefaults A complete search ranking profile. The three weights are normalized by their sum at ranking time, so they need not pre-sum to 1.
+	InstanceDefaults TeamSearchSettingsValues `json:"instance_defaults"`
+
+	// RankCandidateCap How many top-by-relevance rows are pulled and re-ranked in memory per query. Instance-owned and NOT team-configurable — one team must not be able to raise the whole deployment's per-query cost. Exposed so clients can explain why pagination is clamped to this many results when recency ranking is on.
+	// Deliberately NOT marked `readOnly`: the update request uses a separate schema that has no such field, which is what actually makes the cap unsettable. Marking it readOnly additionally makes oapi-codegen emit it as an optional pointer, which would let a required field serialize as absent.
+	RankCandidateCap int `json:"rank_candidate_cap"`
+
+	// RankHalfLifeDays Effective value — the team's when source is `team`, otherwise the instance default.
+	RankHalfLifeDays float64 `json:"rank_half_life_days"`
+
+	// RankWeightCreated Effective value — the team's when source is `team`, otherwise the instance default.
+	RankWeightCreated float64 `json:"rank_weight_created"`
+
+	// RankWeightRelevance Effective value — the team's when source is `team`, otherwise the instance default.
+	RankWeightRelevance float64 `json:"rank_weight_relevance"`
+
+	// RankWeightUpdated Effective value — the team's when source is `team`, otherwise the instance default.
+	RankWeightUpdated float64 `json:"rank_weight_updated"`
+
+	// RecencyRankingEnabled Effective value — the team's when source is `team`, otherwise the instance default.
+	RecencyRankingEnabled bool `json:"recency_ranking_enabled"`
+
+	// Source Where the effective values come from. `instance` means the team has no override and inherits the deployment defaults; `team` means the team has stored its own profile.
+	Source TeamSearchSettingsSource `json:"source"`
+}
+
+// TeamSearchSettingsSource Where the effective values come from. `instance` means the team has no override and inherits the deployment defaults; `team` means the team has stored its own profile.
+type TeamSearchSettingsSource string
+
+// TeamSearchSettingsValues A complete search ranking profile. The three weights are normalized by their sum at ranking time, so they need not pre-sum to 1.
+type TeamSearchSettingsValues struct {
+	// RankHalfLifeDays Half-life in days for the exponential freshness decay applied to both created_at and updated_at. An item exactly one half-life old scores 0.5.
+	RankHalfLifeDays float64 `json:"rank_half_life_days"`
+
+	// RankWeightCreated Weight of how recently the resource was created.
+	RankWeightCreated float64 `json:"rank_weight_created"`
+
+	// RankWeightRelevance Weight of semantic relevance. Expected to be the dominant weight.
+	RankWeightRelevance float64 `json:"rank_weight_relevance"`
+
+	// RankWeightUpdated Weight of how recently the resource was updated.
+	RankWeightUpdated float64 `json:"rank_weight_updated"`
+
+	// RecencyRankingEnabled When false, results keep relevance-only ordering. When true they are re-ranked by a weighted blend of relevance and freshness.
+	RecencyRankingEnabled bool `json:"recency_ranking_enabled"`
 }
 
 // TeamStatsResponse defines model for TeamStatsResponse.
@@ -6805,6 +7299,19 @@ type UpdateFeedRequest struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// UpdateGitHubAppConfigRequest Edits the team's App registration. Every field is optional; an omitted field keeps the stored value. An explicitly EMPTY value is rejected rather than treated as a clear — a GitHub App with no private key is not a meaningful state, so a blank value is far more likely a client bug than an intent. webhook_secret is absent for the same reason it is absent from create: it is server-generated, and replaced through the rotation endpoint.
+type UpdateGitHubAppConfigRequest struct {
+	AppId    *string `json:"app_id,omitempty"`
+	AppSlug  *string `json:"app_slug,omitempty"`
+	ClientId *string `json:"client_id,omitempty"`
+
+	// ClientSecret Replacement OAuth client secret.
+	ClientSecret *string `json:"client_secret,omitempty"`
+
+	// PrivateKey Replacement RSA private key (raw PEM or base64-encoded PEM).
+	PrivateKey *string `json:"private_key,omitempty"`
+}
+
 // UpdateMemoryRequest defines model for UpdateMemoryRequest.
 type UpdateMemoryRequest struct {
 	// Metadata Updated metadata as key-value pairs
@@ -6907,6 +7414,40 @@ type UpdateTeamRequest struct {
 	// Name New team name (must be non-empty when provided)
 	Name *string `json:"name,omitempty"`
 }
+
+// UpdateTeamSearchSettingsRequest A complete replacement ranking profile for the team. There is no partial update: every field is required, and the whole profile is stored or replaced atomically. `rank_candidate_cap` is deliberately absent — it is instance-owned.
+type UpdateTeamSearchSettingsRequest struct {
+	RankHalfLifeDays      float64 `json:"rank_half_life_days"`
+	RankWeightCreated     float64 `json:"rank_weight_created"`
+	RankWeightRelevance   float64 `json:"rank_weight_relevance"`
+	RankWeightUpdated     float64 `json:"rank_weight_updated"`
+	RecencyRankingEnabled bool    `json:"recency_ranking_enabled"`
+}
+
+// UpsertTeamEmailProviderRequest The team's email provider configuration. This is an upsert, so the same body creates or replaces.
+type UpsertTeamEmailProviderRequest struct {
+	// FromAddress The address the team's mail is sent from.
+	FromAddress openapi_types.Email `json:"from_address"`
+
+	// FromName Optional display name shown beside the from address.
+	FromName *string `json:"from_name,omitempty"`
+
+	// ProviderType Which provider to send through. Matched case-insensitively.
+	ProviderType UpsertTeamEmailProviderRequestProviderType `json:"provider_type"`
+
+	// ReplyTo Optional Reply-To address.
+	ReplyTo *openapi_types.Email `json:"reply_to,omitempty"`
+
+	// Secret The provider's single credential (SMTP password, Mailgun sending key, Postmark server token, or SendGrid API key). Required when configuring a provider for the first time.
+	// On a team that already has a provider, OMIT this field to keep the stored credential — it is never returned, so a client cannot resend it. An explicitly empty string is rejected: a provider with no credential cannot send, so clearing it would silently disable the team's mail.
+	Secret *string `json:"secret,omitempty"`
+
+	// Settings Per-type non-secret settings. Exactly the block matching `provider_type` may be present; a block belonging to another type is rejected rather than ignored. SendGrid has no block — its only configuration is its API key, which is the secret.
+	Settings *TeamEmailProviderSettings `json:"settings,omitempty"`
+}
+
+// UpsertTeamEmailProviderRequestProviderType Which provider to send through. Matched case-insensitively.
+type UpsertTeamEmailProviderRequestProviderType string
 
 // UsageAndGrowthResponse Usage and growth data response
 type UsageAndGrowthResponse struct {
@@ -7041,6 +7582,35 @@ type ValidateEmbeddingProviderResponse struct {
 	} `json:"details,omitempty"`
 	IsValid bool   `json:"is_valid"`
 	Message string `json:"message"`
+}
+
+// ValidateGitHubAppConfigDetails Fixed-category diagnostics for a validation probe.
+type ValidateGitHubAppConfigDetails struct {
+	// ErrorDetails Fixed failure category. Never carries upstream error text, which would reveal what the server could and could not reach.
+	ErrorDetails   *ValidateGitHubAppConfigDetailsErrorDetails `json:"error_details,omitempty"`
+	ResponseTimeMs *int                                        `json:"response_time_ms,omitempty"`
+
+	// StatusCode HTTP status GitHub returned, when the probe got that far.
+	StatusCode *int `json:"status_code,omitempty"`
+}
+
+// ValidateGitHubAppConfigDetailsErrorDetails Fixed failure category. Never carries upstream error text, which would reveal what the server could and could not reach.
+type ValidateGitHubAppConfigDetailsErrorDetails string
+
+// ValidateGitHubAppConfigResponse Result of probing GitHub with the stored credentials. A failed probe is reported here with is_valid=false, not as an HTTP error — a wrong key is user-correctable, not a server fault. error_details is always one of a fixed set of categories so the response cannot become an oracle for what the server could reach; the real upstream error is logged server-side only.
+type ValidateGitHubAppConfigResponse struct {
+	// AppSlug The slug GitHub reports for the authenticated App, echoed so a mismatch with the stored value is visible rather than silently producing a broken install URL later.
+	AppSlug *string `json:"app_slug,omitempty"`
+
+	// Details Fixed-category diagnostics for a validation probe.
+	Details *ValidateGitHubAppConfigDetails `json:"details,omitempty"`
+	IsValid bool                            `json:"is_valid"`
+
+	// Message Human-readable summary of the outcome.
+	Message string `json:"message"`
+
+	// Permissions The App's granted permissions, so a missing contents/metadata read can be surfaced before it breaks an import.
+	Permissions *map[string]string `json:"permissions,omitempty"`
 }
 
 // ValidateModelProviderRequest defines model for ValidateModelProviderRequest.
@@ -7502,6 +8072,9 @@ type GetTeamTopAccessedResourcesParamsSource string
 // HandleGitHubWebhookJSONBody defines parameters for HandleGitHubWebhook.
 type HandleGitHubWebhookJSONBody map[string]interface{}
 
+// HandleGitHubWebhookByTokenJSONBody defines parameters for HandleGitHubWebhookByToken.
+type HandleGitHubWebhookByTokenJSONBody map[string]interface{}
+
 // ListAgentsParams defines parameters for ListAgents.
 type ListAgentsParams struct {
 	// Status Filter by agent status
@@ -7599,6 +8172,9 @@ type ListArtifactsParams struct {
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
+	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
+	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
+
 	// SortBy Sort field
 	SortBy *ListArtifactsParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
 
@@ -7631,6 +8207,9 @@ type ListArtifactsByProjectParams struct {
 
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
+	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
 	// SortBy Sort field
 	SortBy *ListArtifactsByProjectParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
@@ -7707,6 +8286,9 @@ type ListSpecLibrariesParams struct {
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
+	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
+	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
+
 	// SortBy Sort field
 	SortBy *ListSpecLibrariesParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
 
@@ -7748,6 +8330,9 @@ type ListSpecLibrariesByProjectParams struct {
 
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
+	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
 	// SortBy Sort field
 	SortBy *ListSpecLibrariesByProjectParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
@@ -7881,7 +8466,7 @@ type HandleGitHubCallbackJSONBody struct {
 	// SetupAction Setup action reported by GitHub on the callback URL (e.g. "install"). Accepted for forward compatibility but currently ignored server-side.
 	SetupAction *string `json:"setup_action,omitempty"`
 
-	// State HMAC-signed state parameter from the install URL (CSRF protection)
+	// State HMAC-signed state parameter from the install URL (CSRF protection). It is bound to the team's GitHub App config, so a state minted before the team replaced or rotated its App is no longer redeemable.
 	State string `json:"state"`
 }
 
@@ -7910,6 +8495,9 @@ type ListMemoriesParams struct {
 
 	// MetadataValue Filter by metadata value (requires metadata_key)
 	MetadataValue *string `form:"metadata_value,omitempty" json:"metadata_value,omitempty"`
+
+	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
+	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
 	// Status Filter by lifecycle status. When omitted, archived memories are hidden (active and draft are returned); an explicit value returns only that status. Returns 400 for unknown values.
 	Status *ListMemoriesParamsStatus `form:"status,omitempty" json:"status,omitempty"`
@@ -7962,6 +8550,42 @@ type SearchMemoriesByMetadataParams struct {
 
 // SearchMemoriesByMetadataParamsStatus defines parameters for SearchMemoriesByMetadata.
 type SearchMemoriesByMetadataParamsStatus string
+
+// GetMetadataKeysParams defines parameters for GetMetadataKeys.
+type GetMetadataKeysParams struct {
+	// ResourceType Which resource type's metadata to enumerate
+	ResourceType GetMetadataKeysParamsResourceType `form:"resource_type" json:"resource_type"`
+
+	// ProjectId Narrow the catalog to a single project
+	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
+
+	// Limit Maximum number of keys to return
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// GetMetadataKeysParamsResourceType defines parameters for GetMetadataKeys.
+type GetMetadataKeysParamsResourceType string
+
+// GetMetadataValuesParams defines parameters for GetMetadataValues.
+type GetMetadataValuesParams struct {
+	// ResourceType Which resource type's metadata to enumerate
+	ResourceType GetMetadataValuesParamsResourceType `form:"resource_type" json:"resource_type"`
+
+	// Key The metadata key whose values to enumerate
+	Key string `form:"key" json:"key"`
+
+	// ProjectId Narrow the catalog to a single project
+	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
+
+	// Q Case-insensitive substring filter for typeahead
+	Q *string `form:"q,omitempty" json:"q,omitempty"`
+
+	// Limit Maximum number of values to return
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// GetMetadataValuesParamsResourceType defines parameters for GetMetadataValues.
+type GetMetadataValuesParamsResourceType string
 
 // ListProjectsParams defines parameters for ListProjects.
 type ListProjectsParams struct {
@@ -8134,6 +8758,9 @@ type TransferTeamOwnershipJSONRequestBody = TransferTeamOwnershipRequest
 // HandleGitHubWebhookJSONRequestBody defines body for HandleGitHubWebhook for application/json ContentType.
 type HandleGitHubWebhookJSONRequestBody HandleGitHubWebhookJSONBody
 
+// HandleGitHubWebhookByTokenJSONRequestBody defines body for HandleGitHubWebhookByToken for application/json ContentType.
+type HandleGitHubWebhookByTokenJSONRequestBody HandleGitHubWebhookByTokenJSONBody
+
 // CreateAgentJSONRequestBody defines body for CreateAgent for application/json ContentType.
 type CreateAgentJSONRequestBody = CreateAgentRequest
 
@@ -8179,6 +8806,12 @@ type CreateCommentJSONRequestBody = CreateCommentRequest
 // UpdateCommentJSONRequestBody defines body for UpdateComment for application/json ContentType.
 type UpdateCommentJSONRequestBody = UpdateCommentRequest
 
+// UpsertTeamEmailProviderJSONRequestBody defines body for UpsertTeamEmailProvider for application/json ContentType.
+type UpsertTeamEmailProviderJSONRequestBody = UpsertTeamEmailProviderRequest
+
+// TestTeamEmailProviderJSONRequestBody defines body for TestTeamEmailProvider for application/json ContentType.
+type TestTeamEmailProviderJSONRequestBody = UpsertTeamEmailProviderRequest
+
 // CreateEmbeddingProviderJSONRequestBody defines body for CreateEmbeddingProvider for application/json ContentType.
 type CreateEmbeddingProviderJSONRequestBody = CreateEmbeddingProviderRequest
 
@@ -8199,6 +8832,12 @@ type UpdateFeedJSONRequestBody = UpdateFeedRequest
 
 // CreateFeedItemJSONRequestBody defines body for CreateFeedItem for application/json ContentType.
 type CreateFeedItemJSONRequestBody = CreateFeedItemRequest
+
+// CreateGitHubAppConfigJSONRequestBody defines body for CreateGitHubAppConfig for application/json ContentType.
+type CreateGitHubAppConfigJSONRequestBody = CreateGitHubAppConfigRequest
+
+// UpdateGitHubAppConfigJSONRequestBody defines body for UpdateGitHubAppConfig for application/json ContentType.
+type UpdateGitHubAppConfigJSONRequestBody = UpdateGitHubAppConfigRequest
 
 // HandleGitHubCallbackJSONRequestBody defines body for HandleGitHubCallback for application/json ContentType.
 type HandleGitHubCallbackJSONRequestBody HandleGitHubCallbackJSONBody
@@ -8248,6 +8887,12 @@ type CreateRelationJSONRequestBody = CreateRelationRequest
 // SearchTeamResourcesJSONRequestBody defines body for SearchTeamResources for application/json ContentType.
 type SearchTeamResourcesJSONRequestBody = SearchRequest
 
+// UpsertTeamEmailProviderSettingsJSONRequestBody defines body for UpsertTeamEmailProviderSettings for application/json ContentType.
+type UpsertTeamEmailProviderSettingsJSONRequestBody = UpsertTeamEmailProviderRequest
+
+// TestTeamEmailProviderSettingsJSONRequestBody defines body for TestTeamEmailProviderSettings for application/json ContentType.
+type TestTeamEmailProviderSettingsJSONRequestBody = UpsertTeamEmailProviderRequest
+
 // CreateEmbeddingProviderSettingsJSONRequestBody defines body for CreateEmbeddingProviderSettings for application/json ContentType.
 type CreateEmbeddingProviderSettingsJSONRequestBody = CreateEmbeddingProviderRequest
 
@@ -8257,6 +8902,12 @@ type ValidateEmbeddingProviderSettingsJSONRequestBody = ValidateEmbeddingProvide
 // UpdateEmbeddingProviderSettingsJSONRequestBody defines body for UpdateEmbeddingProviderSettings for application/json ContentType.
 type UpdateEmbeddingProviderSettingsJSONRequestBody = UpdateEmbeddingProviderRequest
 
+// CreateGitHubAppConfigSettingsJSONRequestBody defines body for CreateGitHubAppConfigSettings for application/json ContentType.
+type CreateGitHubAppConfigSettingsJSONRequestBody = CreateGitHubAppConfigRequest
+
+// UpdateGitHubAppConfigSettingsJSONRequestBody defines body for UpdateGitHubAppConfigSettings for application/json ContentType.
+type UpdateGitHubAppConfigSettingsJSONRequestBody = UpdateGitHubAppConfigRequest
+
 // CreateModelProviderSettingsJSONRequestBody defines body for CreateModelProviderSettings for application/json ContentType.
 type CreateModelProviderSettingsJSONRequestBody = CreateModelProviderRequest
 
@@ -8265,6 +8916,9 @@ type ValidateModelProviderSettingsJSONRequestBody = ValidateModelProviderRequest
 
 // UpdateModelProviderSettingsJSONRequestBody defines body for UpdateModelProviderSettings for application/json ContentType.
 type UpdateModelProviderSettingsJSONRequestBody = UpdateModelProviderRequest
+
+// UpdateTeamSearchSettingsJSONRequestBody defines body for UpdateTeamSearchSettings for application/json ContentType.
+type UpdateTeamSearchSettingsJSONRequestBody = UpdateTeamSearchSettingsRequest
 
 // CreateTypeJSONRequestBody defines body for CreateType for application/json ContentType.
 type CreateTypeJSONRequestBody = CreateTypeRequest
