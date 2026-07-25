@@ -20,6 +20,15 @@ on:
 permissions:
   contents: read
 
+# Superseded runs are pointless here: this job only verifies generation, has no
+# side effects, and a new push to the same ref makes the older result stale. So
+# unlike Release (constant group, cancel-in-progress: false — never abort a
+# commit+tag mid-flight), CI cancels. The group is keyed on the ref so PR runs
+# and main-branch runs never cancel each other.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   generate-and-verify:
     name: Generate & verify
