@@ -1744,6 +1744,42 @@ func (e GetAdminDashboardTimeseriesParamsGranularity) Valid() bool {
 	}
 }
 
+// Defines values for ListAdminProjectsParamsSortBy.
+const (
+	ListAdminProjectsParamsSortByCreatedAt ListAdminProjectsParamsSortBy = "created_at"
+	ListAdminProjectsParamsSortByName      ListAdminProjectsParamsSortBy = "name"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminProjectsParamsSortBy enum.
+func (e ListAdminProjectsParamsSortBy) Valid() bool {
+	switch e {
+	case ListAdminProjectsParamsSortByCreatedAt:
+		return true
+	case ListAdminProjectsParamsSortByName:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListAdminProjectsParamsSortOrder.
+const (
+	ListAdminProjectsParamsSortOrderAsc  ListAdminProjectsParamsSortOrder = "asc"
+	ListAdminProjectsParamsSortOrderDesc ListAdminProjectsParamsSortOrder = "desc"
+)
+
+// Valid indicates whether the value is a known member of the ListAdminProjectsParamsSortOrder enum.
+func (e ListAdminProjectsParamsSortOrder) Valid() bool {
+	switch e {
+	case ListAdminProjectsParamsSortOrderAsc:
+		return true
+	case ListAdminProjectsParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListAdminTeamsParamsSortBy.
 const (
 	ListAdminTeamsParamsSortByCreatedAt   ListAdminTeamsParamsSortBy = "created_at"
@@ -2580,22 +2616,22 @@ func (e ListPromptsParamsStatus) Valid() bool {
 
 // Defines values for ListPromptsParamsSortBy.
 const (
-	CreatedAt ListPromptsParamsSortBy = "created_at"
-	Name      ListPromptsParamsSortBy = "name"
-	Status    ListPromptsParamsSortBy = "status"
-	UpdatedAt ListPromptsParamsSortBy = "updated_at"
+	ListPromptsParamsSortByCreatedAt ListPromptsParamsSortBy = "created_at"
+	ListPromptsParamsSortByName      ListPromptsParamsSortBy = "name"
+	ListPromptsParamsSortByStatus    ListPromptsParamsSortBy = "status"
+	ListPromptsParamsSortByUpdatedAt ListPromptsParamsSortBy = "updated_at"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsSortBy enum.
 func (e ListPromptsParamsSortBy) Valid() bool {
 	switch e {
-	case CreatedAt:
+	case ListPromptsParamsSortByCreatedAt:
 		return true
-	case Name:
+	case ListPromptsParamsSortByName:
 		return true
-	case Status:
+	case ListPromptsParamsSortByStatus:
 		return true
-	case UpdatedAt:
+	case ListPromptsParamsSortByUpdatedAt:
 		return true
 	default:
 		return false
@@ -2604,16 +2640,16 @@ func (e ListPromptsParamsSortBy) Valid() bool {
 
 // Defines values for ListPromptsParamsSortOrder.
 const (
-	Asc  ListPromptsParamsSortOrder = "asc"
-	Desc ListPromptsParamsSortOrder = "desc"
+	ListPromptsParamsSortOrderAsc  ListPromptsParamsSortOrder = "asc"
+	ListPromptsParamsSortOrderDesc ListPromptsParamsSortOrder = "desc"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsSortOrder enum.
 func (e ListPromptsParamsSortOrder) Valid() bool {
 	switch e {
-	case Asc:
+	case ListPromptsParamsSortOrderAsc:
 		return true
-	case Desc:
+	case ListPromptsParamsSortOrderDesc:
 		return true
 	default:
 		return false
@@ -2931,6 +2967,88 @@ type AdminInstanceCounts struct {
 	Users int64 `json:"users"`
 }
 
+// AdminProjectDetail A single project with its team, owner and resource counts (GET /api/v1/admin/projects/{id}).
+type AdminProjectDetail struct {
+	CreatedAt time.Time `json:"created_at"`
+
+	// Description Empty string when unset (the column defaults to '').
+	Description string `json:"description"`
+
+	// GitUrl Empty string when unset.
+	GitUrl string `json:"git_url"`
+
+	// Homepage Empty string when unset.
+	Homepage string             `json:"homepage"`
+	Id       openapi_types.UUID `json:"id"`
+	Name     string             `json:"name"`
+
+	// Owner The project's creator (projects.user_id); see AdminProjectListItem.owner.
+	Owner AdminTeamOwner `json:"owner"`
+
+	// ResourceCounts How many of each PROJECT-SCOPED resource type the project contains.
+	//
+	// Only these four types belong to a project. Agents and feeds are deliberately
+	// absent: neither table has a project_id column (both are team-scoped), so
+	// reporting zero for them would read as "this project has no agents" rather
+	// than "agents do not belong to projects".
+	ResourceCounts AdminProjectResourceCounts `json:"resource_counts"`
+	Slug           string                     `json:"slug"`
+
+	// Team The team a project belongs to.
+	Team      AdminProjectTeam `json:"team"`
+	UpdatedAt time.Time        `json:"updated_at"`
+}
+
+// AdminProjectListItem One project in the instance-wide admin project listing.
+type AdminProjectListItem struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+	Name      string             `json:"name"`
+
+	// Owner The project's creator (projects.user_id). This is NOT necessarily the
+	// owning team's owner — a project carries both a team and a creating user,
+	// and the two can differ.
+	Owner AdminTeamOwner `json:"owner"`
+	Slug  string         `json:"slug"`
+
+	// Team The team a project belongs to.
+	Team      AdminProjectTeam `json:"team"`
+	UpdatedAt time.Time        `json:"updated_at"`
+}
+
+// AdminProjectListResponse A page of the instance-wide project listing.
+type AdminProjectListResponse struct {
+	Page    int `json:"page"`
+	PerPage int `json:"per_page"`
+
+	// Projects Projects on this page.
+	Projects []AdminProjectListItem `json:"projects"`
+
+	// TotalCount Total number of projects matching the filters.
+	TotalCount int `json:"total_count"`
+	TotalPages int `json:"total_pages"`
+}
+
+// AdminProjectResourceCounts How many of each PROJECT-SCOPED resource type the project contains.
+//
+// Only these four types belong to a project. Agents and feeds are deliberately
+// absent: neither table has a project_id column (both are team-scoped), so
+// reporting zero for them would read as "this project has no agents" rather
+// than "agents do not belong to projects".
+type AdminProjectResourceCounts struct {
+	Artifacts  int64 `json:"artifacts"`
+	Blueprints int64 `json:"blueprints"`
+	Memories   int64 `json:"memories"`
+	Prompts    int64 `json:"prompts"`
+}
+
+// AdminProjectTeam The team a project belongs to.
+type AdminProjectTeam struct {
+	Id   openapi_types.UUID `json:"id"`
+	Name string             `json:"name"`
+	Slug string             `json:"slug"`
+}
+
 // AdminSourcePoint A count for one access source within one time bucket.
 type AdminSourcePoint struct {
 	// Bucket Start of the bucket, in UTC.
@@ -2980,7 +3098,9 @@ type AdminTeamDetail struct {
 	Members []AdminTeamMember `json:"members"`
 	Name    string            `json:"name"`
 
-	// Owner The owning user of a team.
+	// Owner A user shown as the responsible party for a resource: the owner of a team, or
+	// the creator of a project (#453). The shape is id/email/name in both cases;
+	// which relationship it represents is stated on the referencing property.
 	Owner AdminTeamOwner `json:"owner"`
 
 	// Slug URL-safe team identifier.
@@ -2999,7 +3119,9 @@ type AdminTeamListItem struct {
 	MemberCount int64  `json:"member_count"`
 	Name        string `json:"name"`
 
-	// Owner The owning user of a team.
+	// Owner A user shown as the responsible party for a resource: the owner of a team, or
+	// the creator of a project (#453). The shape is id/email/name in both cases;
+	// which relationship it represents is stated on the referencing property.
 	Owner AdminTeamOwner `json:"owner"`
 
 	// Slug URL-safe team identifier.
@@ -3038,7 +3160,9 @@ type AdminTeamMembership struct {
 	TeamName string             `json:"team_name"`
 }
 
-// AdminTeamOwner The owning user of a team.
+// AdminTeamOwner A user shown as the responsible party for a resource: the owner of a team, or
+// the creator of a project (#453). The shape is id/email/name in both cases;
+// which relationship it represents is stated on the referencing property.
 type AdminTeamOwner struct {
 	Email openapi_types.Email `json:"email"`
 	Id    openapi_types.UUID  `json:"id"`
@@ -7027,6 +7151,39 @@ type GetAdminDashboardTimeseriesParams struct {
 
 // GetAdminDashboardTimeseriesParamsGranularity defines parameters for GetAdminDashboardTimeseries.
 type GetAdminDashboardTimeseriesParamsGranularity string
+
+// ListAdminProjectsParams defines parameters for ListAdminProjects.
+type ListAdminProjectsParams struct {
+	// Page 1-based page number
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Items per page
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Search Case-insensitive substring match over the project name and slug.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// TeamId Narrow to projects belonging to one team.
+	TeamId *openapi_types.UUID `form:"team_id,omitempty" json:"team_id,omitempty"`
+
+	// CreatedFrom Only projects created at or after this instant (inclusive).
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Only projects created at or before this instant (inclusive).
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// SortBy Column to sort by. Ties are always broken by project id so paging is stable.
+	SortBy *ListAdminProjectsParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+
+	// SortOrder Sort direction.
+	SortOrder *ListAdminProjectsParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
+}
+
+// ListAdminProjectsParamsSortBy defines parameters for ListAdminProjects.
+type ListAdminProjectsParamsSortBy string
+
+// ListAdminProjectsParamsSortOrder defines parameters for ListAdminProjects.
+type ListAdminProjectsParamsSortOrder string
 
 // ListAdminTeamsParams defines parameters for ListAdminTeams.
 type ListAdminTeamsParams struct {
