@@ -4700,10 +4700,6 @@ type CurrentUser struct {
 	Name                  string     `json:"name"`
 	OnboardingCompleted   bool       `json:"onboarding_completed"`
 	OnboardingCompletedAt *time.Time `json:"onboarding_completed_at,omitempty"`
-	StripeCustomerId      *string    `json:"stripe_customer_id,omitempty"`
-	SubscriptionPlan      *string    `json:"subscription_plan,omitempty"`
-	SubscriptionStatus    string     `json:"subscription_status"`
-	TrialEndsAt           *time.Time `json:"trial_ends_at,omitempty"`
 	UpdatedAt             time.Time  `json:"updated_at"`
 	Version               int64      `json:"version"`
 }
@@ -6969,10 +6965,6 @@ type User struct {
 	Name                  string     `json:"name"`
 	OnboardingCompleted   bool       `json:"onboarding_completed"`
 	OnboardingCompletedAt *time.Time `json:"onboarding_completed_at,omitempty"`
-	StripeCustomerId      *string    `json:"stripe_customer_id,omitempty"`
-	SubscriptionPlan      *string    `json:"subscription_plan,omitempty"`
-	SubscriptionStatus    string     `json:"subscription_status"`
-	TrialEndsAt           *time.Time `json:"trial_ends_at,omitempty"`
 	UpdatedAt             time.Time  `json:"updated_at"`
 	Version               int64      `json:"version"`
 }
