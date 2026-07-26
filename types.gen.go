@@ -7442,12 +7442,6 @@ type UsageMetricsRow struct {
 	// AgentExecutions Number of agent executions this week
 	AgentExecutions *int `json:"agent_executions,omitempty"`
 
-	// ClaudeSessions Number of distinct Claude Code sessions this week
-	ClaudeSessions *int `json:"claude_sessions,omitempty"`
-
-	// CursorSessions Number of distinct Cursor IDE sessions this week
-	CursorSessions *int `json:"cursor_sessions,omitempty"`
-
 	// NewAgents Number of new agents created this week
 	NewAgents *int `json:"new_agents,omitempty"`
 
@@ -7465,9 +7459,6 @@ type UsageMetricsRow struct {
 
 	// NewUsers Number of new users registered this week
 	NewUsers *int `json:"new_users,omitempty"`
-
-	// TotalAiToolSessions Total AI tool sessions (Claude + Cursor)
-	TotalAiToolSessions *int `json:"total_ai_tool_sessions,omitempty"`
 
 	// WeekStart Week start date (Monday)
 	WeekStart *openapi_types.Date `json:"week_start,omitempty"`
