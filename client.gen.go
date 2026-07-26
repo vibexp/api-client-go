@@ -18058,7 +18058,6 @@ type ListActivitiesHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ActivityListEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -18092,7 +18091,6 @@ type CreateActivityHTTPResponse struct {
 	JSON201                   *ActivityEnvelope
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -18125,7 +18123,6 @@ type GetActivityEntityTypesHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ActivityEntityTypesEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -18157,7 +18154,6 @@ type GetActivityStatsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ActivityStatsEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -18190,7 +18186,6 @@ type GetActivityTypesHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ActivityTypesEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -18222,7 +18217,6 @@ type GetActivityHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ActivityEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -19069,7 +19063,6 @@ type GetPendingInvitationsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *PendingInvitationsListResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -19138,7 +19131,6 @@ type AcceptInvitationHTTPResponse struct {
 	JSON200                   *AcceptInvitationResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
@@ -19175,7 +19167,6 @@ type RejectInvitationHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -19690,7 +19681,6 @@ type ListTeamsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *TeamListResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -19724,7 +19714,6 @@ type CreateTeamHTTPResponse struct {
 	JSON201                   *Team
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -19756,7 +19745,6 @@ type DeleteTeamHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON409 *TeamDeleteConflictError
@@ -19792,7 +19780,6 @@ type GetTeamHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *Team
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -19827,7 +19814,6 @@ type UpdateTeamHTTPResponse struct {
 	JSON200                   *Team
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -19895,7 +19881,6 @@ type ListTeamInvitationsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *InvitationResponseList
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -19930,7 +19915,6 @@ type SendTeamInvitationsHTTPResponse struct {
 	JSON201                   *InvitationResponseList
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON409 *InvitationDuplicateMembersError
@@ -19965,7 +19949,6 @@ type RevokeTeamInvitationHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20000,7 +19983,6 @@ type GetTeamMembersHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *TeamMembersListResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -20033,7 +20015,6 @@ type RemoveTeamMemberHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20366,7 +20347,6 @@ type ListAgentsHTTPResponse struct {
 	JSON200                   *AgentListResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -20401,7 +20381,6 @@ type CreateAgentHTTPResponse struct {
 	JSON201                   *Agent
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20438,7 +20417,6 @@ type ListConversationExecutionsHTTPResponse struct {
 	JSON200                   *ConversationExecutionsResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20474,7 +20452,6 @@ type GetAgentExecutionHTTPResponse struct {
 	JSON200                   *AgentExecution
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20510,7 +20487,6 @@ type CompleteAgentExecutionHTTPResponse struct {
 	JSON200                   *AgentExecution
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20546,7 +20522,6 @@ type CancelAgentExecutionHTTPResponse struct {
 	JSON200                   *AgentExecution
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
@@ -20583,7 +20558,6 @@ type GetAgentExecutionEventsHTTPResponse struct {
 	JSON200                   *GetAgentExecutionEvents200JSONResponseBody
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20619,7 +20593,6 @@ type GetAgentExecutionStatusHTTPResponse struct {
 	JSON200                   *AgentExecution
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20655,7 +20628,6 @@ type PreviewAgentCardHTTPResponse struct {
 	JSON200                   *AgentCard
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON502 *ErrorResponse
 }
@@ -20690,7 +20662,6 @@ type GetAgentStatsHTTPResponse struct {
 	JSON200                   *AgentStatsResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -20724,7 +20695,6 @@ type DeleteAgentHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20760,7 +20730,6 @@ type GetAgentHTTPResponse struct {
 	JSON200                   *Agent
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20796,7 +20765,6 @@ type UpdateAgentHTTPResponse struct {
 	JSON200                   *Agent
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
@@ -20833,7 +20801,6 @@ type ListAgentConversationsHTTPResponse struct {
 	JSON200                   *ConversationListResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20868,7 +20835,6 @@ type UpdateAgentCredentialsHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20904,7 +20870,6 @@ type ExecuteAgentHTTPResponse struct {
 	JSON200                   *AgentExecution
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -20940,7 +20905,6 @@ type ListAgentExecutionsHTTPResponse struct {
 	JSON200                   *AgentExecutionListResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -20975,7 +20939,6 @@ type StartAgentExecutionHTTPResponse struct {
 	JSON201                   *AgentExecution
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -23962,7 +23925,6 @@ type ListProjectsHTTPResponse struct {
 	JSON200                   *ProjectListResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -23997,7 +23959,6 @@ type CreateProjectHTTPResponse struct {
 	JSON201                   *Project
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -24033,7 +23994,6 @@ type MigrateProjectHTTPResponse struct {
 	JSON200                   *MigrationResult
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -24069,7 +24029,6 @@ type GetProjectMigrationInventoryHTTPResponse struct {
 	JSON200                   *MigrationInventory
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -24104,7 +24063,6 @@ type DeleteProjectHTTPResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -24140,7 +24098,6 @@ type GetProjectHTTPResponse struct {
 	JSON200                   *Project
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
@@ -24176,7 +24133,6 @@ type UpdateProjectHTTPResponse struct {
 	JSON200                   *Project
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON402 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
 	ApplicationproblemJSON409 *ErrorResponse
@@ -28898,13 +28854,6 @@ func ParseListActivitiesHTTPResponse(rsp *http.Response) (*ListActivitiesHTTPRes
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -28952,13 +28901,6 @@ func ParseCreateActivityHTTPResponse(rsp *http.Response) (*CreateActivityHTTPRes
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -28999,13 +28941,6 @@ func ParseGetActivityEntityTypesHTTPResponse(rsp *http.Response) (*GetActivityEn
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	}
 
 	return response, nil
@@ -29038,13 +28973,6 @@ func ParseGetActivityStatsHTTPResponse(rsp *http.Response) (*GetActivityStatsHTT
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
@@ -29086,13 +29014,6 @@ func ParseGetActivityTypesHTTPResponse(rsp *http.Response) (*GetActivityTypesHTT
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	}
 
 	return response, nil
@@ -29125,13 +29046,6 @@ func ParseGetActivityHTTPResponse(rsp *http.Response) (*GetActivityHTTPResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
@@ -30271,13 +30185,6 @@ func ParseGetPendingInvitationsHTTPResponse(rsp *http.Response) (*GetPendingInvi
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -30386,13 +30293,6 @@ func ParseAcceptInvitationHTTPResponse(rsp *http.Response) (*AcceptInvitationHTT
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -30460,13 +30360,6 @@ func ParseRejectInvitationHTTPResponse(rsp *http.Response) (*RejectInvitationHTT
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -31122,13 +31015,6 @@ func ParseListTeamsHTTPResponse(rsp *http.Response) (*ListTeamsHTTPResponse, err
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31176,13 +31062,6 @@ func ParseCreateTeamHTTPResponse(rsp *http.Response) (*CreateTeamHTTPResponse, e
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31215,13 +31094,6 @@ func ParseDeleteTeamHTTPResponse(rsp *http.Response) (*DeleteTeamHTTPResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -31284,13 +31156,6 @@ func ParseGetTeamHTTPResponse(rsp *http.Response) (*GetTeamHTTPResponse, error) 
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31344,13 +31209,6 @@ func ParseUpdateTeamHTTPResponse(rsp *http.Response) (*UpdateTeamHTTPResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -31453,13 +31311,6 @@ func ParseListTeamInvitationsHTTPResponse(rsp *http.Response) (*ListTeamInvitati
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31513,13 +31364,6 @@ func ParseSendTeamInvitationsHTTPResponse(rsp *http.Response) (*SendTeamInvitati
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -31575,13 +31419,6 @@ func ParseRevokeTeamInvitationHTTPResponse(rsp *http.Response) (*RevokeTeamInvit
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31636,13 +31473,6 @@ func ParseGetTeamMembersHTTPResponse(rsp *http.Response) (*GetTeamMembersHTTPRes
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31682,13 +31512,6 @@ func ParseRemoveTeamMemberHTTPResponse(rsp *http.Response) (*RemoveTeamMemberHTT
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -32174,13 +31997,6 @@ func ParseListAgentsHTTPResponse(rsp *http.Response) (*ListAgentsHTTPResponse, e
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32234,13 +32050,6 @@ func ParseCreateAgentHTTPResponse(rsp *http.Response) (*CreateAgentHTTPResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -32310,13 +32119,6 @@ func ParseListConversationExecutionsHTTPResponse(rsp *http.Response) (*ListConve
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32377,13 +32179,6 @@ func ParseGetAgentExecutionHTTPResponse(rsp *http.Response) (*GetAgentExecutionH
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -32446,13 +32241,6 @@ func ParseCompleteAgentExecutionHTTPResponse(rsp *http.Response) (*CompleteAgent
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32513,13 +32301,6 @@ func ParseCancelAgentExecutionHTTPResponse(rsp *http.Response) (*CancelAgentExec
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -32589,13 +32370,6 @@ func ParseGetAgentExecutionEventsHTTPResponse(rsp *http.Response) (*GetAgentExec
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32656,13 +32430,6 @@ func ParseGetAgentExecutionStatusHTTPResponse(rsp *http.Response) (*GetAgentExec
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -32725,13 +32492,6 @@ func ParsePreviewAgentCardHTTPResponse(rsp *http.Response) (*PreviewAgentCardHTT
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32786,13 +32546,6 @@ func ParseGetAgentStatsHTTPResponse(rsp *http.Response) (*GetAgentStatsHTTPRespo
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32839,13 +32592,6 @@ func ParseDeleteAgentHTTPResponse(rsp *http.Response) (*DeleteAgentHTTPResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -32908,13 +32654,6 @@ func ParseGetAgentHTTPResponse(rsp *http.Response) (*GetAgentHTTPResponse, error
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -32975,13 +32714,6 @@ func ParseUpdateAgentHTTPResponse(rsp *http.Response) (*UpdateAgentHTTPResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -33051,13 +32783,6 @@ func ParseListAgentConversationsHTTPResponse(rsp *http.Response) (*ListAgentConv
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33111,13 +32836,6 @@ func ParseUpdateAgentCredentialsHTTPResponse(rsp *http.Response) (*UpdateAgentCr
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -33180,13 +32898,6 @@ func ParseExecuteAgentHTTPResponse(rsp *http.Response) (*ExecuteAgentHTTPRespons
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33248,13 +32959,6 @@ func ParseListAgentExecutionsHTTPResponse(rsp *http.Response) (*ListAgentExecuti
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -33308,13 +33012,6 @@ func ParseStartAgentExecutionHTTPResponse(rsp *http.Response) (*StartAgentExecut
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -37800,13 +37497,6 @@ func ParseListProjectsHTTPResponse(rsp *http.Response) (*ListProjectsHTTPRespons
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37860,13 +37550,6 @@ func ParseCreateProjectHTTPResponse(rsp *http.Response) (*CreateProjectHTTPRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -37929,13 +37612,6 @@ func ParseMigrateProjectHTTPResponse(rsp *http.Response) (*MigrateProjectHTTPRes
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -37997,13 +37673,6 @@ func ParseGetProjectMigrationInventoryHTTPResponse(rsp *http.Response) (*GetProj
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -38057,13 +37726,6 @@ func ParseDeleteProjectHTTPResponse(rsp *http.Response) (*DeleteProjectHTTPRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
@@ -38126,13 +37788,6 @@ func ParseGetProjectHTTPResponse(rsp *http.Response) (*GetProjectHTTPResponse, e
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -38193,13 +37848,6 @@ func ParseUpdateProjectHTTPResponse(rsp *http.Response) (*UpdateProjectHTTPRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON402 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorResponse
