@@ -20,7 +20,6 @@ const (
 
 // Defines values for APIKeyIntegrations.
 const (
-	APIKeyIntegrationsAiTools   APIKeyIntegrations = "ai_tools"
 	APIKeyIntegrationsCli       APIKeyIntegrations = "cli"
 	APIKeyIntegrationsMcpServer APIKeyIntegrations = "mcp_server"
 )
@@ -28,8 +27,6 @@ const (
 // Valid indicates whether the value is a known member of the APIKeyIntegrations enum.
 func (e APIKeyIntegrations) Valid() bool {
 	switch e {
-	case APIKeyIntegrationsAiTools:
-		return true
 	case APIKeyIntegrationsCli:
 		return true
 	case APIKeyIntegrationsMcpServer:
@@ -41,7 +38,6 @@ func (e APIKeyIntegrations) Valid() bool {
 
 // Defines values for APIKeyUsageType.
 const (
-	APIKeyUsageTypeAiTools    APIKeyUsageType = "ai_tools"
 	APIKeyUsageTypeCli        APIKeyUsageType = "cli"
 	APIKeyUsageTypeEverything APIKeyUsageType = "everything"
 	APIKeyUsageTypeMcp        APIKeyUsageType = "mcp"
@@ -50,8 +46,6 @@ const (
 // Valid indicates whether the value is a known member of the APIKeyUsageType enum.
 func (e APIKeyUsageType) Valid() bool {
 	switch e {
-	case APIKeyUsageTypeAiTools:
-		return true
 	case APIKeyUsageTypeCli:
 		return true
 	case APIKeyUsageTypeEverything:
@@ -479,7 +473,6 @@ func (e ContentVersionActorType) Valid() bool {
 
 // Defines values for CreateAPIKeyRequestIntegrationCodes.
 const (
-	CreateAPIKeyRequestIntegrationCodesAiTools   CreateAPIKeyRequestIntegrationCodes = "ai_tools"
 	CreateAPIKeyRequestIntegrationCodesCli       CreateAPIKeyRequestIntegrationCodes = "cli"
 	CreateAPIKeyRequestIntegrationCodesMcpServer CreateAPIKeyRequestIntegrationCodes = "mcp_server"
 )
@@ -487,8 +480,6 @@ const (
 // Valid indicates whether the value is a known member of the CreateAPIKeyRequestIntegrationCodes enum.
 func (e CreateAPIKeyRequestIntegrationCodes) Valid() bool {
 	switch e {
-	case CreateAPIKeyRequestIntegrationCodesAiTools:
-		return true
 	case CreateAPIKeyRequestIntegrationCodesCli:
 		return true
 	case CreateAPIKeyRequestIntegrationCodesMcpServer:
