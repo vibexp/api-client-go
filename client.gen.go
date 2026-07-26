@@ -19802,7 +19802,6 @@ type CreateTeamHTTPResponse struct {
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON402 *ErrorResponse
-	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -31309,13 +31308,6 @@ func ParseCreateTeamHTTPResponse(rsp *http.Response) (*CreateTeamHTTPResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON402 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

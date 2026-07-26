@@ -1340,18 +1340,12 @@ func (e TeamPermissions) Valid() bool {
 
 // Defines values for TeamDeleteConflictErrorCode.
 const (
-	ACTIVESUBSCRIPTIONEXISTS TeamDeleteConflictErrorCode = "ACTIVE_SUBSCRIPTION_EXISTS"
-	SUBSCRIPTIONCANCELING    TeamDeleteConflictErrorCode = "SUBSCRIPTION_CANCELING"
-	TEAMHASMEMBERS           TeamDeleteConflictErrorCode = "TEAM_HAS_MEMBERS"
+	TEAMHASMEMBERS TeamDeleteConflictErrorCode = "TEAM_HAS_MEMBERS"
 )
 
 // Valid indicates whether the value is a known member of the TeamDeleteConflictErrorCode enum.
 func (e TeamDeleteConflictErrorCode) Valid() bool {
 	switch e {
-	case ACTIVESUBSCRIPTIONEXISTS:
-		return true
-	case SUBSCRIPTIONCANCELING:
-		return true
 	case TEAMHASMEMBERS:
 		return true
 	default:
@@ -1361,18 +1355,12 @@ func (e TeamDeleteConflictErrorCode) Valid() bool {
 
 // Defines values for TeamDeleteConflictErrorTitle.
 const (
-	ActiveSubscriptionExists TeamDeleteConflictErrorTitle = "Active Subscription Exists"
-	SubscriptionCanceling    TeamDeleteConflictErrorTitle = "Subscription Canceling"
-	TeamHasMembers           TeamDeleteConflictErrorTitle = "Team Has Members"
+	TeamHasMembers TeamDeleteConflictErrorTitle = "Team Has Members"
 )
 
 // Valid indicates whether the value is a known member of the TeamDeleteConflictErrorTitle enum.
 func (e TeamDeleteConflictErrorTitle) Valid() bool {
 	switch e {
-	case ActiveSubscriptionExists:
-		return true
-	case SubscriptionCanceling:
-		return true
 	case TeamHasMembers:
 		return true
 	default:
@@ -6278,7 +6266,7 @@ type Team struct {
 	Description string             `json:"description"`
 	Id          openapi_types.UUID `json:"id"`
 
-	// IsPersonal Whether this is the user's personal workspace (cannot be deleted or hold a team subscription)
+	// IsPersonal Whether this is the user's personal workspace (cannot be deleted)
 	IsPersonal bool `json:"is_personal"`
 
 	// MemberCount Number of members in this team. Populated only on list responses; 0 on create and single-team reads.
@@ -6304,8 +6292,6 @@ type TeamPermissions string
 
 // TeamDeleteConflictError RFC 9457 problem details returned when team deletion is blocked (HTTP 409).
 // Codes are UPPERCASE and all `metadata` values are strings:
-// - `ACTIVE_SUBSCRIPTION_EXISTS` — metadata: `subscription_id`, `subscription_tier`, `billing_portal_url`, `help_text`
-// - `SUBSCRIPTION_CANCELING` — metadata: `cancel_at` (date the cancellation takes effect)
 // - `TEAM_HAS_MEMBERS` — metadata: `member_count` (stringified integer)
 type TeamDeleteConflictError struct {
 	Code TeamDeleteConflictErrorCode `json:"code"`
