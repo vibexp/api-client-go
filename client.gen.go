@@ -241,9 +241,6 @@ type ClientInterface interface {
 	// TrackPromptGalleryUsage request
 	TrackPromptGalleryUsage(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetResourceUsage request
-	GetResourceUsage(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListAPIKeysSettings request
 	ListAPIKeysSettings(ctx context.Context, params *ListAPIKeysSettingsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1581,18 +1578,6 @@ func (c *Client) GetPromptGalleryPrompt(ctx context.Context, id string, reqEdito
 
 func (c *Client) TrackPromptGalleryUsage(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTrackPromptGalleryUsageRequest(c.Server, id)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetResourceUsage(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetResourceUsageRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -6850,33 +6835,6 @@ func NewTrackPromptGalleryUsageRequest(server string, id string) (*http.Request,
 	}
 
 	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetResourceUsageRequest generates requests for GetResourceUsage
-func NewGetResourceUsageRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/resource-usage")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -17384,9 +17342,6 @@ type ClientWithResponsesInterface interface {
 	// TrackPromptGalleryUsageWithResponse request
 	TrackPromptGalleryUsageWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*TrackPromptGalleryUsageHTTPResponse, error)
 
-	// GetResourceUsageWithResponse request
-	GetResourceUsageWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetResourceUsageHTTPResponse, error)
-
 	// ListAPIKeysSettingsWithResponse request
 	ListAPIKeysSettingsWithResponse(ctx context.Context, params *ListAPIKeysSettingsParams, reqEditors ...RequestEditorFn) (*ListAPIKeysSettingsHTTPResponse, error)
 
@@ -19563,38 +19518,6 @@ func (r TrackPromptGalleryUsageHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r TrackPromptGalleryUsageHTTPResponse) ContentType() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Header.Get("Content-Type")
-	}
-	return ""
-}
-
-type GetResourceUsageHTTPResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	JSON200                   *ResourceUsageResponse
-	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON403 *ErrorResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r GetResourceUsageHTTPResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetResourceUsageHTTPResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r GetResourceUsageHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -26695,15 +26618,6 @@ func (c *ClientWithResponses) TrackPromptGalleryUsageWithResponse(ctx context.Co
 	return ParseTrackPromptGalleryUsageHTTPResponse(rsp)
 }
 
-// GetResourceUsageWithResponse request returning *GetResourceUsageHTTPResponse
-func (c *ClientWithResponses) GetResourceUsageWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetResourceUsageHTTPResponse, error) {
-	rsp, err := c.GetResourceUsage(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetResourceUsageHTTPResponse(rsp)
-}
-
 // ListAPIKeysSettingsWithResponse request returning *ListAPIKeysSettingsHTTPResponse
 func (c *ClientWithResponses) ListAPIKeysSettingsWithResponse(ctx context.Context, params *ListAPIKeysSettingsParams, reqEditors ...RequestEditorFn) (*ListAPIKeysSettingsHTTPResponse, error) {
 	rsp, err := c.ListAPIKeysSettings(ctx, params, reqEditors...)
@@ -30967,46 +30881,6 @@ func ParseTrackPromptGalleryUsageHTTPResponse(rsp *http.Response) (*TrackPromptG
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetResourceUsageHTTPResponse parses an HTTP response from a GetResourceUsageWithResponse call
-func ParseGetResourceUsageHTTPResponse(rsp *http.Response) (*GetResourceUsageHTTPResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetResourceUsageHTTPResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceUsageResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	}
 

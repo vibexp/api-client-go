@@ -6066,36 +6066,6 @@ type ResourceSelections struct {
 	Prompts    *ResourceSelection `json:"prompts,omitempty"`
 }
 
-// ResourceUsageItem defines model for ResourceUsageItem.
-type ResourceUsageItem struct {
-	// Count Current usage count
-	Count *int `json:"count,omitempty"`
-
-	// Limit Maximum allowed for the subscription plan
-	Limit *int `json:"limit,omitempty"`
-
-	// Percentage Usage percentage
-	Percentage *int `json:"percentage,omitempty"`
-
-	// ResourceType Type of resource (e.g., prompt, memory, artifact)
-	ResourceType *string `json:"resource_type,omitempty"`
-}
-
-// ResourceUsageResponse defines model for ResourceUsageResponse.
-type ResourceUsageResponse struct {
-	// PeriodEnd End of the subscription period
-	PeriodEnd *time.Time `json:"period_end,omitempty"`
-
-	// PeriodStart Start of the subscription period
-	PeriodStart *time.Time `json:"period_start,omitempty"`
-
-	// Resources List of resource usage items
-	Resources *[]ResourceUsageItem `json:"resources,omitempty"`
-
-	// UserId ID of the user
-	UserId *openapi_types.UUID `json:"user_id,omitempty"`
-}
-
 // SMTPProviderSettings Non-secret SMTP settings. The password is the provider's secret.
 type SMTPProviderSettings struct {
 	// Host SMTP server hostname.
