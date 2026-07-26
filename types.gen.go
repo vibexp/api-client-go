@@ -996,21 +996,6 @@ func (e PromptStatus) Valid() bool {
 	}
 }
 
-// Defines values for RegisterDeviceTokenRequestPlatform.
-const (
-	Web RegisterDeviceTokenRequestPlatform = "web"
-)
-
-// Valid indicates whether the value is a known member of the RegisterDeviceTokenRequestPlatform enum.
-func (e RegisterDeviceTokenRequestPlatform) Valid() bool {
-	switch e {
-	case Web:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for RelatedResourceDirection.
 const (
 	Incoming RelatedResourceDirection = "incoming"
@@ -4704,12 +4689,6 @@ type CurrentUser struct {
 	Version               int64      `json:"version"`
 }
 
-// DeleteDeviceTokenRequest defines model for DeleteDeviceTokenRequest.
-type DeleteDeviceTokenRequest struct {
-	// Token Push notification device token to delete (leading/trailing whitespace is trimmed)
-	Token string `json:"token"`
-}
-
 // DevLoginRequest Request body for POST /api/v1/auth/dev/login (development environment only)
 type DevLoginRequest struct {
 	// Email Email address to authenticate as
@@ -5455,7 +5434,10 @@ type NotificationChannelPreferences struct {
 	// InApp Enable in-app notifications globally
 	InApp bool `json:"in_app"`
 
-	// WebPush Enable web push notifications globally
+	// WebPush Deprecated and inert. Web push (Firebase Cloud Messaging) was removed in #688;
+	// this field is accepted and returned for backward compatibility but is never read.
+	// It will be dropped in a future release once clients have stopped sending it.
+	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	WebPush bool `json:"web_push"`
 }
 
@@ -5490,7 +5472,10 @@ type NotificationTypePreference struct {
 	// InApp Deliver this notification type in-app
 	InApp bool `json:"in_app"`
 
-	// WebPush Deliver this notification type via web push
+	// WebPush Deprecated and inert. Web push (Firebase Cloud Messaging) was removed in #688;
+	// this field is accepted and returned for backward compatibility but is never read.
+	// It will be dropped in a future release once clients have stopped sending it.
+	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	WebPush bool `json:"web_push"`
 }
 
@@ -5822,21 +5807,6 @@ type RecentCommentListResponse struct {
 	// TotalCount Number of entries in the list
 	TotalCount int `json:"total_count"`
 }
-
-// RegisterDeviceTokenRequest defines model for RegisterDeviceTokenRequest.
-type RegisterDeviceTokenRequest struct {
-	// Platform Push notification platform; currently only "web" (Web Push / FCM browser push) is supported
-	Platform RegisterDeviceTokenRequestPlatform `json:"platform"`
-
-	// Token Push notification device token (leading/trailing whitespace is trimmed)
-	Token string `json:"token"`
-
-	// UserAgent Optional user agent string of the registering browser
-	UserAgent *string `json:"user_agent,omitempty"`
-}
-
-// RegisterDeviceTokenRequestPlatform Push notification platform; currently only "web" (Web Push / FCM browser push) is supported
-type RegisterDeviceTokenRequestPlatform string
 
 // RelatedResource One endpoint of a relation as seen from the other endpoint, enriched with the related resource's resolved title and link fields. project_id is present for every type; slug is present for artifact/blueprint/prompt and absent for memory.
 type RelatedResource struct {
@@ -8019,12 +7989,6 @@ type CreateAPIKeyJSONRequestBody = CreateAPIKeyRequest
 
 // DevLoginJSONRequestBody defines body for DevLogin for application/json ContentType.
 type DevLoginJSONRequestBody = DevLoginRequest
-
-// DeleteDeviceTokenJSONRequestBody defines body for DeleteDeviceToken for application/json ContentType.
-type DeleteDeviceTokenJSONRequestBody = DeleteDeviceTokenRequest
-
-// RegisterDeviceTokenJSONRequestBody defines body for RegisterDeviceToken for application/json ContentType.
-type RegisterDeviceTokenJSONRequestBody = RegisterDeviceTokenRequest
 
 // UpdatePreferencesJSONRequestBody defines body for UpdatePreferences for application/json ContentType.
 type UpdatePreferencesJSONRequestBody = UpdatePreferencesRequest

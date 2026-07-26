@@ -187,16 +187,6 @@ type ClientInterface interface {
 	// ListAuthProviders request
 	ListAuthProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// DeleteDeviceTokenWithBody request with any body
-	DeleteDeviceTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	DeleteDeviceToken(ctx context.Context, body DeleteDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RegisterDeviceTokenWithBody request with any body
-	RegisterDeviceTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	RegisterDeviceToken(ctx context.Context, body RegisterDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetPendingInvitations request
 	GetPendingInvitations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1350,54 +1340,6 @@ func (c *Client) GetMe(ctx context.Context, reqEditors ...RequestEditorFn) (*htt
 
 func (c *Client) ListAuthProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAuthProvidersRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteDeviceTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteDeviceTokenRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteDeviceToken(ctx context.Context, body DeleteDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteDeviceTokenRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RegisterDeviceTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRegisterDeviceTokenRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RegisterDeviceToken(ctx context.Context, body RegisterDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRegisterDeviceTokenRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6211,86 +6153,6 @@ func NewListAuthProvidersRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewDeleteDeviceTokenRequest calls the generic DeleteDeviceToken builder with application/json body
-func NewDeleteDeviceTokenRequest(server string, body DeleteDeviceTokenJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewDeleteDeviceTokenRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewDeleteDeviceTokenRequestWithBody generates requests for DeleteDeviceToken with any type of body
-func NewDeleteDeviceTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/device-tokens")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewRegisterDeviceTokenRequest calls the generic RegisterDeviceToken builder with application/json body
-func NewRegisterDeviceTokenRequest(server string, body RegisterDeviceTokenJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewRegisterDeviceTokenRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewRegisterDeviceTokenRequestWithBody generates requests for RegisterDeviceToken with any type of body
-func NewRegisterDeviceTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/v1/device-tokens")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -17288,16 +17150,6 @@ type ClientWithResponsesInterface interface {
 	// ListAuthProvidersWithResponse request
 	ListAuthProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAuthProvidersHTTPResponse, error)
 
-	// DeleteDeviceTokenWithBodyWithResponse request with any body
-	DeleteDeviceTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteDeviceTokenHTTPResponse, error)
-
-	DeleteDeviceTokenWithResponse(ctx context.Context, body DeleteDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteDeviceTokenHTTPResponse, error)
-
-	// RegisterDeviceTokenWithBodyWithResponse request with any body
-	RegisterDeviceTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RegisterDeviceTokenHTTPResponse, error)
-
-	RegisterDeviceTokenWithResponse(ctx context.Context, body RegisterDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*RegisterDeviceTokenHTTPResponse, error)
-
 	// GetPendingInvitationsWithResponse request
 	GetPendingInvitationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetPendingInvitationsHTTPResponse, error)
 
@@ -18987,71 +18839,6 @@ func (r ListAuthProvidersHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListAuthProvidersHTTPResponse) ContentType() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Header.Get("Content-Type")
-	}
-	return ""
-}
-
-type DeleteDeviceTokenHTTPResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *ErrorResponse
-	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON500 *ErrorResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteDeviceTokenHTTPResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteDeviceTokenHTTPResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r DeleteDeviceTokenHTTPResponse) ContentType() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Header.Get("Content-Type")
-	}
-	return ""
-}
-
-type RegisterDeviceTokenHTTPResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *ErrorResponse
-	ApplicationproblemJSON401 *ErrorResponse
-	ApplicationproblemJSON409 *ErrorResponse
-	ApplicationproblemJSON500 *ErrorResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r RegisterDeviceTokenHTTPResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RegisterDeviceTokenHTTPResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r RegisterDeviceTokenHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -26406,40 +26193,6 @@ func (c *ClientWithResponses) ListAuthProvidersWithResponse(ctx context.Context,
 	return ParseListAuthProvidersHTTPResponse(rsp)
 }
 
-// DeleteDeviceTokenWithBodyWithResponse request with arbitrary body returning *DeleteDeviceTokenHTTPResponse
-func (c *ClientWithResponses) DeleteDeviceTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteDeviceTokenHTTPResponse, error) {
-	rsp, err := c.DeleteDeviceTokenWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteDeviceTokenHTTPResponse(rsp)
-}
-
-func (c *ClientWithResponses) DeleteDeviceTokenWithResponse(ctx context.Context, body DeleteDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteDeviceTokenHTTPResponse, error) {
-	rsp, err := c.DeleteDeviceToken(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteDeviceTokenHTTPResponse(rsp)
-}
-
-// RegisterDeviceTokenWithBodyWithResponse request with arbitrary body returning *RegisterDeviceTokenHTTPResponse
-func (c *ClientWithResponses) RegisterDeviceTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RegisterDeviceTokenHTTPResponse, error) {
-	rsp, err := c.RegisterDeviceTokenWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRegisterDeviceTokenHTTPResponse(rsp)
-}
-
-func (c *ClientWithResponses) RegisterDeviceTokenWithResponse(ctx context.Context, body RegisterDeviceTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*RegisterDeviceTokenHTTPResponse, error) {
-	rsp, err := c.RegisterDeviceToken(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRegisterDeviceTokenHTTPResponse(rsp)
-}
-
 // GetPendingInvitationsWithResponse request returning *GetPendingInvitationsHTTPResponse
 func (c *ClientWithResponses) GetPendingInvitationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetPendingInvitationsHTTPResponse, error) {
 	rsp, err := c.GetPendingInvitations(ctx, reqEditors...)
@@ -30057,93 +29810,6 @@ func ParseListAuthProvidersHTTPResponse(rsp *http.Response) (*ListAuthProvidersH
 			return nil, err
 		}
 		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON500 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteDeviceTokenHTTPResponse parses an HTTP response from a DeleteDeviceTokenWithResponse call
-func ParseDeleteDeviceTokenHTTPResponse(rsp *http.Response) (*DeleteDeviceTokenHTTPResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteDeviceTokenHTTPResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON500 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseRegisterDeviceTokenHTTPResponse parses an HTTP response from a RegisterDeviceTokenWithResponse call
-func ParseRegisterDeviceTokenHTTPResponse(rsp *http.Response) (*RegisterDeviceTokenHTTPResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RegisterDeviceTokenHTTPResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
