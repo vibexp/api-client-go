@@ -5433,12 +5433,6 @@ type NotificationChannelPreferences struct {
 
 	// InApp Enable in-app notifications globally
 	InApp bool `json:"in_app"`
-
-	// WebPush Deprecated and inert. Web push (Firebase Cloud Messaging) was removed in #688;
-	// this field is accepted and returned for backward compatibility but is never read.
-	// It will be dropped in a future release once clients have stopped sending it.
-	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	WebPush bool `json:"web_push"`
 }
 
 // NotificationListResponse Paginated list of notifications for the authenticated user
@@ -5471,12 +5465,6 @@ type NotificationTypePreference struct {
 
 	// InApp Deliver this notification type in-app
 	InApp bool `json:"in_app"`
-
-	// WebPush Deprecated and inert. Web push (Firebase Cloud Messaging) was removed in #688;
-	// this field is accepted and returned for backward compatibility but is never read.
-	// It will be dropped in a future release once clients have stopped sending it.
-	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	WebPush bool `json:"web_push"`
 }
 
 // NotificationTypePreferenceEmail Email delivery mode for this notification type
