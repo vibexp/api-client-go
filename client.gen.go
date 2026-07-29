@@ -19179,7 +19179,7 @@ func (r UpdatePreferencesHTTPResponse) ContentType() string {
 type GetPromptGalleryCategoriesHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *[]PromptGalleryCategory
+	JSON200                   *PromptGalleryCategoryList
 	ApplicationproblemJSON401 *ErrorResponse
 }
 
@@ -20342,7 +20342,7 @@ func (r CancelAgentExecutionHTTPResponse) ContentType() string {
 type GetAgentExecutionEventsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *GetAgentExecutionEvents200JSONResponseBody
+	JSON200                   *AgentExecutionEventsResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
@@ -21993,7 +21993,7 @@ func (r TestTeamEmailProviderHTTPResponse) ContentType() string {
 type ListEmbeddingProvidersHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *[]EmbeddingProviderResponse
+	JSON200                   *EmbeddingProviderArrayResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -23100,17 +23100,10 @@ func (r ListGitHubRepositoriesHTTPResponse) ContentType() string {
 }
 
 type ImportGitHubProjectHTTPResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Created bool    `json:"created"`
-		Message *string `json:"message,omitempty"`
-		Project Project `json:"project"`
-	}
-	JSON201 *struct {
-		Created bool    `json:"created"`
-		Project Project `json:"project"`
-	}
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *GitHubImportProjectResultResponse
+	JSON201                   *GitHubImportProjectResultResponse
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
@@ -24018,13 +24011,9 @@ func (r GetProjectStatsHTTPResponse) ContentType() string {
 }
 
 type ListPromptsHTTPResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Data    PromptListResponse `json:"data"`
-		Message string             `json:"message"`
-		Status  string             `json:"status"`
-	}
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *PromptListEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 }
@@ -24088,15 +24077,9 @@ func (r CreatePromptHTTPResponse) ContentType() string {
 }
 
 type GetPromptLabelsHTTPResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Data struct {
-			Labels []string `json:"labels"`
-		} `json:"data"`
-		Message string `json:"message"`
-		Status  string `json:"status"`
-	}
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *PromptLabelsEnvelope
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 }
@@ -24896,7 +24879,7 @@ func (r TestTeamEmailProviderSettingsHTTPResponse) ContentType() string {
 type ListEmbeddingProvidersSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *[]EmbeddingProviderResponse
+	JSON200                   *EmbeddingProviderArrayResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
 }
@@ -30315,7 +30298,7 @@ func ParseGetPromptGalleryCategoriesHTTPResponse(rsp *http.Response) (*GetPrompt
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []PromptGalleryCategory
+		var dest PromptGalleryCategoryList
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -32016,7 +31999,7 @@ func ParseGetAgentExecutionEventsHTTPResponse(rsp *http.Response) (*GetAgentExec
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest GetAgentExecutionEvents200JSONResponseBody
+		var dest AgentExecutionEventsResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -34557,7 +34540,7 @@ func ParseListEmbeddingProvidersHTTPResponse(rsp *http.Response) (*ListEmbedding
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []EmbeddingProviderResponse
+		var dest EmbeddingProviderArrayResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -36248,21 +36231,14 @@ func ParseImportGitHubProjectHTTPResponse(rsp *http.Response) (*ImportGitHubProj
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Created bool    `json:"created"`
-			Message *string `json:"message,omitempty"`
-			Project Project `json:"project"`
-		}
+		var dest GitHubImportProjectResultResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest struct {
-			Created bool    `json:"created"`
-			Project Project `json:"project"`
-		}
+		var dest GitHubImportProjectResultResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -37664,11 +37640,7 @@ func ParseListPromptsHTTPResponse(rsp *http.Response) (*ListPromptsHTTPResponse,
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Data    PromptListResponse `json:"data"`
-			Message string             `json:"message"`
-			Status  string             `json:"status"`
-		}
+		var dest PromptListEnvelope
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -37762,13 +37734,7 @@ func ParseGetPromptLabelsHTTPResponse(rsp *http.Response) (*GetPromptLabelsHTTPR
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Data struct {
-				Labels []string `json:"labels"`
-			} `json:"data"`
-			Message string `json:"message"`
-			Status  string `json:"status"`
-		}
+		var dest PromptLabelsEnvelope
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -38952,7 +38918,7 @@ func ParseListEmbeddingProvidersSettingsHTTPResponse(rsp *http.Response) (*ListE
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []EmbeddingProviderResponse
+		var dest EmbeddingProviderArrayResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

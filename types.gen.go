@@ -3618,6 +3618,11 @@ type AgentExecutionEventsPollResponse struct {
 // AgentExecutionEventsPollResponseStatus defines model for AgentExecutionEventsPollResponse.Status.
 type AgentExecutionEventsPollResponseStatus string
 
+// AgentExecutionEventsResponse defines model for AgentExecutionEventsResponse.
+type AgentExecutionEventsResponse struct {
+	union json.RawMessage
+}
+
 // AgentExecutionListResponse defines model for AgentExecutionListResponse.
 type AgentExecutionListResponse struct {
 	Executions []AgentExecution `json:"executions"`
@@ -4783,6 +4788,9 @@ type EmbeddingProvider struct {
 	Version int64 `json:"version"`
 }
 
+// EmbeddingProviderArrayResponse defines model for EmbeddingProviderArrayResponse.
+type EmbeddingProviderArrayResponse = []EmbeddingProviderResponse
+
 // EmbeddingProviderResponse defines model for EmbeddingProviderResponse.
 type EmbeddingProviderResponse struct {
 	BaseUrl *string `json:"base_url,omitempty"`
@@ -5065,6 +5073,14 @@ type GitHubAppConfigResponse struct {
 type GitHubCallbackResponse struct {
 	// Reconnected Whether this was a reconnection to an existing installation (true) or a new installation (false)
 	Reconnected bool `json:"reconnected"`
+}
+
+// GitHubImportProjectResultResponse defines model for GitHubImportProjectResultResponse.
+type GitHubImportProjectResultResponse struct {
+	// Created Whether the project was created by this request (false when it already existed)
+	Created bool    `json:"created"`
+	Message *string `json:"message,omitempty"`
+	Project Project `json:"project"`
 }
 
 // GitHubInstallURL GitHub App installation URL with CSRF protection state parameter
@@ -5711,6 +5727,9 @@ type PromptGalleryCategory struct {
 	Count    int    `json:"count"`
 }
 
+// PromptGalleryCategoryList defines model for PromptGalleryCategoryList.
+type PromptGalleryCategoryList = []PromptGalleryCategory
+
 // PromptGalleryListResponse defines model for PromptGalleryListResponse.
 type PromptGalleryListResponse struct {
 	Page       int                     `json:"page"`
@@ -5731,6 +5750,22 @@ type PromptGalleryTemplate struct {
 	Tags        *[]string               `json:"tags,omitempty"`
 	Title       string                  `json:"title"`
 	UpdatedAt   time.Time               `json:"updated_at"`
+}
+
+// PromptLabelsEnvelope defines model for PromptLabelsEnvelope.
+type PromptLabelsEnvelope struct {
+	Data struct {
+		Labels []string `json:"labels"`
+	} `json:"data"`
+	Message string `json:"message"`
+	Status  string `json:"status"`
+}
+
+// PromptListEnvelope defines model for PromptListEnvelope.
+type PromptListEnvelope struct {
+	Data    PromptListResponse `json:"data"`
+	Message string             `json:"message"`
+	Status  string             `json:"status"`
 }
 
 // PromptListResponse defines model for PromptListResponse.
@@ -7418,11 +7453,6 @@ type GetAgentExecutionEventsParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
-// GetAgentExecutionEvents200JSONResponseBody defines parameters for GetAgentExecutionEvents.
-type GetAgentExecutionEvents200JSONResponseBody struct {
-	union json.RawMessage
-}
-
 // ListAgentConversationsParams defines parameters for ListAgentConversations.
 type ListAgentConversationsParams struct {
 	// Page Page number
@@ -8170,22 +8200,22 @@ type UpdateTeamSearchSettingsJSONRequestBody = UpdateTeamSearchSettingsRequest
 // CreateTypeJSONRequestBody defines body for CreateType for application/json ContentType.
 type CreateTypeJSONRequestBody = CreateTypeRequest
 
-// AsAgentExecutionEventsPollResponse returns the union data inside the GetAgentExecutionEvents200JSONResponseBody as a AgentExecutionEventsPollResponse
-func (t GetAgentExecutionEvents200JSONResponseBody) AsAgentExecutionEventsPollResponse() (AgentExecutionEventsPollResponse, error) {
+// AsAgentExecutionEventsPollResponse returns the union data inside the AgentExecutionEventsResponse as a AgentExecutionEventsPollResponse
+func (t AgentExecutionEventsResponse) AsAgentExecutionEventsPollResponse() (AgentExecutionEventsPollResponse, error) {
 	var body AgentExecutionEventsPollResponse
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromAgentExecutionEventsPollResponse overwrites any union data inside the GetAgentExecutionEvents200JSONResponseBody as the provided AgentExecutionEventsPollResponse
-func (t *GetAgentExecutionEvents200JSONResponseBody) FromAgentExecutionEventsPollResponse(v AgentExecutionEventsPollResponse) error {
+// FromAgentExecutionEventsPollResponse overwrites any union data inside the AgentExecutionEventsResponse as the provided AgentExecutionEventsPollResponse
+func (t *AgentExecutionEventsResponse) FromAgentExecutionEventsPollResponse(v AgentExecutionEventsPollResponse) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeAgentExecutionEventsPollResponse performs a merge with any union data inside the GetAgentExecutionEvents200JSONResponseBody, using the provided AgentExecutionEventsPollResponse
-func (t *GetAgentExecutionEvents200JSONResponseBody) MergeAgentExecutionEventsPollResponse(v AgentExecutionEventsPollResponse) error {
+// MergeAgentExecutionEventsPollResponse performs a merge with any union data inside the AgentExecutionEventsResponse, using the provided AgentExecutionEventsPollResponse
+func (t *AgentExecutionEventsResponse) MergeAgentExecutionEventsPollResponse(v AgentExecutionEventsPollResponse) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8196,22 +8226,22 @@ func (t *GetAgentExecutionEvents200JSONResponseBody) MergeAgentExecutionEventsPo
 	return err
 }
 
-// AsAgentExecutionEventsPageResponse returns the union data inside the GetAgentExecutionEvents200JSONResponseBody as a AgentExecutionEventsPageResponse
-func (t GetAgentExecutionEvents200JSONResponseBody) AsAgentExecutionEventsPageResponse() (AgentExecutionEventsPageResponse, error) {
+// AsAgentExecutionEventsPageResponse returns the union data inside the AgentExecutionEventsResponse as a AgentExecutionEventsPageResponse
+func (t AgentExecutionEventsResponse) AsAgentExecutionEventsPageResponse() (AgentExecutionEventsPageResponse, error) {
 	var body AgentExecutionEventsPageResponse
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromAgentExecutionEventsPageResponse overwrites any union data inside the GetAgentExecutionEvents200JSONResponseBody as the provided AgentExecutionEventsPageResponse
-func (t *GetAgentExecutionEvents200JSONResponseBody) FromAgentExecutionEventsPageResponse(v AgentExecutionEventsPageResponse) error {
+// FromAgentExecutionEventsPageResponse overwrites any union data inside the AgentExecutionEventsResponse as the provided AgentExecutionEventsPageResponse
+func (t *AgentExecutionEventsResponse) FromAgentExecutionEventsPageResponse(v AgentExecutionEventsPageResponse) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeAgentExecutionEventsPageResponse performs a merge with any union data inside the GetAgentExecutionEvents200JSONResponseBody, using the provided AgentExecutionEventsPageResponse
-func (t *GetAgentExecutionEvents200JSONResponseBody) MergeAgentExecutionEventsPageResponse(v AgentExecutionEventsPageResponse) error {
+// MergeAgentExecutionEventsPageResponse performs a merge with any union data inside the AgentExecutionEventsResponse, using the provided AgentExecutionEventsPageResponse
+func (t *AgentExecutionEventsResponse) MergeAgentExecutionEventsPageResponse(v AgentExecutionEventsPageResponse) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8222,12 +8252,12 @@ func (t *GetAgentExecutionEvents200JSONResponseBody) MergeAgentExecutionEventsPa
 	return err
 }
 
-func (t GetAgentExecutionEvents200JSONResponseBody) MarshalJSON() ([]byte, error) {
+func (t AgentExecutionEventsResponse) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
-func (t *GetAgentExecutionEvents200JSONResponseBody) UnmarshalJSON(b []byte) error {
+func (t *AgentExecutionEventsResponse) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
