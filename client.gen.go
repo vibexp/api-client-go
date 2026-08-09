@@ -9241,6 +9241,18 @@ func NewListArtifactsRequest(server string, teamId openapi_types.UUID, params *L
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
+		if params.Freshness != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.ProjectId != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_id", *params.ProjectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
@@ -9485,6 +9497,18 @@ func NewListArtifactsByProjectRequest(server string, teamId openapi_types.UUID, 
 		// styled parameters, preserving literal commas as delimiters
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
+
+		if params.Freshness != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
 
 		if params.Status != nil {
 
@@ -10337,6 +10361,18 @@ func NewListSpecLibrariesRequest(server string, teamId openapi_types.UUID, param
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
+		if params.Freshness != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.ProjectName != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_name", *params.ProjectName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -10605,6 +10641,18 @@ func NewListSpecLibrariesByProjectRequest(server string, teamId openapi_types.UU
 		// styled parameters, preserving literal commas as delimiters
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
+
+		if params.Freshness != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
 
 		if params.Status != nil {
 
@@ -13692,6 +13740,18 @@ func NewListMemoriesRequest(server string, teamId openapi_types.UUID, params *Li
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
+		if params.Freshness != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.ProjectId != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_id", *params.ProjectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
@@ -15098,6 +15158,18 @@ func NewListPromptsRequest(server string, teamId openapi_types.UUID, params *Lis
 		// styled parameters, preserving literal commas as delimiters
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
+
+		if params.Freshness != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
 
 		if params.Page != nil {
 

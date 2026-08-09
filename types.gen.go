@@ -827,19 +827,19 @@ func (e FreshnessAuditEntryAction) Valid() bool {
 
 // Defines values for FreshnessAuditEntryReason.
 const (
-	Accessed FreshnessAuditEntryReason = "accessed"
-	Edited   FreshnessAuditEntryReason = "edited"
-	RuleRun  FreshnessAuditEntryReason = "rule_run"
+	FreshnessAuditEntryReasonAccessed FreshnessAuditEntryReason = "accessed"
+	FreshnessAuditEntryReasonEdited   FreshnessAuditEntryReason = "edited"
+	FreshnessAuditEntryReasonRuleRun  FreshnessAuditEntryReason = "rule_run"
 )
 
 // Valid indicates whether the value is a known member of the FreshnessAuditEntryReason enum.
 func (e FreshnessAuditEntryReason) Valid() bool {
 	switch e {
-	case Accessed:
+	case FreshnessAuditEntryReasonAccessed:
 		return true
-	case Edited:
+	case FreshnessAuditEntryReasonEdited:
 		return true
-	case RuleRun:
+	case FreshnessAuditEntryReasonRuleRun:
 		return true
 	default:
 		return false
@@ -1272,6 +1272,42 @@ func (e ResourceAccessMetricsDataRange) Valid() bool {
 	case ResourceAccessMetricsDataRangeN7d:
 		return true
 	case ResourceAccessMetricsDataRangeN90d:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ResourceFreshnessStateReason.
+const (
+	ResourceFreshnessStateReasonAccessed ResourceFreshnessStateReason = "accessed"
+	ResourceFreshnessStateReasonEdited   ResourceFreshnessStateReason = "edited"
+	ResourceFreshnessStateReasonRuleRun  ResourceFreshnessStateReason = "rule_run"
+)
+
+// Valid indicates whether the value is a known member of the ResourceFreshnessStateReason enum.
+func (e ResourceFreshnessStateReason) Valid() bool {
+	switch e {
+	case ResourceFreshnessStateReasonAccessed:
+		return true
+	case ResourceFreshnessStateReasonEdited:
+		return true
+	case ResourceFreshnessStateReasonRuleRun:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ResourceFreshnessStateStatus.
+const (
+	ResourceFreshnessStateStatusStale ResourceFreshnessStateStatus = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ResourceFreshnessStateStatus enum.
+func (e ResourceFreshnessStateStatus) Valid() bool {
+	switch e {
+	case ResourceFreshnessStateStatusStale:
 		return true
 	default:
 		return false
@@ -2325,6 +2361,21 @@ func (e ListAgentsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for ListArtifactsParamsFreshness.
+const (
+	ListArtifactsParamsFreshnessStale ListArtifactsParamsFreshness = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ListArtifactsParamsFreshness enum.
+func (e ListArtifactsParamsFreshness) Valid() bool {
+	switch e {
+	case ListArtifactsParamsFreshnessStale:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListArtifactsParamsStatus.
 const (
 	ListArtifactsParamsStatusActive   ListArtifactsParamsStatus = "active"
@@ -2385,6 +2436,21 @@ func (e ListArtifactsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for ListArtifactsByProjectParamsFreshness.
+const (
+	ListArtifactsByProjectParamsFreshnessStale ListArtifactsByProjectParamsFreshness = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ListArtifactsByProjectParamsFreshness enum.
+func (e ListArtifactsByProjectParamsFreshness) Valid() bool {
+	switch e {
+	case ListArtifactsByProjectParamsFreshnessStale:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListArtifactsByProjectParamsStatus.
 const (
 	ListArtifactsByProjectParamsStatusActive   ListArtifactsByProjectParamsStatus = "active"
@@ -2439,6 +2505,21 @@ func (e ListArtifactsByProjectParamsSortOrder) Valid() bool {
 	case ListArtifactsByProjectParamsSortOrderAsc:
 		return true
 	case ListArtifactsByProjectParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListSpecLibrariesParamsFreshness.
+const (
+	ListSpecLibrariesParamsFreshnessStale ListSpecLibrariesParamsFreshness = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ListSpecLibrariesParamsFreshness enum.
+func (e ListSpecLibrariesParamsFreshness) Valid() bool {
+	switch e {
+	case ListSpecLibrariesParamsFreshnessStale:
 		return true
 	default:
 		return false
@@ -2565,6 +2646,21 @@ func (e ListSpecLibrariesParamsSortOrder) Valid() bool {
 	case ListSpecLibrariesParamsSortOrderAsc:
 		return true
 	case ListSpecLibrariesParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListSpecLibrariesByProjectParamsFreshness.
+const (
+	ListSpecLibrariesByProjectParamsFreshnessStale ListSpecLibrariesByProjectParamsFreshness = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ListSpecLibrariesByProjectParamsFreshness enum.
+func (e ListSpecLibrariesByProjectParamsFreshness) Valid() bool {
+	switch e {
+	case ListSpecLibrariesByProjectParamsFreshnessStale:
 		return true
 	default:
 		return false
@@ -2739,6 +2835,21 @@ func (e ListFeedItemsByFeedParamsArchived) Valid() bool {
 	}
 }
 
+// Defines values for ListMemoriesParamsFreshness.
+const (
+	ListMemoriesParamsFreshnessStale ListMemoriesParamsFreshness = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ListMemoriesParamsFreshness enum.
+func (e ListMemoriesParamsFreshness) Valid() bool {
+	switch e {
+	case ListMemoriesParamsFreshnessStale:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListMemoriesParamsStatus.
 const (
 	ListMemoriesParamsStatusActive   ListMemoriesParamsStatus = "active"
@@ -2865,6 +2976,21 @@ func (e GetProjectResourceCreationMetricsParamsRange) Valid() bool {
 	case GetProjectResourceCreationMetricsParamsRangeN7d:
 		return true
 	case GetProjectResourceCreationMetricsParamsRangeN90d:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListPromptsParamsFreshness.
+const (
+	Stale ListPromptsParamsFreshness = "stale"
+)
+
+// Valid indicates whether the value is a known member of the ListPromptsParamsFreshness enum.
+func (e ListPromptsParamsFreshness) Valid() bool {
+	switch e {
+	case Stale:
 		return true
 	default:
 		return false
@@ -3810,6 +3936,9 @@ type Artifact struct {
 	// Description Optional description of the artifact
 	Description *string `json:"description,omitempty"`
 
+	// Freshness The resource's staleness state. Present only when the resource is stale; absent means fresh.
+	Freshness *ResourceFreshnessState `json:"freshness,omitempty"`
+
 	// Id Unique identifier for the artifact
 	Id string `json:"id"`
 
@@ -3959,6 +4088,9 @@ type Blueprint struct {
 	// Description Optional description of the spec library
 	Description *string `json:"description,omitempty"`
 
+	// Freshness The resource's staleness state. Present only when the resource is stale; absent means fresh.
+	Freshness *ResourceFreshnessState `json:"freshness,omitempty"`
+
 	// Id Unique identifier for the spec library
 	Id string `json:"id"`
 
@@ -4024,6 +4156,9 @@ type BlueprintDetail struct {
 
 	// Description Optional description of the spec library
 	Description *string `json:"description,omitempty"`
+
+	// Freshness The resource's staleness state. Present only when the resource is stale; absent means fresh.
+	Freshness *ResourceFreshnessState `json:"freshness,omitempty"`
 
 	// Id Unique identifier for the spec library
 	Id string `json:"id"`
@@ -5596,6 +5731,9 @@ type Memory struct {
 	// CreatedAt Timestamp when the memory was created
 	CreatedAt time.Time `json:"created_at"`
 
+	// Freshness The resource's staleness state. Present only when the resource is stale; absent means fresh.
+	Freshness *ResourceFreshnessState `json:"freshness,omitempty"`
+
 	// Id Unique identifier for the memory
 	Id string `json:"id"`
 
@@ -6018,7 +6156,10 @@ type Prompt struct {
 	Body        string    `json:"body"`
 	CreatedAt   time.Time `json:"created_at"`
 	Description string    `json:"description"`
-	Id          string    `json:"id"`
+
+	// Freshness The resource's staleness state. Present only when the resource is stale; absent means fresh.
+	Freshness *ResourceFreshnessState `json:"freshness,omitempty"`
+	Id        string                  `json:"id"`
 
 	// IsShared Whether this prompt has an active, non-expired share
 	IsShared bool `json:"is_shared"`
@@ -6347,6 +6488,27 @@ type ResourceAccessMetricsResponse struct {
 	Message string                    `json:"message"`
 	Status  string                    `json:"status"`
 }
+
+// ResourceFreshnessState The resource's staleness state. Present only when the resource is stale; absent means fresh.
+type ResourceFreshnessState struct {
+	// MatchedRuleIds Every rule that currently marks this resource — staleness is a union across rules, so this answers "why is this stale". Serializes as `[]`, never `null`.
+	MatchedRuleIds []openapi_types.UUID `json:"matched_rule_ids"`
+
+	// Reason What produced the current state.
+	Reason ResourceFreshnessStateReason `json:"reason"`
+
+	// Since When the resource was FIRST marked stale. It is preserved across re-evaluations that keep it stale, so it is the age a client can show.
+	Since time.Time `json:"since"`
+
+	// Status Today the only state a resource can be in while it has freshness state at all. It is modelled as an enum rather than a boolean so a future state can be added without changing the field's type.
+	Status ResourceFreshnessStateStatus `json:"status"`
+}
+
+// ResourceFreshnessStateReason What produced the current state.
+type ResourceFreshnessStateReason string
+
+// ResourceFreshnessStateStatus Today the only state a resource can be in while it has freshness state at all. It is modelled as an enum rather than a boolean so a future state can be added without changing the field's type.
+type ResourceFreshnessStateStatus string
 
 // ResourceInventory defines model for ResourceInventory.
 type ResourceInventory struct {
@@ -7869,6 +8031,9 @@ type ListAgentExecutionsParams struct {
 
 // ListArtifactsParams defines parameters for ListArtifacts.
 type ListArtifactsParams struct {
+	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
+	Freshness *ListArtifactsParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
+
 	// ProjectId Filter by project ID
 	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
 
@@ -7897,6 +8062,9 @@ type ListArtifactsParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListArtifactsParamsFreshness defines parameters for ListArtifacts.
+type ListArtifactsParamsFreshness string
+
 // ListArtifactsParamsStatus defines parameters for ListArtifacts.
 type ListArtifactsParamsStatus string
 
@@ -7908,6 +8076,9 @@ type ListArtifactsParamsSortOrder string
 
 // ListArtifactsByProjectParams defines parameters for ListArtifactsByProject.
 type ListArtifactsByProjectParams struct {
+	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
+	Freshness *ListArtifactsByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
+
 	// Status Filter by status
 	Status *ListArtifactsByProjectParamsStatus `form:"status,omitempty" json:"status,omitempty"`
 
@@ -7932,6 +8103,9 @@ type ListArtifactsByProjectParams struct {
 	// Limit Items per page
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
+
+// ListArtifactsByProjectParamsFreshness defines parameters for ListArtifactsByProject.
+type ListArtifactsByProjectParamsFreshness string
 
 // ListArtifactsByProjectParamsStatus defines parameters for ListArtifactsByProject.
 type ListArtifactsByProjectParamsStatus string
@@ -7977,6 +8151,9 @@ type UploadAttachmentMultipartBody struct {
 
 // ListSpecLibrariesParams defines parameters for ListSpecLibraries.
 type ListSpecLibrariesParams struct {
+	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
+	Freshness *ListSpecLibrariesParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
+
 	// ProjectName Filter by project name
 	ProjectName *string `form:"project_name,omitempty" json:"project_name,omitempty"`
 
@@ -8011,6 +8188,9 @@ type ListSpecLibrariesParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListSpecLibrariesParamsFreshness defines parameters for ListSpecLibraries.
+type ListSpecLibrariesParamsFreshness string
+
 // ListSpecLibrariesParamsStatus defines parameters for ListSpecLibraries.
 type ListSpecLibrariesParamsStatus string
 
@@ -8028,6 +8208,9 @@ type ListSpecLibrariesParamsSortOrder string
 
 // ListSpecLibrariesByProjectParams defines parameters for ListSpecLibrariesByProject.
 type ListSpecLibrariesByProjectParams struct {
+	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
+	Freshness *ListSpecLibrariesByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
+
 	// Status Filter by status
 	Status *ListSpecLibrariesByProjectParamsStatus `form:"status,omitempty" json:"status,omitempty"`
 
@@ -8055,6 +8238,9 @@ type ListSpecLibrariesByProjectParams struct {
 	// Limit Items per page
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
+
+// ListSpecLibrariesByProjectParamsFreshness defines parameters for ListSpecLibrariesByProject.
+type ListSpecLibrariesByProjectParamsFreshness string
 
 // ListSpecLibrariesByProjectParamsStatus defines parameters for ListSpecLibrariesByProject.
 type ListSpecLibrariesByProjectParamsStatus string
@@ -8208,6 +8394,9 @@ type ListGitHubRepositoriesParams struct {
 
 // ListMemoriesParams defines parameters for ListMemories.
 type ListMemoriesParams struct {
+	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
+	Freshness *ListMemoriesParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
+
 	// ProjectId Filter memories by project ID
 	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
 
@@ -8232,6 +8421,9 @@ type ListMemoriesParams struct {
 	// Limit Items per page
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
+
+// ListMemoriesParamsFreshness defines parameters for ListMemories.
+type ListMemoriesParamsFreshness string
 
 // ListMemoriesParamsStatus defines parameters for ListMemories.
 type ListMemoriesParamsStatus string
@@ -8307,6 +8499,9 @@ type GetProjectResourceCreationMetricsParamsRange string
 
 // ListPromptsParams defines parameters for ListPrompts.
 type ListPromptsParams struct {
+	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
+	Freshness *ListPromptsParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
+
 	// Page Page number for pagination
 	Page *int `form:"page,omitempty" json:"page,omitempty"`
 
@@ -8337,6 +8532,9 @@ type ListPromptsParams struct {
 	// SortOrder Sort direction (asc or desc, default desc)
 	SortOrder *ListPromptsParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
 }
+
+// ListPromptsParamsFreshness defines parameters for ListPrompts.
+type ListPromptsParamsFreshness string
 
 // ListPromptsParamsStatus defines parameters for ListPrompts.
 type ListPromptsParamsStatus string
