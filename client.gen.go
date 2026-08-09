@@ -599,6 +599,22 @@ type ClientInterface interface {
 
 	CreateFeedItem(ctx context.Context, teamId openapi_types.UUID, feedId openapi_types.UUID, body CreateFeedItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListFreshnessRules request
+	ListFreshnessRules(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateFreshnessRuleWithBody request with any body
+	CreateFreshnessRuleWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateFreshnessRule(ctx context.Context, teamId openapi_types.UUID, body CreateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteFreshnessRule request
+	DeleteFreshnessRule(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateFreshnessRuleWithBody request with any body
+	UpdateFreshnessRuleWithBody(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateFreshnessRule(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteGitHubAppConfig request
 	DeleteGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -863,6 +879,17 @@ type ClientInterface interface {
 
 	// ReprocessEmbeddingProviderSettings request
 	ReprocessEmbeddingProviderSettings(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ResetTeamFreshnessSettings request
+	ResetTeamFreshnessSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTeamFreshnessSettings request
+	GetTeamFreshnessSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateTeamFreshnessSettingsWithBody request with any body
+	UpdateTeamFreshnessSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateTeamFreshnessSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamFreshnessSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteGitHubAppConfigSettings request
 	DeleteGitHubAppConfigSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3126,6 +3153,78 @@ func (c *Client) CreateFeedItem(ctx context.Context, teamId openapi_types.UUID, 
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListFreshnessRules(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListFreshnessRulesRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFreshnessRuleWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFreshnessRuleRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFreshnessRule(ctx context.Context, teamId openapi_types.UUID, body CreateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFreshnessRuleRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteFreshnessRule(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFreshnessRuleRequest(c.Server, teamId, ruleId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateFreshnessRuleWithBody(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateFreshnessRuleRequestWithBody(c.Server, teamId, ruleId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateFreshnessRule(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateFreshnessRuleRequest(c.Server, teamId, ruleId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteGitHubAppConfig(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteGitHubAppConfigRequest(c.Server, teamId)
 	if err != nil {
@@ -4268,6 +4367,54 @@ func (c *Client) UpdateEmbeddingProviderSettings(ctx context.Context, teamId ope
 
 func (c *Client) ReprocessEmbeddingProviderSettings(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReprocessEmbeddingProviderSettingsRequest(c.Server, teamId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResetTeamFreshnessSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetTeamFreshnessSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTeamFreshnessSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTeamFreshnessSettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTeamFreshnessSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTeamFreshnessSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTeamFreshnessSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamFreshnessSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTeamFreshnessSettingsRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12495,6 +12642,182 @@ func NewCreateFeedItemRequestWithBody(server string, teamId openapi_types.UUID, 
 	return req, nil
 }
 
+// NewListFreshnessRulesRequest generates requests for ListFreshnessRules
+func NewListFreshnessRulesRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/freshness/rules", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateFreshnessRuleRequest calls the generic CreateFreshnessRule builder with application/json body
+func NewCreateFreshnessRuleRequest(server string, teamId openapi_types.UUID, body CreateFreshnessRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateFreshnessRuleRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewCreateFreshnessRuleRequestWithBody generates requests for CreateFreshnessRule with any type of body
+func NewCreateFreshnessRuleRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/freshness/rules", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteFreshnessRuleRequest generates requests for DeleteFreshnessRule
+func NewDeleteFreshnessRuleRequest(server string, teamId openapi_types.UUID, ruleId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "rule_id", ruleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/freshness/rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateFreshnessRuleRequest calls the generic UpdateFreshnessRule builder with application/json body
+func NewUpdateFreshnessRuleRequest(server string, teamId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateFreshnessRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateFreshnessRuleRequestWithBody(server, teamId, ruleId, "application/json", bodyReader)
+}
+
+// NewUpdateFreshnessRuleRequestWithBody generates requests for UpdateFreshnessRule with any type of body
+func NewUpdateFreshnessRuleRequestWithBody(server string, teamId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "rule_id", ruleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/freshness/rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewDeleteGitHubAppConfigRequest generates requests for DeleteGitHubAppConfig
 func NewDeleteGitHubAppConfigRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -16136,6 +16459,121 @@ func NewReprocessEmbeddingProviderSettingsRequest(server string, teamId openapi_
 	return req, nil
 }
 
+// NewResetTeamFreshnessSettingsRequest generates requests for ResetTeamFreshnessSettings
+func NewResetTeamFreshnessSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/freshness", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetTeamFreshnessSettingsRequest generates requests for GetTeamFreshnessSettings
+func NewGetTeamFreshnessSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/freshness", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateTeamFreshnessSettingsRequest calls the generic UpdateTeamFreshnessSettings builder with application/json body
+func NewUpdateTeamFreshnessSettingsRequest(server string, teamId openapi_types.UUID, body UpdateTeamFreshnessSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateTeamFreshnessSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpdateTeamFreshnessSettingsRequestWithBody generates requests for UpdateTeamFreshnessSettings with any type of body
+func NewUpdateTeamFreshnessSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/freshness", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewDeleteGitHubAppConfigSettingsRequest generates requests for DeleteGitHubAppConfigSettings
 func NewDeleteGitHubAppConfigSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -17562,6 +18000,22 @@ type ClientWithResponsesInterface interface {
 
 	CreateFeedItemWithResponse(ctx context.Context, teamId openapi_types.UUID, feedId openapi_types.UUID, body CreateFeedItemJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFeedItemHTTPResponse, error)
 
+	// ListFreshnessRulesWithResponse request
+	ListFreshnessRulesWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListFreshnessRulesHTTPResponse, error)
+
+	// CreateFreshnessRuleWithBodyWithResponse request with any body
+	CreateFreshnessRuleWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFreshnessRuleHTTPResponse, error)
+
+	CreateFreshnessRuleWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFreshnessRuleHTTPResponse, error)
+
+	// DeleteFreshnessRuleWithResponse request
+	DeleteFreshnessRuleWithResponse(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFreshnessRuleHTTPResponse, error)
+
+	// UpdateFreshnessRuleWithBodyWithResponse request with any body
+	UpdateFreshnessRuleWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateFreshnessRuleHTTPResponse, error)
+
+	UpdateFreshnessRuleWithResponse(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFreshnessRuleHTTPResponse, error)
+
 	// DeleteGitHubAppConfigWithResponse request
 	DeleteGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigHTTPResponse, error)
 
@@ -17826,6 +18280,17 @@ type ClientWithResponsesInterface interface {
 
 	// ReprocessEmbeddingProviderSettingsWithResponse request
 	ReprocessEmbeddingProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, id string, reqEditors ...RequestEditorFn) (*ReprocessEmbeddingProviderSettingsHTTPResponse, error)
+
+	// ResetTeamFreshnessSettingsWithResponse request
+	ResetTeamFreshnessSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResetTeamFreshnessSettingsHTTPResponse, error)
+
+	// GetTeamFreshnessSettingsWithResponse request
+	GetTeamFreshnessSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamFreshnessSettingsHTTPResponse, error)
+
+	// UpdateTeamFreshnessSettingsWithBodyWithResponse request with any body
+	UpdateTeamFreshnessSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamFreshnessSettingsHTTPResponse, error)
+
+	UpdateTeamFreshnessSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamFreshnessSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamFreshnessSettingsHTTPResponse, error)
 
 	// DeleteGitHubAppConfigSettingsWithResponse request
 	DeleteGitHubAppConfigSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigSettingsHTTPResponse, error)
@@ -22729,6 +23194,143 @@ func (r CreateFeedItemHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ListFreshnessRulesHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *FreshnessRuleListResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListFreshnessRulesHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListFreshnessRulesHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListFreshnessRulesHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateFreshnessRuleHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON201                   *FreshnessRule
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateFreshnessRuleHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateFreshnessRuleHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateFreshnessRuleHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteFreshnessRuleHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFreshnessRuleHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFreshnessRuleHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteFreshnessRuleHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateFreshnessRuleHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *FreshnessRule
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateFreshnessRuleHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateFreshnessRuleHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateFreshnessRuleHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DeleteGitHubAppConfigHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -25178,6 +25780,107 @@ func (r ReprocessEmbeddingProviderSettingsHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ResetTeamFreshnessSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetTeamFreshnessSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetTeamFreshnessSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetTeamFreshnessSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetTeamFreshnessSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamFreshnessSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTeamFreshnessSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTeamFreshnessSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetTeamFreshnessSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateTeamFreshnessSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamFreshnessSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateTeamFreshnessSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateTeamFreshnessSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateTeamFreshnessSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DeleteGitHubAppConfigSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -27476,6 +28179,58 @@ func (c *ClientWithResponses) CreateFeedItemWithResponse(ctx context.Context, te
 	return ParseCreateFeedItemHTTPResponse(rsp)
 }
 
+// ListFreshnessRulesWithResponse request returning *ListFreshnessRulesHTTPResponse
+func (c *ClientWithResponses) ListFreshnessRulesWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ListFreshnessRulesHTTPResponse, error) {
+	rsp, err := c.ListFreshnessRules(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListFreshnessRulesHTTPResponse(rsp)
+}
+
+// CreateFreshnessRuleWithBodyWithResponse request with arbitrary body returning *CreateFreshnessRuleHTTPResponse
+func (c *ClientWithResponses) CreateFreshnessRuleWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFreshnessRuleHTTPResponse, error) {
+	rsp, err := c.CreateFreshnessRuleWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFreshnessRuleHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateFreshnessRuleWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFreshnessRuleHTTPResponse, error) {
+	rsp, err := c.CreateFreshnessRule(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFreshnessRuleHTTPResponse(rsp)
+}
+
+// DeleteFreshnessRuleWithResponse request returning *DeleteFreshnessRuleHTTPResponse
+func (c *ClientWithResponses) DeleteFreshnessRuleWithResponse(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteFreshnessRuleHTTPResponse, error) {
+	rsp, err := c.DeleteFreshnessRule(ctx, teamId, ruleId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFreshnessRuleHTTPResponse(rsp)
+}
+
+// UpdateFreshnessRuleWithBodyWithResponse request with arbitrary body returning *UpdateFreshnessRuleHTTPResponse
+func (c *ClientWithResponses) UpdateFreshnessRuleWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateFreshnessRuleHTTPResponse, error) {
+	rsp, err := c.UpdateFreshnessRuleWithBody(ctx, teamId, ruleId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateFreshnessRuleHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateFreshnessRuleWithResponse(ctx context.Context, teamId openapi_types.UUID, ruleId openapi_types.UUID, body UpdateFreshnessRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFreshnessRuleHTTPResponse, error) {
+	rsp, err := c.UpdateFreshnessRule(ctx, teamId, ruleId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateFreshnessRuleHTTPResponse(rsp)
+}
+
 // DeleteGitHubAppConfigWithResponse request returning *DeleteGitHubAppConfigHTTPResponse
 func (c *ClientWithResponses) DeleteGitHubAppConfigWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteGitHubAppConfigHTTPResponse, error) {
 	rsp, err := c.DeleteGitHubAppConfig(ctx, teamId, reqEditors...)
@@ -28315,6 +29070,41 @@ func (c *ClientWithResponses) ReprocessEmbeddingProviderSettingsWithResponse(ctx
 		return nil, err
 	}
 	return ParseReprocessEmbeddingProviderSettingsHTTPResponse(rsp)
+}
+
+// ResetTeamFreshnessSettingsWithResponse request returning *ResetTeamFreshnessSettingsHTTPResponse
+func (c *ClientWithResponses) ResetTeamFreshnessSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResetTeamFreshnessSettingsHTTPResponse, error) {
+	rsp, err := c.ResetTeamFreshnessSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetTeamFreshnessSettingsHTTPResponse(rsp)
+}
+
+// GetTeamFreshnessSettingsWithResponse request returning *GetTeamFreshnessSettingsHTTPResponse
+func (c *ClientWithResponses) GetTeamFreshnessSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamFreshnessSettingsHTTPResponse, error) {
+	rsp, err := c.GetTeamFreshnessSettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTeamFreshnessSettingsHTTPResponse(rsp)
+}
+
+// UpdateTeamFreshnessSettingsWithBodyWithResponse request with arbitrary body returning *UpdateTeamFreshnessSettingsHTTPResponse
+func (c *ClientWithResponses) UpdateTeamFreshnessSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamFreshnessSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateTeamFreshnessSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTeamFreshnessSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateTeamFreshnessSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamFreshnessSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamFreshnessSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateTeamFreshnessSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTeamFreshnessSettingsHTTPResponse(rsp)
 }
 
 // DeleteGitHubAppConfigSettingsWithResponse request returning *DeleteGitHubAppConfigSettingsHTTPResponse
@@ -35650,6 +36440,229 @@ func ParseCreateFeedItemHTTPResponse(rsp *http.Response) (*CreateFeedItemHTTPRes
 	return response, nil
 }
 
+// ParseListFreshnessRulesHTTPResponse parses an HTTP response from a ListFreshnessRulesWithResponse call
+func ParseListFreshnessRulesHTTPResponse(rsp *http.Response) (*ListFreshnessRulesHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListFreshnessRulesHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FreshnessRuleListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateFreshnessRuleHTTPResponse parses an HTTP response from a CreateFreshnessRuleWithResponse call
+func ParseCreateFreshnessRuleHTTPResponse(rsp *http.Response) (*CreateFreshnessRuleHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateFreshnessRuleHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest FreshnessRule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteFreshnessRuleHTTPResponse parses an HTTP response from a DeleteFreshnessRuleWithResponse call
+func ParseDeleteFreshnessRuleHTTPResponse(rsp *http.Response) (*DeleteFreshnessRuleHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFreshnessRuleHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateFreshnessRuleHTTPResponse parses an HTTP response from a UpdateFreshnessRuleWithResponse call
+func ParseUpdateFreshnessRuleHTTPResponse(rsp *http.Response) (*UpdateFreshnessRuleHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateFreshnessRuleHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FreshnessRule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDeleteGitHubAppConfigHTTPResponse parses an HTTP response from a DeleteGitHubAppConfigWithResponse call
 func ParseDeleteGitHubAppConfigHTTPResponse(rsp *http.Response) (*DeleteGitHubAppConfigHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -39348,6 +40361,161 @@ func ParseReprocessEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*R
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseResetTeamFreshnessSettingsHTTPResponse parses an HTTP response from a ResetTeamFreshnessSettingsWithResponse call
+func ParseResetTeamFreshnessSettingsHTTPResponse(rsp *http.Response) (*ResetTeamFreshnessSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetTeamFreshnessSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTeamFreshnessSettingsHTTPResponse parses an HTTP response from a GetTeamFreshnessSettingsWithResponse call
+func ParseGetTeamFreshnessSettingsHTTPResponse(rsp *http.Response) (*GetTeamFreshnessSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTeamFreshnessSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamFreshnessSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateTeamFreshnessSettingsHTTPResponse parses an HTTP response from a UpdateTeamFreshnessSettingsWithResponse call
+func ParseUpdateTeamFreshnessSettingsHTTPResponse(rsp *http.Response) (*UpdateTeamFreshnessSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateTeamFreshnessSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamFreshnessSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

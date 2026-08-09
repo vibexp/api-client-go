@@ -807,6 +807,51 @@ func (e EmbeddingCoverageItemEntityType) Valid() bool {
 	}
 }
 
+// Defines values for FreshnessRuleMedium.
+const (
+	FreshnessRuleMediumCli FreshnessRuleMedium = "cli"
+	FreshnessRuleMediumMcp FreshnessRuleMedium = "mcp"
+	FreshnessRuleMediumWeb FreshnessRuleMedium = "web"
+)
+
+// Valid indicates whether the value is a known member of the FreshnessRuleMedium enum.
+func (e FreshnessRuleMedium) Valid() bool {
+	switch e {
+	case FreshnessRuleMediumCli:
+		return true
+	case FreshnessRuleMediumMcp:
+		return true
+	case FreshnessRuleMediumWeb:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for FreshnessRuleResourceType.
+const (
+	FreshnessRuleResourceTypeArtifact  FreshnessRuleResourceType = "artifact"
+	FreshnessRuleResourceTypeBlueprint FreshnessRuleResourceType = "blueprint"
+	FreshnessRuleResourceTypeMemory    FreshnessRuleResourceType = "memory"
+	FreshnessRuleResourceTypePrompt    FreshnessRuleResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the FreshnessRuleResourceType enum.
+func (e FreshnessRuleResourceType) Valid() bool {
+	switch e {
+	case FreshnessRuleResourceTypeArtifact:
+		return true
+	case FreshnessRuleResourceTypeBlueprint:
+		return true
+	case FreshnessRuleResourceTypeMemory:
+		return true
+	case FreshnessRuleResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GitHubRepositoryOwnerType.
 const (
 	GitHubRepositoryOwnerTypeOrganization GitHubRepositoryOwnerType = "Organization"
@@ -1440,6 +1485,24 @@ func (e TeamFeedCreationMetricsDataRange) Valid() bool {
 	case TeamFeedCreationMetricsDataRangeN7d:
 		return true
 	case TeamFeedCreationMetricsDataRangeN90d:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TeamFreshnessSettingsSource.
+const (
+	TeamFreshnessSettingsSourceInstance TeamFreshnessSettingsSource = "instance"
+	TeamFreshnessSettingsSourceTeam     TeamFreshnessSettingsSource = "team"
+)
+
+// Valid indicates whether the value is a known member of the TeamFreshnessSettingsSource enum.
+func (e TeamFreshnessSettingsSource) Valid() bool {
+	switch e {
+	case TeamFreshnessSettingsSourceInstance:
+		return true
+	case TeamFreshnessSettingsSourceTeam:
 		return true
 	default:
 		return false
@@ -2588,19 +2651,19 @@ func (e ListFeedItemsParamsArchived) Valid() bool {
 
 // Defines values for ListFeedItemsByFeedParamsArchived.
 const (
-	ListFeedItemsByFeedParamsArchivedAll   ListFeedItemsByFeedParamsArchived = "all"
-	ListFeedItemsByFeedParamsArchivedFalse ListFeedItemsByFeedParamsArchived = "false"
-	ListFeedItemsByFeedParamsArchivedTrue  ListFeedItemsByFeedParamsArchived = "true"
+	All   ListFeedItemsByFeedParamsArchived = "all"
+	False ListFeedItemsByFeedParamsArchived = "false"
+	True  ListFeedItemsByFeedParamsArchived = "true"
 )
 
 // Valid indicates whether the value is a known member of the ListFeedItemsByFeedParamsArchived enum.
 func (e ListFeedItemsByFeedParamsArchived) Valid() bool {
 	switch e {
-	case ListFeedItemsByFeedParamsArchivedAll:
+	case All:
 		return true
-	case ListFeedItemsByFeedParamsArchivedFalse:
+	case False:
 		return true
-	case ListFeedItemsByFeedParamsArchivedTrue:
+	case True:
 		return true
 	default:
 		return false
@@ -4458,6 +4521,20 @@ type CreateFeedRequest struct {
 	Name string `json:"name"`
 }
 
+// CreateFreshnessRuleRequest Create a freshness rule.
+type CreateFreshnessRuleRequest struct {
+	// Enabled Defaults to true when omitted.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// Mediums Omit or send an empty array to match any medium.
+	Mediums *[]FreshnessRuleMedium `json:"mediums,omitempty"`
+
+	// ProjectId Scope to one project; omit or send `null` for every project in the team.
+	ProjectId     *openapi_types.UUID         `json:"project_id,omitempty"`
+	ResourceTypes []FreshnessRuleResourceType `json:"resource_types"`
+	ThresholdDays int32                       `json:"threshold_days"`
+}
+
 // CreateGitHubAppConfigRequest Registers a team's GitHub App. There is deliberately no webhook_secret field — the server generates it and returns it once.
 type CreateGitHubAppConfigRequest struct {
 	// AppId GitHub's numeric App id.
@@ -5007,6 +5084,54 @@ type FeedListResponse struct {
 
 	// TotalPages Total number of pages
 	TotalPages int `json:"total_pages"`
+}
+
+// FreshnessRule One team's rule for when a resource becomes stale.
+type FreshnessRule struct {
+	CreatedAt time.Time `json:"created_at"`
+
+	// Enabled Whether evaluation runs apply this rule.
+	Enabled bool `json:"enabled"`
+
+	// Id Rule identifier.
+	Id openapi_types.UUID `json:"id"`
+
+	// Mediums Access mediums that count as "accessed" for this rule. An EMPTY array means ANY medium counts — it does not mean "no medium".
+	Mediums []FreshnessRuleMedium `json:"mediums"`
+
+	// ProjectId Scopes the rule to a single project. `null` means the rule applies to EVERY project in the team.
+	ProjectId *openapi_types.UUID `json:"project_id"`
+
+	// ResourceTypes Resource types the rule applies to. Never empty.
+	ResourceTypes []FreshnessRuleResourceType `json:"resource_types"`
+
+	// TeamId Team the rule belongs to.
+	TeamId openapi_types.UUID `json:"team_id"`
+
+	// ThresholdDays Days without a qualifying access after which the resource is stale. Capped at 36500 (100 years), mirroring the search-settings half-life cap: past that the rule can never fire, and the bound keeps the value inside the int32 the column and the wire format use.
+	ThresholdDays int32     `json:"threshold_days"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
+// FreshnessRuleListResponse The team's freshness rules, oldest first.
+type FreshnessRuleListResponse struct {
+	// Rules Freshness rules. Serializes as `[]` when the team has none, never `null`.
+	Rules []FreshnessRule `json:"rules"`
+}
+
+// FreshnessRuleMedium An access medium that counts as "accessed" for a freshness rule. Note this is narrower than the set of mediums recorded on the access path — `api` accesses are stored but are deliberately not selectable as rule criteria.
+type FreshnessRuleMedium string
+
+// FreshnessRuleResourceType A resource type a freshness rule can cover.
+type FreshnessRuleResourceType string
+
+// FreshnessSettingsValues The tunable freshness-evaluation values, shared by the current settings and the defaults.
+type FreshnessSettingsValues struct {
+	// IntervalSeconds How often the team's rules are evaluated. Storage enforces a one-hour floor, matching the scheduler's own floor; the 31536000 (365-day) ceiling keeps the value inside the int32 the column and the wire format use, and an interval longer than a year is indistinguishable from off.
+	IntervalSeconds int32 `json:"interval_seconds"`
+
+	// ReversibilityEnabled Whether accessing or editing a stale resource clears its stale state.
+	ReversibilityEnabled bool `json:"reversibility_enabled"`
 }
 
 // GitHubAppConfig A team's own GitHub App registration. Never carries secret values.
@@ -6398,6 +6523,20 @@ type TeamFeedCreationMetricsResponse struct {
 	Status  string                      `json:"status"`
 }
 
+// TeamFreshnessSettings The freshness settings in effect for a team, with their provenance. A team that has never overridden them reports `source: instance` and the defaults.
+type TeamFreshnessSettings struct {
+	// Defaults The values a DELETE would restore. Present on every read so clients can preview a reset without a second call.
+	Defaults             FreshnessSettingsValues `json:"defaults"`
+	IntervalSeconds      int32                   `json:"interval_seconds"`
+	ReversibilityEnabled bool                    `json:"reversibility_enabled"`
+
+	// Source `team` when the team stores its own settings, `instance` when it inherits the defaults.
+	Source TeamFreshnessSettingsSource `json:"source"`
+}
+
+// TeamFreshnessSettingsSource `team` when the team stores its own settings, `instance` when it inherits the defaults.
+type TeamFreshnessSettingsSource string
+
 // TeamListResponse Paginated list of teams the user belongs to
 type TeamListResponse struct {
 	Page       int    `json:"page"`
@@ -6753,6 +6892,19 @@ type UpdateFeedRequest struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// UpdateFreshnessRuleRequest Replace a freshness rule in full.
+type UpdateFreshnessRuleRequest struct {
+	Enabled bool `json:"enabled"`
+
+	// Mediums An empty array matches any medium.
+	Mediums []FreshnessRuleMedium `json:"mediums"`
+
+	// ProjectId Scope to one project; `null` means every project in the team.
+	ProjectId     *openapi_types.UUID         `json:"project_id"`
+	ResourceTypes []FreshnessRuleResourceType `json:"resource_types"`
+	ThresholdDays int32                       `json:"threshold_days"`
+}
+
 // UpdateGitHubAppConfigRequest Edits the team's App registration. Every field is optional; an omitted field keeps the stored value. An explicitly EMPTY value is rejected rather than treated as a clear — a GitHub App with no private key is not a meaningful state, so a blank value is far more likely a client bug than an intent. webhook_secret is absent for the same reason it is absent from create: it is server-generated, and replaced through the rotation endpoint.
 type UpdateGitHubAppConfigRequest struct {
 	AppId    *string `json:"app_id,omitempty"`
@@ -6842,6 +6994,13 @@ type UpdatePromptRequest struct {
 
 // UpdatePromptRequestStatus defines model for UpdatePromptRequest.Status.
 type UpdatePromptRequestStatus string
+
+// UpdateTeamFreshnessSettingsRequest Override the team's freshness settings.
+type UpdateTeamFreshnessSettingsRequest struct {
+	// IntervalSeconds Rejected below 3600 (one hour) or above 31536000 (365 days).
+	IntervalSeconds      int32 `json:"interval_seconds"`
+	ReversibilityEnabled bool  `json:"reversibility_enabled"`
+}
 
 // UpdateTeamMemberRoleRequest Request body for changing a team member's role. Only `member` and `admin` are
 // accepted: a team has exactly one owner, and ownership moves solely through
@@ -8110,6 +8269,12 @@ type UpdateFeedJSONRequestBody = UpdateFeedRequest
 // CreateFeedItemJSONRequestBody defines body for CreateFeedItem for application/json ContentType.
 type CreateFeedItemJSONRequestBody = CreateFeedItemRequest
 
+// CreateFreshnessRuleJSONRequestBody defines body for CreateFreshnessRule for application/json ContentType.
+type CreateFreshnessRuleJSONRequestBody = CreateFreshnessRuleRequest
+
+// UpdateFreshnessRuleJSONRequestBody defines body for UpdateFreshnessRule for application/json ContentType.
+type UpdateFreshnessRuleJSONRequestBody = UpdateFreshnessRuleRequest
+
 // CreateGitHubAppConfigJSONRequestBody defines body for CreateGitHubAppConfig for application/json ContentType.
 type CreateGitHubAppConfigJSONRequestBody = CreateGitHubAppConfigRequest
 
@@ -8178,6 +8343,9 @@ type ValidateEmbeddingProviderSettingsJSONRequestBody = ValidateEmbeddingProvide
 
 // UpdateEmbeddingProviderSettingsJSONRequestBody defines body for UpdateEmbeddingProviderSettings for application/json ContentType.
 type UpdateEmbeddingProviderSettingsJSONRequestBody = UpdateEmbeddingProviderRequest
+
+// UpdateTeamFreshnessSettingsJSONRequestBody defines body for UpdateTeamFreshnessSettings for application/json ContentType.
+type UpdateTeamFreshnessSettingsJSONRequestBody = UpdateTeamFreshnessSettingsRequest
 
 // CreateGitHubAppConfigSettingsJSONRequestBody defines body for CreateGitHubAppConfigSettings for application/json ContentType.
 type CreateGitHubAppConfigSettingsJSONRequestBody = CreateGitHubAppConfigRequest
