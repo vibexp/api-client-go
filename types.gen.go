@@ -807,6 +807,75 @@ func (e EmbeddingCoverageItemEntityType) Valid() bool {
 	}
 }
 
+// Defines values for FreshnessAuditEntryAction.
+const (
+	Cleared FreshnessAuditEntryAction = "cleared"
+	Marked  FreshnessAuditEntryAction = "marked"
+)
+
+// Valid indicates whether the value is a known member of the FreshnessAuditEntryAction enum.
+func (e FreshnessAuditEntryAction) Valid() bool {
+	switch e {
+	case Cleared:
+		return true
+	case Marked:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for FreshnessAuditEntryReason.
+const (
+	Accessed FreshnessAuditEntryReason = "accessed"
+	Edited   FreshnessAuditEntryReason = "edited"
+	RuleRun  FreshnessAuditEntryReason = "rule_run"
+)
+
+// Valid indicates whether the value is a known member of the FreshnessAuditEntryReason enum.
+func (e FreshnessAuditEntryReason) Valid() bool {
+	switch e {
+	case Accessed:
+		return true
+	case Edited:
+		return true
+	case RuleRun:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for FreshnessMetricsRange.
+const (
+	FreshnessMetricsRangeN14d  FreshnessMetricsRange = "14d"
+	FreshnessMetricsRangeN180d FreshnessMetricsRange = "180d"
+	FreshnessMetricsRangeN30d  FreshnessMetricsRange = "30d"
+	FreshnessMetricsRangeN60d  FreshnessMetricsRange = "60d"
+	FreshnessMetricsRangeN7d   FreshnessMetricsRange = "7d"
+	FreshnessMetricsRangeN90d  FreshnessMetricsRange = "90d"
+)
+
+// Valid indicates whether the value is a known member of the FreshnessMetricsRange enum.
+func (e FreshnessMetricsRange) Valid() bool {
+	switch e {
+	case FreshnessMetricsRangeN14d:
+		return true
+	case FreshnessMetricsRangeN180d:
+		return true
+	case FreshnessMetricsRangeN30d:
+		return true
+	case FreshnessMetricsRangeN60d:
+		return true
+	case FreshnessMetricsRangeN7d:
+		return true
+	case FreshnessMetricsRangeN90d:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for FreshnessRuleMedium.
 const (
 	FreshnessRuleMediumCli FreshnessRuleMedium = "cli"
@@ -2894,28 +2963,28 @@ func (e GetResourceAccessMetricsParamsResourceType) Valid() bool {
 
 // Defines values for GetResourceAccessMetricsParamsRange.
 const (
-	N14d  GetResourceAccessMetricsParamsRange = "14d"
-	N180d GetResourceAccessMetricsParamsRange = "180d"
-	N30d  GetResourceAccessMetricsParamsRange = "30d"
-	N60d  GetResourceAccessMetricsParamsRange = "60d"
-	N7d   GetResourceAccessMetricsParamsRange = "7d"
-	N90d  GetResourceAccessMetricsParamsRange = "90d"
+	GetResourceAccessMetricsParamsRangeN14d  GetResourceAccessMetricsParamsRange = "14d"
+	GetResourceAccessMetricsParamsRangeN180d GetResourceAccessMetricsParamsRange = "180d"
+	GetResourceAccessMetricsParamsRangeN30d  GetResourceAccessMetricsParamsRange = "30d"
+	GetResourceAccessMetricsParamsRangeN60d  GetResourceAccessMetricsParamsRange = "60d"
+	GetResourceAccessMetricsParamsRangeN7d   GetResourceAccessMetricsParamsRange = "7d"
+	GetResourceAccessMetricsParamsRangeN90d  GetResourceAccessMetricsParamsRange = "90d"
 )
 
 // Valid indicates whether the value is a known member of the GetResourceAccessMetricsParamsRange enum.
 func (e GetResourceAccessMetricsParamsRange) Valid() bool {
 	switch e {
-	case N14d:
+	case GetResourceAccessMetricsParamsRangeN14d:
 		return true
-	case N180d:
+	case GetResourceAccessMetricsParamsRangeN180d:
 		return true
-	case N30d:
+	case GetResourceAccessMetricsParamsRangeN30d:
 		return true
-	case N60d:
+	case GetResourceAccessMetricsParamsRangeN60d:
 		return true
-	case N7d:
+	case GetResourceAccessMetricsParamsRangeN7d:
 		return true
-	case N90d:
+	case GetResourceAccessMetricsParamsRangeN90d:
 		return true
 	default:
 		return false
@@ -5086,6 +5155,143 @@ type FeedListResponse struct {
 	TotalPages int `json:"total_pages"`
 }
 
+// FreshnessAuditEntry One recorded freshness transition. The log is append-only.
+type FreshnessAuditEntry struct {
+	// Action Whether the resource became stale or stopped being stale.
+	Action    FreshnessAuditEntryAction `json:"action"`
+	CreatedAt time.Time                 `json:"created_at"`
+	Id        openapi_types.UUID        `json:"id"`
+
+	// Reason What caused it — a scheduled evaluation, a read, or an edit.
+	Reason     FreshnessAuditEntryReason `json:"reason"`
+	ResourceId openapi_types.UUID        `json:"resource_id"`
+
+	// ResourceType A resource type a freshness rule can cover.
+	ResourceType FreshnessRuleResourceType `json:"resource_type"`
+
+	// RuleId The rule that caused the change, when exactly one did. Null for a reversal (caused by a read or an edit) and for a mark attributable to several rules at once — the resource's own state carries the full set.
+	RuleId *openapi_types.UUID `json:"rule_id"`
+}
+
+// FreshnessAuditEntryAction Whether the resource became stale or stopped being stale.
+type FreshnessAuditEntryAction string
+
+// FreshnessAuditEntryReason What caused it — a scheduled evaluation, a read, or an edit.
+type FreshnessAuditEntryReason string
+
+// FreshnessAuditListResponse A page of the team's freshness audit log, newest first.
+type FreshnessAuditListResponse struct {
+	// Entries Serializes as `[]` when the page is empty, never `null`.
+	Entries []FreshnessAuditEntry `json:"entries"`
+
+	// Page Current page number (1-based)
+	Page int `json:"page"`
+
+	// PerPage Number of entries per page
+	PerPage int `json:"per_page"`
+
+	// TotalCount Total entries in the team's log, ignoring pagination.
+	TotalCount int `json:"total_count"`
+
+	// TotalPages Total number of pages
+	TotalPages int `json:"total_pages"`
+}
+
+// FreshnessByProjectMetricsData defines model for FreshnessByProjectMetricsData.
+type FreshnessByProjectMetricsData struct {
+	// Counts One entry per project in the team, including projects with nothing stale (0), ordered by count descending then name. Serializes as `[]`, never `null`.
+	Counts     []FreshnessProjectCount `json:"counts"`
+	TotalStale int32                   `json:"total_stale"`
+}
+
+// FreshnessByProjectMetricsResponse defines model for FreshnessByProjectMetricsResponse.
+type FreshnessByProjectMetricsResponse struct {
+	Data    FreshnessByProjectMetricsData `json:"data"`
+	Message string                        `json:"message"`
+	Status  string                        `json:"status"`
+}
+
+// FreshnessByRuleMetricsData defines model for FreshnessByRuleMetricsData.
+type FreshnessByRuleMetricsData struct {
+	// Counts One entry per rule the team has defined, including rules matching nothing, ordered by count descending then rule id. Serializes as `[]`, never `null`.
+	Counts []FreshnessRuleImpact `json:"counts"`
+
+	// TotalStale Distinct stale resources in the team. It is NOT the sum of the per-rule counts: a resource matched by two rules is counted once here and once under each rule, because staleness is a union across rules.
+	TotalStale int32 `json:"total_stale"`
+}
+
+// FreshnessByRuleMetricsResponse defines model for FreshnessByRuleMetricsResponse.
+type FreshnessByRuleMetricsResponse struct {
+	Data    FreshnessByRuleMetricsData `json:"data"`
+	Message string                     `json:"message"`
+	Status  string                     `json:"status"`
+}
+
+// FreshnessByTypeMetricsData defines model for FreshnessByTypeMetricsData.
+type FreshnessByTypeMetricsData struct {
+	// Counts One entry per resource type, always all four, in a stable order — a type with nothing stale reports 0 rather than being omitted, so the chart's bars never move. Serializes as `[]`, never `null`.
+	Counts []FreshnessTypeCount `json:"counts"`
+
+	// TotalStale Total stale resources in the team, across every type.
+	TotalStale int32 `json:"total_stale"`
+}
+
+// FreshnessByTypeMetricsResponse defines model for FreshnessByTypeMetricsResponse.
+type FreshnessByTypeMetricsResponse struct {
+	Data    FreshnessByTypeMetricsData `json:"data"`
+	Message string                     `json:"message"`
+	Status  string                     `json:"status"`
+}
+
+// FreshnessDailyStaleCount One calendar day (UTC) of freshness activity, zero-filled: every day in the window is present even when nothing happened.
+type FreshnessDailyStaleCount struct {
+	// Cleared Resources that stopped being stale on this day, for any reason.
+	Cleared int32              `json:"cleared"`
+	Date    openapi_types.Date `json:"date"`
+
+	// Marked Resources that became stale on this day.
+	Marked int32 `json:"marked"`
+
+	// StaleTotal How many resources were stale at the END of this day — the level, not the flow. It is reconstructed by walking today's live count backwards through the recorded transitions, so it is exact only for the period the audit log covers; days before freshness evaluation first ran on this team read as the earliest known level rather than as zero. The most recent day reports the live count as of the request. The reconstruction is clamped at zero, so on a team whose rows were removed by a project or team deletion — which writes no audit entry — the series can flatten at 0 instead of satisfying stale_total[i] = stale_total[i-1] + marked[i] - cleared[i].
+	StaleTotal int32 `json:"stale_total"`
+
+	// Total The day's total ACTIVITY, marked + cleared — the sum of the two series, not the level. It is the field the shared time-series chart reads for its per-day total, which is why it is a flow rather than stale_total.
+	Total int32 `json:"total"`
+}
+
+// FreshnessMetricsRange The reporting window for a time-series metric. The options mirror the other analytics endpoints so one range selector drives every chart.
+type FreshnessMetricsRange string
+
+// FreshnessOverTimeMetricsData defines model for FreshnessOverTimeMetricsData.
+type FreshnessOverTimeMetricsData struct {
+	// Counts One entry per day in the window, oldest first. Serializes as `[]`, never `null`.
+	Counts []FreshnessDailyStaleCount `json:"counts"`
+
+	// Range The reporting window for a time-series metric. The options mirror the other analytics endpoints so one range selector drives every chart.
+	Range FreshnessMetricsRange `json:"range"`
+
+	// TotalCleared Resources cleared across the whole window.
+	TotalCleared int32 `json:"total_cleared"`
+
+	// TotalMarked Resources marked stale across the whole window.
+	TotalMarked int32 `json:"total_marked"`
+}
+
+// FreshnessOverTimeMetricsResponse defines model for FreshnessOverTimeMetricsResponse.
+type FreshnessOverTimeMetricsResponse struct {
+	Data    FreshnessOverTimeMetricsData `json:"data"`
+	Message string                       `json:"message"`
+	Status  string                       `json:"status"`
+}
+
+// FreshnessProjectCount How many resources are stale right now in one project. `name` and `slug` are carried so the client can label and deep-link the bar without a second request.
+type FreshnessProjectCount struct {
+	Count     int32              `json:"count"`
+	Name      string             `json:"name"`
+	ProjectId openapi_types.UUID `json:"project_id"`
+	Slug      string             `json:"slug"`
+}
+
 // FreshnessRule One team's rule for when a resource becomes stale.
 type FreshnessRule struct {
 	CreatedAt time.Time `json:"created_at"`
@@ -5113,6 +5319,20 @@ type FreshnessRule struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 }
 
+// FreshnessRuleImpact How many resources one rule currently marks. Rules have no name, so the defining fields travel with the count for the client to label the bar.
+type FreshnessRuleImpact struct {
+	Count int32 `json:"count"`
+
+	// Enabled A disabled rule reports 0 — it is listed so its absence from the chart is not mistaken for deletion.
+	Enabled bool `json:"enabled"`
+
+	// ProjectId The project the rule is scoped to, or null for every project in the team.
+	ProjectId     *openapi_types.UUID         `json:"project_id"`
+	ResourceTypes []FreshnessRuleResourceType `json:"resource_types"`
+	RuleId        openapi_types.UUID          `json:"rule_id"`
+	ThresholdDays int32                       `json:"threshold_days"`
+}
+
 // FreshnessRuleListResponse The team's freshness rules, oldest first.
 type FreshnessRuleListResponse struct {
 	// Rules Freshness rules. Serializes as `[]` when the team has none, never `null`.
@@ -5132,6 +5352,14 @@ type FreshnessSettingsValues struct {
 
 	// ReversibilityEnabled Whether accessing or editing a stale resource clears its stale state.
 	ReversibilityEnabled bool `json:"reversibility_enabled"`
+}
+
+// FreshnessTypeCount How many of one resource type are stale right now.
+type FreshnessTypeCount struct {
+	Count int32 `json:"count"`
+
+	// ResourceType A resource type a freshness rule can cover.
+	ResourceType FreshnessRuleResourceType `json:"resource_type"`
 }
 
 // GitHubAppConfig A team's own GitHub App registration. Never carries secret values.
@@ -7935,6 +8163,21 @@ type ListFeedItemsByFeedParams struct {
 
 // ListFeedItemsByFeedParamsArchived defines parameters for ListFeedItemsByFeed.
 type ListFeedItemsByFeedParamsArchived string
+
+// ListFreshnessAuditParams defines parameters for ListFreshnessAudit.
+type ListFreshnessAuditParams struct {
+	// Page Page number (1-based). The upper bound is not a storage limit — it keeps page * limit inside the range the offset arithmetic can represent, so an absurd page is rejected rather than silently wrapping around to the first one.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Entries per page
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// GetFreshnessOverTimeMetricsParams defines parameters for GetFreshnessOverTimeMetrics.
+type GetFreshnessOverTimeMetricsParams struct {
+	// Range The reporting window. Defaults to 30d.
+	Range *FreshnessMetricsRange `form:"range,omitempty" json:"range,omitempty"`
+}
 
 // HandleGitHubCallbackJSONBody defines parameters for HandleGitHubCallback.
 type HandleGitHubCallbackJSONBody struct {
