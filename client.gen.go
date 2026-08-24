@@ -963,6 +963,11 @@ type ClientInterface interface {
 
 	UpdateTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CopyTypesFromTeamWithBody request with any body
+	CopyTypesFromTeamWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CopyTypesFromTeam(ctx context.Context, teamId openapi_types.UUID, body CopyTypesFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListTypes request
 	ListTypes(ctx context.Context, teamId openapi_types.UUID, params *ListTypesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4742,6 +4747,30 @@ func (c *Client) UpdateTeamSearchSettingsWithBody(ctx context.Context, teamId op
 
 func (c *Client) UpdateTeamSearchSettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateTeamSearchSettingsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CopyTypesFromTeamWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCopyTypesFromTeamRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CopyTypesFromTeam(ctx context.Context, teamId openapi_types.UUID, body CopyTypesFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCopyTypesFromTeamRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -17566,6 +17595,53 @@ func NewUpdateTeamSearchSettingsRequestWithBody(server string, teamId openapi_ty
 	return req, nil
 }
 
+// NewCopyTypesFromTeamRequest calls the generic CopyTypesFromTeam builder with application/json body
+func NewCopyTypesFromTeamRequest(server string, teamId openapi_types.UUID, body CopyTypesFromTeamJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCopyTypesFromTeamRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewCopyTypesFromTeamRequestWithBody generates requests for CopyTypesFromTeam with any type of body
+func NewCopyTypesFromTeamRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/types/copy", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListTypesRequest generates requests for ListTypes
 func NewListTypesRequest(server string, teamId openapi_types.UUID, params *ListTypesParams) (*http.Request, error) {
 	var err error
@@ -18746,6 +18822,11 @@ type ClientWithResponsesInterface interface {
 	UpdateTeamSearchSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamSearchSettingsHTTPResponse, error)
 
 	UpdateTeamSearchSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamSearchSettingsHTTPResponse, error)
+
+	// CopyTypesFromTeamWithBodyWithResponse request with any body
+	CopyTypesFromTeamWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CopyTypesFromTeamHTTPResponse, error)
+
+	CopyTypesFromTeamWithResponse(ctx context.Context, teamId openapi_types.UUID, body CopyTypesFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*CopyTypesFromTeamHTTPResponse, error)
 
 	// ListTypesWithResponse request
 	ListTypesWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListTypesParams, reqEditors ...RequestEditorFn) (*ListTypesHTTPResponse, error)
@@ -26951,6 +27032,40 @@ func (r UpdateTeamSearchSettingsHTTPResponse) ContentType() string {
 	return ""
 }
 
+type CopyTypesFromTeamHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *CopyTypesResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CopyTypesFromTeamHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CopyTypesFromTeamHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CopyTypesFromTeamHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListTypesHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -29901,6 +30016,23 @@ func (c *ClientWithResponses) UpdateTeamSearchSettingsWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseUpdateTeamSearchSettingsHTTPResponse(rsp)
+}
+
+// CopyTypesFromTeamWithBodyWithResponse request with arbitrary body returning *CopyTypesFromTeamHTTPResponse
+func (c *ClientWithResponses) CopyTypesFromTeamWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CopyTypesFromTeamHTTPResponse, error) {
+	rsp, err := c.CopyTypesFromTeamWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCopyTypesFromTeamHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) CopyTypesFromTeamWithResponse(ctx context.Context, teamId openapi_types.UUID, body CopyTypesFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*CopyTypesFromTeamHTTPResponse, error) {
+	rsp, err := c.CopyTypesFromTeam(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCopyTypesFromTeamHTTPResponse(rsp)
 }
 
 // ListTypesWithResponse request returning *ListTypesHTTPResponse
@@ -42128,6 +42260,60 @@ func ParseUpdateTeamSearchSettingsHTTPResponse(rsp *http.Response) (*UpdateTeamS
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest TeamSearchSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCopyTypesFromTeamHTTPResponse parses an HTTP response from a CopyTypesFromTeamWithResponse call
+func ParseCopyTypesFromTeamHTTPResponse(rsp *http.Response) (*CopyTypesFromTeamHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CopyTypesFromTeamHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CopyTypesResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

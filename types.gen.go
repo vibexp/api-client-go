@@ -4524,6 +4524,27 @@ type ConversationSummary struct {
 	StartedAt      time.Time `json:"started_at"`
 }
 
+// CopyTypesRequest Request body for copying another team's custom types into this one. The destination is the `{team_id}` path parameter; only the source is carried here.
+type CopyTypesRequest struct {
+	// SourceTeamId Team to copy the custom types from. The caller must belong to it, and it must differ from the destination team.
+	SourceTeamId openapi_types.UUID `json:"source_team_id"`
+}
+
+// CopyTypesResponse Outcome of copying a team's custom types. The copy is a merge: types whose slug is free in the destination are added, the rest are reported as skipped. System defaults are never part of the source set — every team already has them.
+type CopyTypesResponse struct {
+	// Added Types created in the destination team
+	Added []Type `json:"added"`
+
+	// AddedCount Number of types created in the destination team
+	AddedCount int `json:"added_count"`
+
+	// Skipped Source types left untouched because their slug is already taken
+	Skipped []SkippedType `json:"skipped"`
+
+	// SkippedCount Number of source types skipped
+	SkippedCount int `json:"skipped_count"`
+}
+
 // CreateAPIKeyRequest defines model for CreateAPIKeyRequest.
 type CreateAPIKeyRequest struct {
 	// IntegrationCodes Array of integration codes to grant access to
@@ -6719,6 +6740,15 @@ type SimilarResource struct {
 	Type string `json:"type"`
 }
 
+// SkippedType A source type that was not copied because the destination already has a type with the same slug for that resource. A skip is a normal outcome, never an error.
+type SkippedType struct {
+	// ResourceType Resource the skipped type applies to
+	ResourceType string `json:"resource_type"`
+
+	// Slug Slug that already exists in the destination team
+	Slug string `json:"slug"`
+}
+
 // SuccessResponse defines model for SuccessResponse.
 type SuccessResponse struct {
 	Data    *map[string]interface{} `json:"data,omitempty"`
@@ -8811,6 +8841,9 @@ type UpdateModelProviderSettingsJSONRequestBody = UpdateModelProviderRequest
 
 // UpdateTeamSearchSettingsJSONRequestBody defines body for UpdateTeamSearchSettings for application/json ContentType.
 type UpdateTeamSearchSettingsJSONRequestBody = UpdateTeamSearchSettingsRequest
+
+// CopyTypesFromTeamJSONRequestBody defines body for CopyTypesFromTeam for application/json ContentType.
+type CopyTypesFromTeamJSONRequestBody = CopyTypesRequest
 
 // CreateTypeJSONRequestBody defines body for CreateType for application/json ContentType.
 type CreateTypeJSONRequestBody = CreateTypeRequest
