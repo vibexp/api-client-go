@@ -846,6 +846,9 @@ type ClientInterface interface {
 
 	SearchTeamResources(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListTeamSettingsAudit request
+	ListTeamSettingsAudit(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteTeamEmailProviderSettings request
 	DeleteTeamEmailProviderSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4241,6 +4244,18 @@ func (c *Client) SearchTeamResourcesWithBody(ctx context.Context, teamId openapi
 
 func (c *Client) SearchTeamResources(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSearchTeamResourcesRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListTeamSettingsAudit(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListTeamSettingsAuditRequest(c.Server, teamId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -16394,6 +16409,79 @@ func NewSearchTeamResourcesRequestWithBody(server string, teamId openapi_types.U
 	return req, nil
 }
 
+// NewListTeamSettingsAuditRequest generates requests for ListTeamSettingsAudit
+func NewListTeamSettingsAuditRequest(server string, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/audit", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteTeamEmailProviderSettingsRequest generates requests for DeleteTeamEmailProviderSettings
 func NewDeleteTeamEmailProviderSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -18857,6 +18945,9 @@ type ClientWithResponsesInterface interface {
 	SearchTeamResourcesWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchTeamResourcesHTTPResponse, error)
 
 	SearchTeamResourcesWithResponse(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchTeamResourcesHTTPResponse, error)
+
+	// ListTeamSettingsAuditWithResponse request
+	ListTeamSettingsAuditWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListTeamSettingsAuditHTTPResponse, error)
 
 	// DeleteTeamEmailProviderSettingsWithResponse request
 	DeleteTeamEmailProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTeamEmailProviderSettingsHTTPResponse, error)
@@ -26160,6 +26251,40 @@ func (r SearchTeamResourcesHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ListTeamSettingsAuditHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamSettingsAuditListResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListTeamSettingsAuditHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListTeamSettingsAuditHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListTeamSettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DeleteTeamEmailProviderSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -29875,6 +30000,15 @@ func (c *ClientWithResponses) SearchTeamResourcesWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseSearchTeamResourcesHTTPResponse(rsp)
+}
+
+// ListTeamSettingsAuditWithResponse request returning *ListTeamSettingsAuditHTTPResponse
+func (c *ClientWithResponses) ListTeamSettingsAuditWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListTeamSettingsAuditHTTPResponse, error) {
+	rsp, err := c.ListTeamSettingsAudit(ctx, teamId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListTeamSettingsAuditHTTPResponse(rsp)
 }
 
 // DeleteTeamEmailProviderSettingsWithResponse request returning *DeleteTeamEmailProviderSettingsHTTPResponse
@@ -41026,6 +41160,60 @@ func ParseSearchTeamResourcesHTTPResponse(rsp *http.Response) (*SearchTeamResour
 			return nil, err
 		}
 		response.ApplicationproblemJSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListTeamSettingsAuditHTTPResponse parses an HTTP response from a ListTeamSettingsAuditWithResponse call
+func ParseListTeamSettingsAuditHTTPResponse(rsp *http.Response) (*ListTeamSettingsAuditHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListTeamSettingsAuditHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamSettingsAuditListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
 
 	}
 

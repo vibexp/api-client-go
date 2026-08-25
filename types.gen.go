@@ -1701,6 +1701,27 @@ func (e TeamSearchSettingsSource) Valid() bool {
 	}
 }
 
+// Defines values for TeamSettingsAuditSurface.
+const (
+	TeamSettingsAuditSurfaceCustomTypes       TeamSettingsAuditSurface = "custom_types"
+	TeamSettingsAuditSurfaceEmbeddingProvider TeamSettingsAuditSurface = "embedding_provider"
+	TeamSettingsAuditSurfaceModelProvider     TeamSettingsAuditSurface = "model_provider"
+)
+
+// Valid indicates whether the value is a known member of the TeamSettingsAuditSurface enum.
+func (e TeamSettingsAuditSurface) Valid() bool {
+	switch e {
+	case TeamSettingsAuditSurfaceCustomTypes:
+		return true
+	case TeamSettingsAuditSurfaceEmbeddingProvider:
+		return true
+	case TeamSettingsAuditSurfaceModelProvider:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TeamTopAccessedResourcesDataRange.
 const (
 	TeamTopAccessedResourcesDataRangeN14d  TeamTopAccessedResourcesDataRange = "14d"
@@ -7189,6 +7210,60 @@ type TeamSearchSettingsValues struct {
 	RecencyRankingEnabled bool `json:"recency_ranking_enabled"`
 }
 
+// TeamSettingsAuditEntry One recorded settings copy into this team: which surface arrived, who brought it, and where it came from.
+type TeamSettingsAuditEntry struct {
+	// ActorName The actor's display name (their email when the name is blank), resolved server-side so a client need not fan out per row. `null` when `actor_user_id` is null or no longer resolves to a user.
+	ActorName *string `json:"actor_name"`
+
+	// ActorUserId Who performed the copy. `null` once that account is deleted — the entry outlives the actor on purpose, so that deletion cannot erase the record of what the account did.
+	ActorUserId *openapi_types.UUID `json:"actor_user_id"`
+
+	// CreatedAt When the copy was recorded.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedResourceId The resource created in this team. `null` for a `custom_types` copy, for the same reason as `source_resource_id`.
+	CreatedResourceId *openapi_types.UUID `json:"created_resource_id"`
+
+	// Detail Surface-specific facts snapshotted at write time — resource names, and for a provider copy whether it carried a credential and whether it became the team's active provider. Always an object, never null.
+	Detail map[string]interface{} `json:"detail"`
+
+	// Id Identifier of the audit entry.
+	Id openapi_types.UUID `json:"id"`
+
+	// SourceResourceId The resource that was copied. `null` for a `custom_types` copy, where one action copies a whole set and the individual ids live in `detail`.
+	SourceResourceId *openapi_types.UUID `json:"source_resource_id"`
+
+	// SourceTeamId The team the configuration was copied FROM.
+	SourceTeamId *openapi_types.UUID `json:"source_team_id"`
+
+	// SourceTeamName The source team's name, resolved server-side. `null` when that team has since been deleted — the id above is then the only remaining handle on it, and is deliberately still present rather than blanked.
+	SourceTeamName *string `json:"source_team_name"`
+
+	// Surface Which settings surface was copied between teams.
+	Surface TeamSettingsAuditSurface `json:"surface"`
+}
+
+// TeamSettingsAuditListResponse A page of the team's settings audit log, newest first.
+type TeamSettingsAuditListResponse struct {
+	// Entries Serializes as `[]` when the page is empty, never `null`.
+	Entries []TeamSettingsAuditEntry `json:"entries"`
+
+	// Page Current page number (1-based)
+	Page int `json:"page"`
+
+	// PerPage Number of entries per page
+	PerPage int `json:"per_page"`
+
+	// TotalCount Total entries in the team's log, ignoring pagination.
+	TotalCount int `json:"total_count"`
+
+	// TotalPages Total number of pages
+	TotalPages int `json:"total_pages"`
+}
+
+// TeamSettingsAuditSurface Which settings surface was copied between teams.
+type TeamSettingsAuditSurface string
+
 // TeamStatsResponse defines model for TeamStatsResponse.
 type TeamStatsResponse struct {
 	// TotalArtifacts Total number of artifacts belonging to this team
@@ -8724,6 +8799,15 @@ type GetResourceAccessMetricsParamsResourceType string
 
 // GetResourceAccessMetricsParamsRange defines parameters for GetResourceAccessMetrics.
 type GetResourceAccessMetricsParamsRange string
+
+// ListTeamSettingsAuditParams defines parameters for ListTeamSettingsAudit.
+type ListTeamSettingsAuditParams struct {
+	// Page Page number (1-based). The upper bound is not a storage limit — it keeps page * limit inside the range the offset arithmetic can represent, so an absurd page is rejected rather than silently wrapping around to the first one.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// Limit Entries per page
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
 
 // ListTypesParams defines parameters for ListTypes.
 type ListTypesParams struct {
