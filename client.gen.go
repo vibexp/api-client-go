@@ -870,6 +870,11 @@ type ClientInterface interface {
 
 	CreateEmbeddingProviderSettings(ctx context.Context, teamId openapi_types.UUID, body CreateEmbeddingProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CopyEmbeddingProviderFromTeamWithBody request with any body
+	CopyEmbeddingProviderFromTeamWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CopyEmbeddingProviderFromTeam(ctx context.Context, teamId openapi_types.UUID, body CopyEmbeddingProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetEmbeddingCoverageSettings request
 	GetEmbeddingCoverageSettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4344,6 +4349,30 @@ func (c *Client) CreateEmbeddingProviderSettingsWithBody(ctx context.Context, te
 
 func (c *Client) CreateEmbeddingProviderSettings(ctx context.Context, teamId openapi_types.UUID, body CreateEmbeddingProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateEmbeddingProviderSettingsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CopyEmbeddingProviderFromTeamWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCopyEmbeddingProviderFromTeamRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CopyEmbeddingProviderFromTeam(ctx context.Context, teamId openapi_types.UUID, body CopyEmbeddingProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCopyEmbeddingProviderFromTeamRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -16608,6 +16637,53 @@ func NewCreateEmbeddingProviderSettingsRequestWithBody(server string, teamId ope
 	return req, nil
 }
 
+// NewCopyEmbeddingProviderFromTeamRequest calls the generic CopyEmbeddingProviderFromTeam builder with application/json body
+func NewCopyEmbeddingProviderFromTeamRequest(server string, teamId openapi_types.UUID, body CopyEmbeddingProviderFromTeamJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCopyEmbeddingProviderFromTeamRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewCopyEmbeddingProviderFromTeamRequestWithBody generates requests for CopyEmbeddingProviderFromTeam with any type of body
+func NewCopyEmbeddingProviderFromTeamRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/embedding-providers/copy", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetEmbeddingCoverageSettingsRequest generates requests for GetEmbeddingCoverageSettings
 func NewGetEmbeddingCoverageSettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -18805,6 +18881,11 @@ type ClientWithResponsesInterface interface {
 	CreateEmbeddingProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateEmbeddingProviderSettingsHTTPResponse, error)
 
 	CreateEmbeddingProviderSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateEmbeddingProviderSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateEmbeddingProviderSettingsHTTPResponse, error)
+
+	// CopyEmbeddingProviderFromTeamWithBodyWithResponse request with any body
+	CopyEmbeddingProviderFromTeamWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CopyEmbeddingProviderFromTeamHTTPResponse, error)
+
+	CopyEmbeddingProviderFromTeamWithResponse(ctx context.Context, teamId openapi_types.UUID, body CopyEmbeddingProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*CopyEmbeddingProviderFromTeamHTTPResponse, error)
 
 	// GetEmbeddingCoverageSettingsWithResponse request
 	GetEmbeddingCoverageSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetEmbeddingCoverageSettingsHTTPResponse, error)
@@ -26275,6 +26356,42 @@ func (r CreateEmbeddingProviderSettingsHTTPResponse) ContentType() string {
 	return ""
 }
 
+type CopyEmbeddingProviderFromTeamHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *CopyEmbeddingProviderResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CopyEmbeddingProviderFromTeamHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CopyEmbeddingProviderFromTeamHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CopyEmbeddingProviderFromTeamHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetEmbeddingCoverageSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -29836,6 +29953,23 @@ func (c *ClientWithResponses) CreateEmbeddingProviderSettingsWithResponse(ctx co
 		return nil, err
 	}
 	return ParseCreateEmbeddingProviderSettingsHTTPResponse(rsp)
+}
+
+// CopyEmbeddingProviderFromTeamWithBodyWithResponse request with arbitrary body returning *CopyEmbeddingProviderFromTeamHTTPResponse
+func (c *ClientWithResponses) CopyEmbeddingProviderFromTeamWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CopyEmbeddingProviderFromTeamHTTPResponse, error) {
+	rsp, err := c.CopyEmbeddingProviderFromTeamWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCopyEmbeddingProviderFromTeamHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) CopyEmbeddingProviderFromTeamWithResponse(ctx context.Context, teamId openapi_types.UUID, body CopyEmbeddingProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*CopyEmbeddingProviderFromTeamHTTPResponse, error) {
+	rsp, err := c.CopyEmbeddingProviderFromTeam(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCopyEmbeddingProviderFromTeamHTTPResponse(rsp)
 }
 
 // GetEmbeddingCoverageSettingsWithResponse request returning *GetEmbeddingCoverageSettingsHTTPResponse
@@ -41146,6 +41280,74 @@ func ParseCreateEmbeddingProviderSettingsHTTPResponse(rsp *http.Response) (*Crea
 			return nil, err
 		}
 		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCopyEmbeddingProviderFromTeamHTTPResponse parses an HTTP response from a CopyEmbeddingProviderFromTeamWithResponse call
+func ParseCopyEmbeddingProviderFromTeamHTTPResponse(rsp *http.Response) (*CopyEmbeddingProviderFromTeamHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CopyEmbeddingProviderFromTeamHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CopyEmbeddingProviderResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest ErrorResponse
