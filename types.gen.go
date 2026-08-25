@@ -4524,6 +4524,34 @@ type ConversationSummary struct {
 	StartedAt      time.Time `json:"started_at"`
 }
 
+// CopyModelProviderRequest Request body for copying one model provider out of another team into this one. The destination is the `{team_id}` path parameter; only the source is carried here.
+//
+// The API key is deliberately absent. Responses expose `has_api_key` and never the key itself, so a client cannot carry the credential across — the server re-reads the source row's stored ciphertext and writes it to the copy untouched, without ever decrypting it.
+//
+// Every property other than the two source identifiers is an OPTIONAL override of the value the source row already holds: omit one to copy the source value verbatim, or send it to change the copy without touching the source. An override that IS sent must be non-empty, the same bar the create path sets.
+type CopyModelProviderRequest struct {
+	// BaseUrl Overrides the source provider's base URL. Send null or an empty string to store no base URL at all.
+	BaseUrl *string `json:"base_url,omitempty"`
+
+	// Configuration Overrides the source provider's configuration wholesale.
+	Configuration *map[string]interface{} `json:"configuration,omitempty"`
+
+	// Model Overrides the source provider's chat/completion model.
+	Model *string `json:"model,omitempty"`
+
+	// Name Name for the copy. Sent, it is used verbatim, and a name the destination already holds fails the copy with 409. Omitted, the source name is used, disambiguated as "<name> (copy)", "<name> (copy 2)", … when the destination already holds it.
+	Name *string `json:"name,omitempty"`
+
+	// ProviderType Overrides the source provider's type.
+	ProviderType *string `json:"provider_type,omitempty"`
+
+	// SourceProviderId Provider to copy, as it exists in the source team.
+	SourceProviderId openapi_types.UUID `json:"source_provider_id"`
+
+	// SourceTeamId Team to copy the provider from. The caller needs permission to manage provider settings in it, and it must differ from the destination team.
+	SourceTeamId openapi_types.UUID `json:"source_team_id"`
+}
+
 // CopyTypesRequest Request body for copying another team's custom types into this one. The destination is the `{team_id}` path parameter; only the source is carried here.
 type CopyTypesRequest struct {
 	// SourceTeamId Team to copy the custom types from. The caller must belong to it, and it must differ from the destination team.
@@ -8832,6 +8860,9 @@ type UpdateGitHubAppConfigSettingsJSONRequestBody = UpdateGitHubAppConfigRequest
 
 // CreateModelProviderSettingsJSONRequestBody defines body for CreateModelProviderSettings for application/json ContentType.
 type CreateModelProviderSettingsJSONRequestBody = CreateModelProviderRequest
+
+// CopyModelProviderFromTeamJSONRequestBody defines body for CopyModelProviderFromTeam for application/json ContentType.
+type CopyModelProviderFromTeamJSONRequestBody = CopyModelProviderRequest
 
 // ValidateModelProviderSettingsJSONRequestBody defines body for ValidateModelProviderSettings for application/json ContentType.
 type ValidateModelProviderSettingsJSONRequestBody = ValidateModelProviderRequest
