@@ -255,24 +255,6 @@ func (e ArtifactStatus) Valid() bool {
 	}
 }
 
-// Defines values for BlueprintStatus.
-const (
-	BlueprintStatusActive  BlueprintStatus = "active"
-	BlueprintStatusExpired BlueprintStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the BlueprintStatus enum.
-func (e BlueprintStatus) Valid() bool {
-	switch e {
-	case BlueprintStatusActive:
-		return true
-	case BlueprintStatusExpired:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for BlueprintSubtype.
 const (
 	BlueprintSubtypeAgents        BlueprintSubtype = "agents"
@@ -336,24 +318,6 @@ func (e BlueprintType) Valid() bool {
 	case BlueprintTypeCursor:
 		return true
 	case BlueprintTypeGeneral:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for BlueprintDetailStatus.
-const (
-	BlueprintDetailStatusActive  BlueprintDetailStatus = "active"
-	BlueprintDetailStatusExpired BlueprintDetailStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the BlueprintDetailStatus enum.
-func (e BlueprintDetailStatus) Valid() bool {
-	switch e {
-	case BlueprintDetailStatusActive:
-		return true
-	case BlueprintDetailStatusExpired:
 		return true
 	default:
 		return false
@@ -453,6 +417,24 @@ func (e BlueprintImportCompanionOutcome) Valid() bool {
 	}
 }
 
+// Defines values for BlueprintStatus.
+const (
+	BlueprintStatusActive  BlueprintStatus = "active"
+	BlueprintStatusExpired BlueprintStatus = "expired"
+)
+
+// Valid indicates whether the value is a known member of the BlueprintStatus enum.
+func (e BlueprintStatus) Valid() bool {
+	switch e {
+	case BlueprintStatusActive:
+		return true
+	case BlueprintStatusExpired:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ContentVersionActorType.
 const (
 	ContentVersionActorTypeHuman  ContentVersionActorType = "human"
@@ -501,45 +483,6 @@ func (e CreateAgentRequestStatus) Valid() bool {
 	case CreateAgentRequestStatusActive:
 		return true
 	case CreateAgentRequestStatusPaused:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for CreateArtifactRequestStatus.
-const (
-	CreateArtifactRequestStatusActive   CreateArtifactRequestStatus = "active"
-	CreateArtifactRequestStatusArchived CreateArtifactRequestStatus = "archived"
-	CreateArtifactRequestStatusDraft    CreateArtifactRequestStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the CreateArtifactRequestStatus enum.
-func (e CreateArtifactRequestStatus) Valid() bool {
-	switch e {
-	case CreateArtifactRequestStatusActive:
-		return true
-	case CreateArtifactRequestStatusArchived:
-		return true
-	case CreateArtifactRequestStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for CreateBlueprintRequestStatus.
-const (
-	CreateBlueprintRequestStatusActive  CreateBlueprintRequestStatus = "active"
-	CreateBlueprintRequestStatusExpired CreateBlueprintRequestStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the CreateBlueprintRequestStatus enum.
-func (e CreateBlueprintRequestStatus) Valid() bool {
-	switch e {
-	case CreateBlueprintRequestStatusActive:
-		return true
-	case CreateBlueprintRequestStatusExpired:
 		return true
 	default:
 		return false
@@ -609,45 +552,6 @@ func (e CreateBlueprintRequestType) Valid() bool {
 	case CreateBlueprintRequestTypeCursor:
 		return true
 	case CreateBlueprintRequestTypeGeneral:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for CreateMemoryRequestStatus.
-const (
-	CreateMemoryRequestStatusActive   CreateMemoryRequestStatus = "active"
-	CreateMemoryRequestStatusArchived CreateMemoryRequestStatus = "archived"
-	CreateMemoryRequestStatusDraft    CreateMemoryRequestStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the CreateMemoryRequestStatus enum.
-func (e CreateMemoryRequestStatus) Valid() bool {
-	switch e {
-	case CreateMemoryRequestStatusActive:
-		return true
-	case CreateMemoryRequestStatusArchived:
-		return true
-	case CreateMemoryRequestStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for CreatePromptRequestStatus.
-const (
-	CreatePromptRequestStatusDraft     CreatePromptRequestStatus = "draft"
-	CreatePromptRequestStatusPublished CreatePromptRequestStatus = "published"
-)
-
-// Valid indicates whether the value is a known member of the CreatePromptRequestStatus enum.
-func (e CreatePromptRequestStatus) Valid() bool {
-	switch e {
-	case CreatePromptRequestStatusDraft:
-		return true
-	case CreatePromptRequestStatusPublished:
 		return true
 	default:
 		return false
@@ -1094,16 +998,16 @@ func (e ProjectResourceCreationMetricsDataRange) Valid() bool {
 
 // Defines values for PromptStatus.
 const (
-	PromptStatusDraft     PromptStatus = "draft"
-	PromptStatusPublished PromptStatus = "published"
+	Draft     PromptStatus = "draft"
+	Published PromptStatus = "published"
 )
 
 // Valid indicates whether the value is a known member of the PromptStatus enum.
 func (e PromptStatus) Valid() bool {
 	switch e {
-	case PromptStatusDraft:
+	case Draft:
 		return true
-	case PromptStatusPublished:
+	case Published:
 		return true
 	default:
 		return false
@@ -1794,45 +1698,6 @@ func (e UpdateAgentRequestStatus) Valid() bool {
 	}
 }
 
-// Defines values for UpdateArtifactRequestStatus.
-const (
-	UpdateArtifactRequestStatusActive   UpdateArtifactRequestStatus = "active"
-	UpdateArtifactRequestStatusArchived UpdateArtifactRequestStatus = "archived"
-	UpdateArtifactRequestStatusDraft    UpdateArtifactRequestStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the UpdateArtifactRequestStatus enum.
-func (e UpdateArtifactRequestStatus) Valid() bool {
-	switch e {
-	case UpdateArtifactRequestStatusActive:
-		return true
-	case UpdateArtifactRequestStatusArchived:
-		return true
-	case UpdateArtifactRequestStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for UpdateBlueprintRequestStatus.
-const (
-	UpdateBlueprintRequestStatusActive  UpdateBlueprintRequestStatus = "active"
-	UpdateBlueprintRequestStatusExpired UpdateBlueprintRequestStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the UpdateBlueprintRequestStatus enum.
-func (e UpdateBlueprintRequestStatus) Valid() bool {
-	switch e {
-	case UpdateBlueprintRequestStatusActive:
-		return true
-	case UpdateBlueprintRequestStatusExpired:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for UpdateBlueprintRequestSubtype.
 const (
 	UpdateBlueprintRequestSubtypeAgents        UpdateBlueprintRequestSubtype = "agents"
@@ -1896,45 +1761,6 @@ func (e UpdateBlueprintRequestType) Valid() bool {
 	case UpdateBlueprintRequestTypeCursor:
 		return true
 	case UpdateBlueprintRequestTypeGeneral:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for UpdateMemoryRequestStatus.
-const (
-	UpdateMemoryRequestStatusActive   UpdateMemoryRequestStatus = "active"
-	UpdateMemoryRequestStatusArchived UpdateMemoryRequestStatus = "archived"
-	UpdateMemoryRequestStatusDraft    UpdateMemoryRequestStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the UpdateMemoryRequestStatus enum.
-func (e UpdateMemoryRequestStatus) Valid() bool {
-	switch e {
-	case UpdateMemoryRequestStatusActive:
-		return true
-	case UpdateMemoryRequestStatusArchived:
-		return true
-	case UpdateMemoryRequestStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for UpdatePromptRequestStatus.
-const (
-	UpdatePromptRequestStatusDraft     UpdatePromptRequestStatus = "draft"
-	UpdatePromptRequestStatusPublished UpdatePromptRequestStatus = "published"
-)
-
-// Valid indicates whether the value is a known member of the UpdatePromptRequestStatus enum.
-func (e UpdatePromptRequestStatus) Valid() bool {
-	switch e {
-	case UpdatePromptRequestStatusDraft:
-		return true
-	case UpdatePromptRequestStatusPublished:
 		return true
 	default:
 		return false
@@ -2397,27 +2223,6 @@ func (e ListArtifactsParamsFreshness) Valid() bool {
 	}
 }
 
-// Defines values for ListArtifactsParamsStatus.
-const (
-	ListArtifactsParamsStatusActive   ListArtifactsParamsStatus = "active"
-	ListArtifactsParamsStatusArchived ListArtifactsParamsStatus = "archived"
-	ListArtifactsParamsStatusDraft    ListArtifactsParamsStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the ListArtifactsParamsStatus enum.
-func (e ListArtifactsParamsStatus) Valid() bool {
-	switch e {
-	case ListArtifactsParamsStatusActive:
-		return true
-	case ListArtifactsParamsStatusArchived:
-		return true
-	case ListArtifactsParamsStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for ListArtifactsParamsSortBy.
 const (
 	ListArtifactsParamsSortByCreatedAt ListArtifactsParamsSortBy = "created_at"
@@ -2472,27 +2277,6 @@ func (e ListArtifactsByProjectParamsFreshness) Valid() bool {
 	}
 }
 
-// Defines values for ListArtifactsByProjectParamsStatus.
-const (
-	ListArtifactsByProjectParamsStatusActive   ListArtifactsByProjectParamsStatus = "active"
-	ListArtifactsByProjectParamsStatusArchived ListArtifactsByProjectParamsStatus = "archived"
-	ListArtifactsByProjectParamsStatusDraft    ListArtifactsByProjectParamsStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the ListArtifactsByProjectParamsStatus enum.
-func (e ListArtifactsByProjectParamsStatus) Valid() bool {
-	switch e {
-	case ListArtifactsByProjectParamsStatusActive:
-		return true
-	case ListArtifactsByProjectParamsStatusArchived:
-		return true
-	case ListArtifactsByProjectParamsStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for ListArtifactsByProjectParamsSortBy.
 const (
 	ListArtifactsByProjectParamsSortByCreatedAt ListArtifactsByProjectParamsSortBy = "created_at"
@@ -2541,24 +2325,6 @@ const (
 func (e ListSpecLibrariesParamsFreshness) Valid() bool {
 	switch e {
 	case ListSpecLibrariesParamsFreshnessStale:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ListSpecLibrariesParamsStatus.
-const (
-	ListSpecLibrariesParamsStatusActive  ListSpecLibrariesParamsStatus = "active"
-	ListSpecLibrariesParamsStatusExpired ListSpecLibrariesParamsStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the ListSpecLibrariesParamsStatus enum.
-func (e ListSpecLibrariesParamsStatus) Valid() bool {
-	switch e {
-	case ListSpecLibrariesParamsStatusActive:
-		return true
-	case ListSpecLibrariesParamsStatusExpired:
 		return true
 	default:
 		return false
@@ -2682,24 +2448,6 @@ const (
 func (e ListSpecLibrariesByProjectParamsFreshness) Valid() bool {
 	switch e {
 	case ListSpecLibrariesByProjectParamsFreshnessStale:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ListSpecLibrariesByProjectParamsStatus.
-const (
-	ListSpecLibrariesByProjectParamsStatusActive  ListSpecLibrariesByProjectParamsStatus = "active"
-	ListSpecLibrariesByProjectParamsStatusExpired ListSpecLibrariesByProjectParamsStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the ListSpecLibrariesByProjectParamsStatus enum.
-func (e ListSpecLibrariesByProjectParamsStatus) Valid() bool {
-	switch e {
-	case ListSpecLibrariesByProjectParamsStatusActive:
-		return true
-	case ListSpecLibrariesByProjectParamsStatusExpired:
 		return true
 	default:
 		return false
@@ -2871,27 +2619,6 @@ func (e ListMemoriesParamsFreshness) Valid() bool {
 	}
 }
 
-// Defines values for ListMemoriesParamsStatus.
-const (
-	ListMemoriesParamsStatusActive   ListMemoriesParamsStatus = "active"
-	ListMemoriesParamsStatusArchived ListMemoriesParamsStatus = "archived"
-	ListMemoriesParamsStatusDraft    ListMemoriesParamsStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the ListMemoriesParamsStatus enum.
-func (e ListMemoriesParamsStatus) Valid() bool {
-	switch e {
-	case ListMemoriesParamsStatusActive:
-		return true
-	case ListMemoriesParamsStatusArchived:
-		return true
-	case ListMemoriesParamsStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for ListMemoriesParamsSortBy.
 const (
 	ListMemoriesParamsSortByCreatedAt ListMemoriesParamsSortBy = "created_at"
@@ -3012,24 +2739,6 @@ const (
 func (e ListPromptsParamsFreshness) Valid() bool {
 	switch e {
 	case Stale:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ListPromptsParamsStatus.
-const (
-	ListPromptsParamsStatusDraft     ListPromptsParamsStatus = "draft"
-	ListPromptsParamsStatusPublished ListPromptsParamsStatus = "published"
-)
-
-// Valid indicates whether the value is a known member of the ListPromptsParamsStatus enum.
-func (e ListPromptsParamsStatus) Valid() bool {
-	switch e {
-	case ListPromptsParamsStatusDraft:
-		return true
-	case ListPromptsParamsStatusPublished:
 		return true
 	default:
 		return false
@@ -3981,7 +3690,7 @@ type Artifact struct {
 	// Slug Unique slug for the artifact within the project
 	Slug string `json:"slug"`
 
-	// Status Current status of the artifact
+	// Status Lifecycle status of an artifact.
 	Status ArtifactStatus `json:"status"`
 
 	// Title Human-readable title for the artifact
@@ -3996,9 +3705,6 @@ type Artifact struct {
 	// UserId ID of the user who owns this artifact
 	UserId string `json:"user_id"`
 }
-
-// ArtifactStatus Current status of the artifact
-type ArtifactStatus string
 
 // ArtifactListResponse defines model for ArtifactListResponse.
 type ArtifactListResponse struct {
@@ -4035,6 +3741,9 @@ type ArtifactStatsResponse struct {
 	// TotalProjects Total number of projects with artifacts
 	TotalProjects int `json:"total_projects"`
 }
+
+// ArtifactStatus Lifecycle status of an artifact.
+type ArtifactStatus string
 
 // ArtifactVersionListResponse defines model for ArtifactVersionListResponse.
 type ArtifactVersionListResponse struct {
@@ -4142,7 +3851,7 @@ type Blueprint struct {
 	// Source Read-only import provenance; present only for imported blueprints.
 	Source *BlueprintSource `json:"source,omitempty"`
 
-	// Status Current status of the spec library
+	// Status Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
 	Status BlueprintStatus `json:"status"`
 
 	// Subtype Subtype category for specific type spec libraries
@@ -4160,9 +3869,6 @@ type Blueprint struct {
 	// UserId ID of the user who owns this spec library
 	UserId string `json:"user_id"`
 }
-
-// BlueprintStatus Current status of the spec library
-type BlueprintStatus string
 
 // BlueprintSubtype Subtype category for specific type spec libraries
 type BlueprintSubtype string
@@ -4217,8 +3923,8 @@ type BlueprintDetail struct {
 	// Source Read-only import provenance; present only for imported blueprints.
 	Source *BlueprintSource `json:"source,omitempty"`
 
-	// Status Current status of the spec library
-	Status BlueprintDetailStatus `json:"status"`
+	// Status Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
+	Status BlueprintStatus `json:"status"`
 
 	// Subtype Subtype category for specific type spec libraries
 	Subtype *BlueprintDetailSubtype `json:"subtype,omitempty"`
@@ -4235,9 +3941,6 @@ type BlueprintDetail struct {
 	// UserId ID of the user who owns this spec library
 	UserId string `json:"user_id"`
 }
-
-// BlueprintDetailStatus Current status of the spec library
-type BlueprintDetailStatus string
 
 // BlueprintDetailSubtype Subtype category for specific type spec libraries
 type BlueprintDetailSubtype string
@@ -4425,6 +4128,9 @@ type BlueprintStatsResponse struct {
 	// TotalProjects Total number of projects with spec libraries
 	TotalProjects int `json:"total_projects"`
 }
+
+// BlueprintStatus Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
+type BlueprintStatus string
 
 // BlueprintVersionListResponse defines model for BlueprintVersionListResponse.
 type BlueprintVersionListResponse struct {
@@ -4736,10 +4442,8 @@ type CreateArtifactRequest struct {
 	ProjectId openapi_types.UUID `json:"project_id"`
 
 	// Slug Unique slug for the artifact within the project
-	Slug string `json:"slug"`
-
-	// Status Initial status of the artifact
-	Status *CreateArtifactRequestStatus `json:"status,omitempty"`
+	Slug   string          `json:"slug"`
+	Status *ArtifactStatus `json:"status,omitempty"`
 
 	// Title Human-readable title for the artifact
 	Title string `json:"title"`
@@ -4747,9 +4451,6 @@ type CreateArtifactRequest struct {
 	// Type Type category of the artifact. An open string validated at runtime against the team's registered types (the system defaults work_reports, static_contexts and general, plus any custom types the team has added), not a fixed enum. Defaults to general when omitted.
 	Type *string `json:"type,omitempty"`
 }
-
-// CreateArtifactRequestStatus Initial status of the artifact
-type CreateArtifactRequestStatus string
 
 // CreateBlueprintRequest defines model for CreateBlueprintRequest.
 type CreateBlueprintRequest struct {
@@ -4772,10 +4473,8 @@ type CreateBlueprintRequest struct {
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
 
 	// Slug Unique slug for the spec library within the project
-	Slug string `json:"slug"`
-
-	// Status Initial status of the spec library
-	Status *CreateBlueprintRequestStatus `json:"status,omitempty"`
+	Slug   string           `json:"slug"`
+	Status *BlueprintStatus `json:"status,omitempty"`
 
 	// Subtype Subtype category for specific type spec libraries
 	Subtype *CreateBlueprintRequestSubtype `json:"subtype,omitempty"`
@@ -4786,9 +4485,6 @@ type CreateBlueprintRequest struct {
 	// Type Type category of the spec library
 	Type *CreateBlueprintRequestType `json:"type,omitempty"`
 }
-
-// CreateBlueprintRequestStatus Initial status of the spec library
-type CreateBlueprintRequestStatus string
 
 // CreateBlueprintRequestSubtype Subtype category for specific type spec libraries
 type CreateBlueprintRequestSubtype string
@@ -4950,9 +4646,7 @@ type CreateMemoryRequest struct {
 
 	// ProjectId UUID of the project this memory belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
-
-	// Status Initial lifecycle status of the memory (defaults to active)
-	Status *CreateMemoryRequestStatus `json:"status,omitempty"`
+	Status    *MemoryStatus      `json:"status,omitempty"`
 
 	// Text The text content of the memory
 	Text string `json:"text"`
@@ -4960,9 +4654,6 @@ type CreateMemoryRequest struct {
 	// Title Optional short title for the memory (max 255 characters)
 	Title *string `json:"title,omitempty"`
 }
-
-// CreateMemoryRequestStatus Initial lifecycle status of the memory (defaults to active)
-type CreateMemoryRequestStatus string
 
 // CreateModelProviderRequest defines model for CreateModelProviderRequest.
 type CreateModelProviderRequest struct {
@@ -5011,13 +4702,10 @@ type CreatePromptRequest struct {
 	Name      string `json:"name"`
 
 	// ProjectId Project identifier that this prompt belongs to
-	ProjectId openapi_types.UUID         `json:"project_id"`
-	Slug      string                     `json:"slug"`
-	Status    *CreatePromptRequestStatus `json:"status,omitempty"`
+	ProjectId openapi_types.UUID `json:"project_id"`
+	Slug      string             `json:"slug"`
+	Status    *PromptStatus      `json:"status,omitempty"`
 }
-
-// CreatePromptRequestStatus defines model for CreatePromptRequest.Status.
-type CreatePromptRequestStatus string
 
 // CreateRelationRequest Request body for creating a typed relation between two resources.
 type CreateRelationRequest struct {
@@ -5932,7 +5620,7 @@ type Memory struct {
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
 
-	// Status Current lifecycle status of the memory
+	// Status Lifecycle status of a memory.
 	Status MemoryStatus `json:"status"`
 
 	// TeamId ID of the team this memory belongs to
@@ -5954,9 +5642,6 @@ type Memory struct {
 	Version int64 `json:"version"`
 }
 
-// MemoryStatus Current lifecycle status of the memory
-type MemoryStatus string
-
 // MemoryListResponse defines model for MemoryListResponse.
 type MemoryListResponse struct {
 	// Memories List of memories
@@ -5974,6 +5659,9 @@ type MemoryListResponse struct {
 	// TotalPages Total number of pages
 	TotalPages int `json:"total_pages"`
 }
+
+// MemoryStatus Lifecycle status of a memory.
+type MemoryStatus string
 
 // MemoryVersionListResponse defines model for MemoryVersionListResponse.
 type MemoryVersionListResponse struct {
@@ -6366,7 +6054,9 @@ type Prompt struct {
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
 	Slug    string             `json:"slug"`
-	Status  PromptStatus       `json:"status"`
+
+	// Status Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
+	Status PromptStatus `json:"status"`
 
 	// TeamId Team identifier that owns this prompt
 	TeamId    openapi_types.UUID `json:"team_id"`
@@ -6376,9 +6066,6 @@ type Prompt struct {
 	// Version Version number for optimistic concurrency control
 	Version int64 `json:"version"`
 }
-
-// PromptStatus defines model for Prompt.Status.
-type PromptStatus string
 
 // PromptDependenciesResponse defines model for PromptDependenciesResponse.
 type PromptDependenciesResponse struct {
@@ -6461,6 +6148,9 @@ type PromptListResponse struct {
 type PromptPlaceholdersResponse struct {
 	Placeholders []string `json:"placeholders"`
 }
+
+// PromptStatus Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
+type PromptStatus string
 
 // PromptVersionListResponse defines model for PromptVersionListResponse.
 type PromptVersionListResponse struct {
@@ -7444,8 +7134,8 @@ type UpdateArtifactRequest struct {
 	// Slug New slug for the artifact
 	Slug *string `json:"slug,omitempty"`
 
-	// Status Updated status of the artifact
-	Status *UpdateArtifactRequestStatus `json:"status,omitempty"`
+	// Status Lifecycle status of an artifact.
+	Status *ArtifactStatus `json:"status,omitempty"`
 
 	// Title Updated title for the artifact
 	Title *string `json:"title,omitempty"`
@@ -7453,9 +7143,6 @@ type UpdateArtifactRequest struct {
 	// Type Updated type category of the artifact. An open string validated at runtime against the team's registered types (the system defaults work_reports, static_contexts and general, plus any custom types the team has added), not a fixed enum.
 	Type *string `json:"type,omitempty"`
 }
-
-// UpdateArtifactRequestStatus Updated status of the artifact
-type UpdateArtifactRequestStatus string
 
 // UpdateBlueprintRequest defines model for UpdateBlueprintRequest.
 type UpdateBlueprintRequest struct {
@@ -7480,8 +7167,8 @@ type UpdateBlueprintRequest struct {
 	// Slug New slug for the spec library
 	Slug *string `json:"slug,omitempty"`
 
-	// Status Updated status of the spec library
-	Status *UpdateBlueprintRequestStatus `json:"status,omitempty"`
+	// Status Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
+	Status *BlueprintStatus `json:"status,omitempty"`
 
 	// Subtype Updated subtype category for specific type spec libraries
 	Subtype *UpdateBlueprintRequestSubtype `json:"subtype,omitempty"`
@@ -7492,9 +7179,6 @@ type UpdateBlueprintRequest struct {
 	// Type Updated type category of the spec library
 	Type *UpdateBlueprintRequestType `json:"type,omitempty"`
 }
-
-// UpdateBlueprintRequestStatus Updated status of the spec library
-type UpdateBlueprintRequestStatus string
 
 // UpdateBlueprintRequestSubtype Updated subtype category for specific type spec libraries
 type UpdateBlueprintRequestSubtype string
@@ -7574,8 +7258,8 @@ type UpdateMemoryRequest struct {
 	// ProjectId New project UUID for the memory (moves it between projects)
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
 
-	// Status Updated lifecycle status of the memory
-	Status *UpdateMemoryRequestStatus `json:"status,omitempty"`
+	// Status Lifecycle status of a memory.
+	Status *MemoryStatus `json:"status,omitempty"`
 
 	// Text Updated text content of the memory
 	Text *string `json:"text,omitempty"`
@@ -7583,9 +7267,6 @@ type UpdateMemoryRequest struct {
 	// Title Updated title for the memory (max 255 characters). Omit the key to leave the title unchanged; send null to clear it.
 	Title *string `json:"title,omitempty"`
 }
-
-// UpdateMemoryRequestStatus Updated lifecycle status of the memory
-type UpdateMemoryRequestStatus string
 
 // UpdateModelProviderRequest defines model for UpdateModelProviderRequest.
 type UpdateModelProviderRequest struct {
@@ -7638,13 +7319,12 @@ type UpdatePromptRequest struct {
 	Name      *string `json:"name,omitempty"`
 
 	// ProjectId Project identifier to move this prompt to a different project
-	ProjectId *openapi_types.UUID        `json:"project_id,omitempty"`
-	Slug      *string                    `json:"slug,omitempty"`
-	Status    *UpdatePromptRequestStatus `json:"status,omitempty"`
-}
+	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
+	Slug      *string             `json:"slug,omitempty"`
 
-// UpdatePromptRequestStatus defines model for UpdatePromptRequest.Status.
-type UpdatePromptRequestStatus string
+	// Status Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
+	Status *PromptStatus `json:"status,omitempty"`
+}
 
 // UpdateTeamFreshnessSettingsRequest Override the team's freshness settings.
 type UpdateTeamFreshnessSettingsRequest struct {
@@ -8299,7 +7979,7 @@ type ListArtifactsParams struct {
 	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
 
 	// Status Filter by status
-	Status *ListArtifactsParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *ArtifactStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type. An open string matched against the team's registered types (the system defaults work_reports, static_contexts and general, plus any custom types the team has added), not a fixed enum.
 	Type *string `form:"type,omitempty" json:"type,omitempty"`
@@ -8329,9 +8009,6 @@ type ListArtifactsParams struct {
 // ListArtifactsParamsFreshness defines parameters for ListArtifacts.
 type ListArtifactsParamsFreshness string
 
-// ListArtifactsParamsStatus defines parameters for ListArtifacts.
-type ListArtifactsParamsStatus string
-
 // ListArtifactsParamsSortBy defines parameters for ListArtifacts.
 type ListArtifactsParamsSortBy string
 
@@ -8344,7 +8021,7 @@ type ListArtifactsByProjectParams struct {
 	Freshness *ListArtifactsByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
 	// Status Filter by status
-	Status *ListArtifactsByProjectParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *ArtifactStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type. An open string matched against the team's registered types (the system defaults work_reports, static_contexts and general, plus any custom types the team has added), not a fixed enum.
 	Type *string `form:"type,omitempty" json:"type,omitempty"`
@@ -8373,9 +8050,6 @@ type ListArtifactsByProjectParams struct {
 
 // ListArtifactsByProjectParamsFreshness defines parameters for ListArtifactsByProject.
 type ListArtifactsByProjectParamsFreshness string
-
-// ListArtifactsByProjectParamsStatus defines parameters for ListArtifactsByProject.
-type ListArtifactsByProjectParamsStatus string
 
 // ListArtifactsByProjectParamsSortBy defines parameters for ListArtifactsByProject.
 type ListArtifactsByProjectParamsSortBy string
@@ -8428,7 +8102,7 @@ type ListSpecLibrariesParams struct {
 	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
 
 	// Status Filter by status
-	Status *ListSpecLibrariesParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *BlueprintStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type
 	Type *ListSpecLibrariesParamsType `form:"type,omitempty" json:"type,omitempty"`
@@ -8461,9 +8135,6 @@ type ListSpecLibrariesParams struct {
 // ListSpecLibrariesParamsFreshness defines parameters for ListSpecLibraries.
 type ListSpecLibrariesParamsFreshness string
 
-// ListSpecLibrariesParamsStatus defines parameters for ListSpecLibraries.
-type ListSpecLibrariesParamsStatus string
-
 // ListSpecLibrariesParamsType defines parameters for ListSpecLibraries.
 type ListSpecLibrariesParamsType string
 
@@ -8482,7 +8153,7 @@ type ListSpecLibrariesByProjectParams struct {
 	Freshness *ListSpecLibrariesByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
 	// Status Filter by status
-	Status *ListSpecLibrariesByProjectParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *BlueprintStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type
 	Type *ListSpecLibrariesByProjectParamsType `form:"type,omitempty" json:"type,omitempty"`
@@ -8514,9 +8185,6 @@ type ListSpecLibrariesByProjectParams struct {
 
 // ListSpecLibrariesByProjectParamsFreshness defines parameters for ListSpecLibrariesByProject.
 type ListSpecLibrariesByProjectParamsFreshness string
-
-// ListSpecLibrariesByProjectParamsStatus defines parameters for ListSpecLibrariesByProject.
-type ListSpecLibrariesByProjectParamsStatus string
 
 // ListSpecLibrariesByProjectParamsType defines parameters for ListSpecLibrariesByProject.
 type ListSpecLibrariesByProjectParamsType string
@@ -8683,7 +8351,7 @@ type ListMemoriesParams struct {
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
 	// Status Filter by lifecycle status. When omitted, archived memories are hidden (active and draft are returned); an explicit value returns only that status. Returns 400 for unknown values.
-	Status *ListMemoriesParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *MemoryStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// SortBy Field to sort results by. Allowed: text, updated_at, created_at. Returns 400 for unknown values.
 	SortBy *ListMemoriesParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
@@ -8700,9 +8368,6 @@ type ListMemoriesParams struct {
 
 // ListMemoriesParamsFreshness defines parameters for ListMemories.
 type ListMemoriesParamsFreshness string
-
-// ListMemoriesParamsStatus defines parameters for ListMemories.
-type ListMemoriesParamsStatus string
 
 // ListMemoriesParamsSortBy defines parameters for ListMemories.
 type ListMemoriesParamsSortBy string
@@ -8788,7 +8453,7 @@ type ListPromptsParams struct {
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
 	// Status Filter by prompt status
-	Status *ListPromptsParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *PromptStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Labels Comma-separated list of labels to filter by
 	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
@@ -8811,9 +8476,6 @@ type ListPromptsParams struct {
 
 // ListPromptsParamsFreshness defines parameters for ListPrompts.
 type ListPromptsParamsFreshness string
-
-// ListPromptsParamsStatus defines parameters for ListPrompts.
-type ListPromptsParamsStatus string
 
 // ListPromptsParamsSortBy defines parameters for ListPrompts.
 type ListPromptsParamsSortBy string
