@@ -4956,6 +4956,9 @@ type CreateMemoryRequest struct {
 
 	// Text The text content of the memory
 	Text string `json:"text"`
+
+	// Title Optional short title for the memory (max 255 characters)
+	Title *string `json:"title,omitempty"`
 }
 
 // CreateMemoryRequestStatus Initial lifecycle status of the memory (defaults to active)
@@ -5937,6 +5940,9 @@ type Memory struct {
 
 	// Text The text content of the memory
 	Text string `json:"text"`
+
+	// Title Optional short title for the memory. Always present; null when the memory has none, in which case clients derive a display title from the text (e.g. its first markdown heading).
+	Title *string `json:"title"`
 
 	// UpdatedAt Timestamp when the memory was last updated
 	UpdatedAt time.Time `json:"updated_at"`
@@ -7573,6 +7579,9 @@ type UpdateMemoryRequest struct {
 
 	// Text Updated text content of the memory
 	Text *string `json:"text,omitempty"`
+
+	// Title Updated title for the memory (max 255 characters). Omit the key to leave the title unchanged; send null to clear it.
+	Title *string `json:"title,omitempty"`
 }
 
 // UpdateMemoryRequestStatus Updated lifecycle status of the memory
