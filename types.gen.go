@@ -3963,6 +3963,9 @@ type Artifact struct {
 	// Id Unique identifier for the artifact
 	Id string `json:"id"`
 
+	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
+	Labels []string `json:"labels"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -4115,6 +4118,9 @@ type Blueprint struct {
 	// Id Unique identifier for the spec library
 	Id string `json:"id"`
 
+	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
+	Labels []string `json:"labels"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -4183,6 +4189,9 @@ type BlueprintDetail struct {
 
 	// Id Unique identifier for the spec library
 	Id string `json:"id"`
+
+	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
+	Labels []string `json:"labels"`
 
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
@@ -4717,6 +4726,9 @@ type CreateArtifactRequest struct {
 	// Description Optional description of the artifact
 	Description *string `json:"description,omitempty"`
 
+	// Labels Optional labels for categorising and filtering (max 10, 50 characters each)
+	Labels *[]string `json:"labels,omitempty"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -4746,6 +4758,9 @@ type CreateBlueprintRequest struct {
 
 	// Description Optional description of the spec library
 	Description *string `json:"description,omitempty"`
+
+	// Labels Optional labels for categorising and filtering (max 10, 50 characters each)
+	Labels *[]string `json:"labels,omitempty"`
 
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
@@ -4927,6 +4942,9 @@ type CreateGitHubAppConfigResponse struct {
 
 // CreateMemoryRequest defines model for CreateMemoryRequest.
 type CreateMemoryRequest struct {
+	// Labels Optional labels for categorising and filtering (max 10, 50 characters each)
+	Labels *[]string `json:"labels,omitempty"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -5895,6 +5913,9 @@ type Memory struct {
 
 	// Id Unique identifier for the memory
 	Id string `json:"id"`
+
+	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
+	Labels []string `json:"labels"`
 
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
@@ -7405,6 +7426,9 @@ type UpdateArtifactRequest struct {
 	// Description Updated description of the artifact
 	Description *string `json:"description,omitempty"`
 
+	// Labels Updated labels for categorising and filtering (max 10, 50 characters each)
+	Labels *[]string `json:"labels,omitempty"`
+
 	// Metadata Updated metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -7434,6 +7458,9 @@ type UpdateBlueprintRequest struct {
 
 	// Description Updated description of the spec library
 	Description *string `json:"description,omitempty"`
+
+	// Labels Updated labels for categorising and filtering (max 10, 50 characters each)
+	Labels *[]string `json:"labels,omitempty"`
 
 	// Metadata Updated metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
@@ -7532,6 +7559,9 @@ type UpdateGitHubAppConfigRequest struct {
 
 // UpdateMemoryRequest defines model for UpdateMemoryRequest.
 type UpdateMemoryRequest struct {
+	// Labels Updated labels for categorising and filtering (max 10, 50 characters each)
+	Labels *[]string `json:"labels,omitempty"`
+
 	// Metadata Updated metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -8268,6 +8298,9 @@ type ListArtifactsParams struct {
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
+	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
+	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
+
 	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
@@ -8309,6 +8342,9 @@ type ListArtifactsByProjectParams struct {
 
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
+	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
 
 	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
@@ -8394,6 +8430,9 @@ type ListSpecLibrariesParams struct {
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
+	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
+	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
+
 	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
 
@@ -8444,6 +8483,9 @@ type ListSpecLibrariesByProjectParams struct {
 
 	// Search Search in title, description, and content
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
+	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
 
 	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
@@ -8624,6 +8666,9 @@ type ListMemoriesParams struct {
 
 	// Search Search in memory text
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
+	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
 
 	// Metadata Filter by metadata as a JSON object of key to array of string values. Keys are combined with AND, values within a key with OR, and an empty array means "the key exists". Values match metadata stored as a scalar or as an array, and numeric/boolean values are matched by their string form. At most 10 keys, 25 values per key, key length 255, value length 512. Example: {"env":["prod","staging"],"team":["core"]}
 	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`

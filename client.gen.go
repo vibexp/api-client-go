@@ -9403,6 +9403,18 @@ func NewListArtifactsRequest(server string, teamId openapi_types.UUID, params *L
 
 		}
 
+		if params.Labels != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "labels", *params.Labels, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Metadata != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -9639,6 +9651,18 @@ func NewListArtifactsByProjectRequest(server string, teamId openapi_types.UUID, 
 		if params.Search != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Labels != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "labels", *params.Labels, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
@@ -10547,6 +10571,18 @@ func NewListSpecLibrariesRequest(server string, teamId openapi_types.UUID, param
 
 		}
 
+		if params.Labels != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "labels", *params.Labels, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Metadata != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -10795,6 +10831,18 @@ func NewListSpecLibrariesByProjectRequest(server string, teamId openapi_types.UU
 		if params.Search != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Labels != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "labels", *params.Labels, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
@@ -13869,6 +13917,18 @@ func NewListMemoriesRequest(server string, teamId openapi_types.UUID, params *Li
 		if params.Search != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Labels != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "labels", *params.Labels, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
