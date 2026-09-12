@@ -8482,7 +8482,7 @@ type ListPromptsParams struct {
 	// Status Filter by prompt status
 	Status *PromptStatus `form:"status,omitempty" json:"status,omitempty"`
 
-	// Labels Comma-separated list of labels to filter by
+	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
 	Labels *string `form:"labels,omitempty" json:"labels,omitempty"`
 
 	// ProjectId Filter by project ID
