@@ -3678,6 +3678,9 @@ type Artifact struct {
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
+	// Project Identity of the project this resource belongs to, so a client can render a project label without a second request (issue #929). Guaranteed on the single-resource detail GET; null in list responses, and null wherever the server has not resolved it — a project that no longer exists, or one belonging to another team. `project_id` remains the authoritative field: a client must not read a null here as "this resource has no project".
+	Project *ProjectSummary `json:"project"`
+
 	// ProjectId UUID of the project this artifact belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
 
@@ -3836,6 +3839,9 @@ type Blueprint struct {
 	// Path Canonical repo-relative path this blueprint materializes to. Derived from (type, subtype, slug) for VibeXP-authored blueprints, or the verbatim source path for imported ones.
 	Path string `json:"path"`
 
+	// Project Identity of the project this resource belongs to, so a client can render a project label without a second request (issue #929). Guaranteed on the single-resource detail GET; null in list responses, and null wherever the server has not resolved it — a project that no longer exists, or one belonging to another team. `project_id` remains the authoritative field: a client must not read a null here as "this resource has no project".
+	Project *ProjectSummary `json:"project"`
+
 	// ProjectId UUID of the project this spec library belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
 
@@ -3904,6 +3910,9 @@ type BlueprintDetail struct {
 
 	// Path Canonical repo-relative path this blueprint materializes to. Derived from (type, subtype, slug) for VibeXP-authored blueprints, or the verbatim source path for imported ones.
 	Path string `json:"path"`
+
+	// Project Identity of the project this resource belongs to, so a client can render a project label without a second request (issue #929). Guaranteed on the single-resource detail GET; null in list responses, and null wherever the server has not resolved it — a project that no longer exists, or one belonging to another team. `project_id` remains the authoritative field: a client must not read a null here as "this resource has no project".
+	Project *ProjectSummary `json:"project"`
 
 	// ProjectId UUID of the project this spec library belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
@@ -5611,6 +5620,9 @@ type Memory struct {
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
+	// Project Identity of the project this resource belongs to, so a client can render a project label without a second request (issue #929). Guaranteed on the single-resource detail GET; null in list responses, and null wherever the server has not resolved it — a project that no longer exists, or one belonging to another team. `project_id` remains the authoritative field: a client must not read a null here as "this resource has no project".
+	Project *ProjectSummary `json:"project"`
+
 	// ProjectId ID of the project this memory belongs to
 	ProjectId string `json:"project_id"`
 
@@ -6025,6 +6037,18 @@ type ProjectStatsResponse struct {
 	TotalPrompts *int `json:"total_prompts,omitempty"`
 }
 
+// ProjectSummary defines model for ProjectSummary.
+type ProjectSummary struct {
+	// Id Unique identifier for the project
+	Id openapi_types.UUID `json:"id"`
+
+	// Name Human-readable project name
+	Name string `json:"name"`
+
+	// Slug URL-friendly project identifier
+	Slug string `json:"slug"`
+}
+
 // Prompt defines model for Prompt.
 type Prompt struct {
 	Body        string    `json:"body"`
@@ -6044,6 +6068,9 @@ type Prompt struct {
 	// McpExpose Whether this prompt is discoverable via MCP (Model Context Protocol) tools
 	McpExpose bool   `json:"mcp_expose"`
 	Name      string `json:"name"`
+
+	// Project Identity of the project this resource belongs to, so a client can render a project label without a second request (issue #929). Guaranteed on the single-resource detail GET; null in list responses, and null wherever the server has not resolved it — a project that no longer exists, or one belonging to another team. `project_id` remains the authoritative field: a client must not read a null here as "this resource has no project".
+	Project *ProjectSummary `json:"project"`
 
 	// ProjectId Project identifier that this prompt belongs to
 	ProjectId openapi_types.UUID `json:"project_id"`
