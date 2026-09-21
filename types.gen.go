@@ -1449,6 +1449,45 @@ func (e TeamPermissions) Valid() bool {
 	}
 }
 
+// Defines values for TeamAISummarySettingsSource.
+const (
+	TeamAISummarySettingsSourceInstance TeamAISummarySettingsSource = "instance"
+	TeamAISummarySettingsSourceTeam     TeamAISummarySettingsSource = "team"
+)
+
+// Valid indicates whether the value is a known member of the TeamAISummarySettingsSource enum.
+func (e TeamAISummarySettingsSource) Valid() bool {
+	switch e {
+	case TeamAISummarySettingsSourceInstance:
+		return true
+	case TeamAISummarySettingsSourceTeam:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TeamAISummarySettingsValuesStyle.
+const (
+	TeamAISummarySettingsValuesStyleBalanced TeamAISummarySettingsValuesStyle = "balanced"
+	TeamAISummarySettingsValuesStyleConcise  TeamAISummarySettingsValuesStyle = "concise"
+	TeamAISummarySettingsValuesStyleDetailed TeamAISummarySettingsValuesStyle = "detailed"
+)
+
+// Valid indicates whether the value is a known member of the TeamAISummarySettingsValuesStyle enum.
+func (e TeamAISummarySettingsValuesStyle) Valid() bool {
+	switch e {
+	case TeamAISummarySettingsValuesStyleBalanced:
+		return true
+	case TeamAISummarySettingsValuesStyleConcise:
+		return true
+	case TeamAISummarySettingsValuesStyleDetailed:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TeamDeleteConflictErrorCode.
 const (
 	TEAMHASMEMBERS TeamDeleteConflictErrorCode = "TEAM_HAS_MEMBERS"
@@ -1833,6 +1872,27 @@ func (e UpdateBlueprintRequestType) Valid() bool {
 	case UpdateBlueprintRequestTypeCursor:
 		return true
 	case UpdateBlueprintRequestTypeGeneral:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for UpdateTeamAISummarySettingsRequestStyle.
+const (
+	UpdateTeamAISummarySettingsRequestStyleBalanced UpdateTeamAISummarySettingsRequestStyle = "balanced"
+	UpdateTeamAISummarySettingsRequestStyleConcise  UpdateTeamAISummarySettingsRequestStyle = "concise"
+	UpdateTeamAISummarySettingsRequestStyleDetailed UpdateTeamAISummarySettingsRequestStyle = "detailed"
+)
+
+// Valid indicates whether the value is a known member of the UpdateTeamAISummarySettingsRequestStyle enum.
+func (e UpdateTeamAISummarySettingsRequestStyle) Valid() bool {
+	switch e {
+	case UpdateTeamAISummarySettingsRequestStyleBalanced:
+		return true
+	case UpdateTeamAISummarySettingsRequestStyleConcise:
+		return true
+	case UpdateTeamAISummarySettingsRequestStyleDetailed:
 		return true
 	default:
 		return false
@@ -6873,6 +6933,48 @@ type Team struct {
 // TeamPermissions defines model for Team.Permissions.
 type TeamPermissions string
 
+// TeamAISummarySettings The AI summary settings in effect for a team, with enough context for a client to render the whole settings surface from this one response: the effective values, where they came from, the instance defaults to preview a reset against, the instance-owned top_n cap, and whether the team can currently use AI summaries at all.
+type TeamAISummarySettings struct {
+	// Available Whether the team has at least one model provider configured (existence, not health) — AI summaries cannot run without one regardless of `enabled`.
+	Available bool `json:"available"`
+
+	// InstanceDefaults A complete AI summary profile.
+	InstanceDefaults TeamAISummarySettingsValues `json:"instance_defaults"`
+
+	// MaxTopN Instance-owned ceiling on `top_n`, from `ai_summary.max_top_n`. Not team-configurable — exposed so clients can bound their own input control instead of guessing.
+	MaxTopN int `json:"max_top_n"`
+
+	// Source Where the effective values come from. `instance` means the team has no override and inherits the deployment defaults; `team` means the team has stored its own profile.
+	Source TeamAISummarySettingsSource `json:"source"`
+
+	// Values A complete AI summary profile.
+	Values TeamAISummarySettingsValues `json:"values"`
+}
+
+// TeamAISummarySettingsSource Where the effective values come from. `instance` means the team has no override and inherits the deployment defaults; `team` means the team has stored its own profile.
+type TeamAISummarySettingsSource string
+
+// TeamAISummarySettingsValues A complete AI summary profile.
+type TeamAISummarySettingsValues struct {
+	// Enabled Explicit on/off, independent of whether the team has a usable model provider configured.
+	Enabled bool `json:"enabled"`
+
+	// MaxOutputTokens Upper bound on tokens the summarizer may generate, within the instance cap.
+	MaxOutputTokens int `json:"max_output_tokens"`
+
+	// ModelProviderId Which of the team's model providers to use. `null` means "use the team's default provider". Must belong to this team — a provider id from another team is rejected with 400.
+	ModelProviderId *openapi_types.UUID `json:"model_provider_id"`
+
+	// Style Requested length/depth of the generated summary.
+	Style TeamAISummarySettingsValuesStyle `json:"style"`
+
+	// TopN How many top-ranked documents are fed to the summarizer. Bounded above by the instance's max_top_n.
+	TopN int `json:"top_n"`
+}
+
+// TeamAISummarySettingsValuesStyle Requested length/depth of the generated summary.
+type TeamAISummarySettingsValuesStyle string
+
 // TeamDeleteConflictError RFC 9457 problem details returned when team deletion is blocked (HTTP 409).
 // Codes are UPPERCASE and all `metadata` values are strings:
 // - `TEAM_HAS_MEMBERS` — metadata: `member_count` (stringified integer)
@@ -7549,6 +7651,18 @@ type UpdatePromptRequest struct {
 	// Status Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
 	Status *PromptStatus `json:"status,omitempty"`
 }
+
+// UpdateTeamAISummarySettingsRequest A complete replacement AI summary profile for the team. There is no partial update: every field is required, and the whole profile is stored or replaced atomically. `max_top_n` and `available` are deliberately absent — both are computed, not settable.
+type UpdateTeamAISummarySettingsRequest struct {
+	Enabled         bool                                    `json:"enabled"`
+	MaxOutputTokens int                                     `json:"max_output_tokens"`
+	ModelProviderId *openapi_types.UUID                     `json:"model_provider_id"`
+	Style           UpdateTeamAISummarySettingsRequestStyle `json:"style"`
+	TopN            int                                     `json:"top_n"`
+}
+
+// UpdateTeamAISummarySettingsRequestStyle defines model for UpdateTeamAISummarySettingsRequest.Style.
+type UpdateTeamAISummarySettingsRequestStyle string
 
 // UpdateTeamFreshnessSettingsRequest Override the team's freshness settings.
 type UpdateTeamFreshnessSettingsRequest struct {
@@ -8946,6 +9060,9 @@ type SearchTeamResourcesJSONRequestBody = SearchRequest
 
 // SummarizeSearchResultsJSONRequestBody defines body for SummarizeSearchResults for application/json ContentType.
 type SummarizeSearchResultsJSONRequestBody = SearchSummaryRequest
+
+// UpdateTeamAISummarySettingsJSONRequestBody defines body for UpdateTeamAISummarySettings for application/json ContentType.
+type UpdateTeamAISummarySettingsJSONRequestBody = UpdateTeamAISummarySettingsRequest
 
 // UpsertTeamEmailProviderSettingsJSONRequestBody defines body for UpsertTeamEmailProviderSettings for application/json ContentType.
 type UpsertTeamEmailProviderSettingsJSONRequestBody = UpsertTeamEmailProviderRequest

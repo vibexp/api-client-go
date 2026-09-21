@@ -856,6 +856,17 @@ type ClientInterface interface {
 
 	SummarizeSearchResults(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ResetTeamAISummarySettings request
+	ResetTeamAISummarySettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTeamAISummarySettings request
+	GetTeamAISummarySettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateTeamAISummarySettingsWithBody request with any body
+	UpdateTeamAISummarySettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateTeamAISummarySettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListTeamSettingsAudit request
 	ListTeamSettingsAudit(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4307,6 +4318,54 @@ func (c *Client) SummarizeSearchResultsWithBody(ctx context.Context, teamId open
 
 func (c *Client) SummarizeSearchResults(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSummarizeSearchResultsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResetTeamAISummarySettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetTeamAISummarySettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetTeamAISummarySettings(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetTeamAISummarySettingsRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTeamAISummarySettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTeamAISummarySettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTeamAISummarySettings(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTeamAISummarySettingsRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -16650,6 +16709,121 @@ func NewSummarizeSearchResultsRequestWithBody(server string, teamId openapi_type
 	return req, nil
 }
 
+// NewResetTeamAISummarySettingsRequest generates requests for ResetTeamAISummarySettings
+func NewResetTeamAISummarySettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/ai-summary", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetTeamAISummarySettingsRequest generates requests for GetTeamAISummarySettings
+func NewGetTeamAISummarySettingsRequest(server string, teamId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/ai-summary", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateTeamAISummarySettingsRequest calls the generic UpdateTeamAISummarySettings builder with application/json body
+func NewUpdateTeamAISummarySettingsRequest(server string, teamId openapi_types.UUID, body UpdateTeamAISummarySettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateTeamAISummarySettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewUpdateTeamAISummarySettingsRequestWithBody generates requests for UpdateTeamAISummarySettings with any type of body
+func NewUpdateTeamAISummarySettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/ai-summary", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListTeamSettingsAuditRequest generates requests for ListTeamSettingsAudit
 func NewListTeamSettingsAuditRequest(server string, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams) (*http.Request, error) {
 	var err error
@@ -19243,6 +19417,17 @@ type ClientWithResponsesInterface interface {
 	SummarizeSearchResultsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SummarizeSearchResultsHTTPResponse, error)
 
 	SummarizeSearchResultsWithResponse(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*SummarizeSearchResultsHTTPResponse, error)
+
+	// ResetTeamAISummarySettingsWithResponse request
+	ResetTeamAISummarySettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResetTeamAISummarySettingsHTTPResponse, error)
+
+	// GetTeamAISummarySettingsWithResponse request
+	GetTeamAISummarySettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamAISummarySettingsHTTPResponse, error)
+
+	// UpdateTeamAISummarySettingsWithBodyWithResponse request with any body
+	UpdateTeamAISummarySettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamAISummarySettingsHTTPResponse, error)
+
+	UpdateTeamAISummarySettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamAISummarySettingsHTTPResponse, error)
 
 	// ListTeamSettingsAuditWithResponse request
 	ListTeamSettingsAuditWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListTeamSettingsAuditHTTPResponse, error)
@@ -26628,6 +26813,107 @@ func (r SummarizeSearchResultsHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ResetTeamAISummarySettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetTeamAISummarySettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetTeamAISummarySettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetTeamAISummarySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetTeamAISummarySettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamAISummarySettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetTeamAISummarySettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetTeamAISummarySettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetTeamAISummarySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateTeamAISummarySettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamAISummarySettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateTeamAISummarySettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateTeamAISummarySettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateTeamAISummarySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListTeamSettingsAuditHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -30446,6 +30732,41 @@ func (c *ClientWithResponses) SummarizeSearchResultsWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseSummarizeSearchResultsHTTPResponse(rsp)
+}
+
+// ResetTeamAISummarySettingsWithResponse request returning *ResetTeamAISummarySettingsHTTPResponse
+func (c *ClientWithResponses) ResetTeamAISummarySettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*ResetTeamAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.ResetTeamAISummarySettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetTeamAISummarySettingsHTTPResponse(rsp)
+}
+
+// GetTeamAISummarySettingsWithResponse request returning *GetTeamAISummarySettingsHTTPResponse
+func (c *ClientWithResponses) GetTeamAISummarySettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTeamAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.GetTeamAISummarySettings(ctx, teamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetTeamAISummarySettingsHTTPResponse(rsp)
+}
+
+// UpdateTeamAISummarySettingsWithBodyWithResponse request with arbitrary body returning *UpdateTeamAISummarySettingsHTTPResponse
+func (c *ClientWithResponses) UpdateTeamAISummarySettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTeamAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.UpdateTeamAISummarySettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTeamAISummarySettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateTeamAISummarySettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body UpdateTeamAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTeamAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.UpdateTeamAISummarySettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTeamAISummarySettingsHTTPResponse(rsp)
 }
 
 // ListTeamSettingsAuditWithResponse request returning *ListTeamSettingsAuditHTTPResponse
@@ -41773,6 +42094,161 @@ func ParseSummarizeSearchResultsHTTPResponse(rsp *http.Response) (*SummarizeSear
 			return nil, err
 		}
 		response.ApplicationproblemJSON504 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseResetTeamAISummarySettingsHTTPResponse parses an HTTP response from a ResetTeamAISummarySettingsWithResponse call
+func ParseResetTeamAISummarySettingsHTTPResponse(rsp *http.Response) (*ResetTeamAISummarySettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetTeamAISummarySettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetTeamAISummarySettingsHTTPResponse parses an HTTP response from a GetTeamAISummarySettingsWithResponse call
+func ParseGetTeamAISummarySettingsHTTPResponse(rsp *http.Response) (*GetTeamAISummarySettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetTeamAISummarySettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamAISummarySettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateTeamAISummarySettingsHTTPResponse parses an HTTP response from a UpdateTeamAISummarySettingsWithResponse call
+func ParseUpdateTeamAISummarySettingsHTTPResponse(rsp *http.Response) (*UpdateTeamAISummarySettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateTeamAISummarySettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamAISummarySettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
 
 	}
 
