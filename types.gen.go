@@ -6592,6 +6592,15 @@ type SMTPProviderSettings struct {
 	Username *string `json:"username,omitempty"`
 }
 
+// SearchAISummaryAvailability Whether an AI Summary can be generated for this team's search results. Absent on non-REST surfaces.
+type SearchAISummaryAvailability struct {
+	// Available The team has at least one model provider configured
+	Available bool `json:"available"`
+
+	// Enabled The team has not turned the AI Summary feature off
+	Enabled bool `json:"enabled"`
+}
+
 // SearchRequest defines model for SearchRequest.
 type SearchRequest struct {
 	// Page Page number
@@ -6651,6 +6660,9 @@ type SearchResultItemType string
 
 // SearchResultsResponse defines model for SearchResultsResponse.
 type SearchResultsResponse struct {
+	// AiSummary Whether an AI Summary can be generated for this team's search results. Absent on non-REST surfaces.
+	AiSummary *SearchAISummaryAvailability `json:"ai_summary,omitempty"`
+
 	// Page Current page number
 	Page int `json:"page"`
 
