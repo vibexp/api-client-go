@@ -851,6 +851,11 @@ type ClientInterface interface {
 
 	SearchTeamResources(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SummarizeSearchResultsWithBody request with any body
+	SummarizeSearchResultsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SummarizeSearchResults(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListTeamSettingsAudit request
 	ListTeamSettingsAudit(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -4278,6 +4283,30 @@ func (c *Client) SearchTeamResourcesWithBody(ctx context.Context, teamId openapi
 
 func (c *Client) SearchTeamResources(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSearchTeamResourcesRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SummarizeSearchResultsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSummarizeSearchResultsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SummarizeSearchResults(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSummarizeSearchResultsRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -16574,6 +16603,53 @@ func NewSearchTeamResourcesRequestWithBody(server string, teamId openapi_types.U
 	return req, nil
 }
 
+// NewSummarizeSearchResultsRequest calls the generic SummarizeSearchResults builder with application/json body
+func NewSummarizeSearchResultsRequest(server string, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSummarizeSearchResultsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewSummarizeSearchResultsRequestWithBody generates requests for SummarizeSearchResults with any type of body
+func NewSummarizeSearchResultsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/search/summary", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListTeamSettingsAuditRequest generates requests for ListTeamSettingsAudit
 func NewListTeamSettingsAuditRequest(server string, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams) (*http.Request, error) {
 	var err error
@@ -19162,6 +19238,11 @@ type ClientWithResponsesInterface interface {
 	SearchTeamResourcesWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchTeamResourcesHTTPResponse, error)
 
 	SearchTeamResourcesWithResponse(ctx context.Context, teamId openapi_types.UUID, body SearchTeamResourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchTeamResourcesHTTPResponse, error)
+
+	// SummarizeSearchResultsWithBodyWithResponse request with any body
+	SummarizeSearchResultsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SummarizeSearchResultsHTTPResponse, error)
+
+	SummarizeSearchResultsWithResponse(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*SummarizeSearchResultsHTTPResponse, error)
 
 	// ListTeamSettingsAuditWithResponse request
 	ListTeamSettingsAuditWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListTeamSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListTeamSettingsAuditHTTPResponse, error)
@@ -26509,6 +26590,44 @@ func (r SearchTeamResourcesHTTPResponse) ContentType() string {
 	return ""
 }
 
+type SummarizeSearchResultsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *SearchSummaryResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON422 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+	ApplicationproblemJSON502 *ErrorResponse
+	ApplicationproblemJSON504 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r SummarizeSearchResultsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SummarizeSearchResultsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SummarizeSearchResultsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListTeamSettingsAuditHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -30310,6 +30429,23 @@ func (c *ClientWithResponses) SearchTeamResourcesWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseSearchTeamResourcesHTTPResponse(rsp)
+}
+
+// SummarizeSearchResultsWithBodyWithResponse request with arbitrary body returning *SummarizeSearchResultsHTTPResponse
+func (c *ClientWithResponses) SummarizeSearchResultsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SummarizeSearchResultsHTTPResponse, error) {
+	rsp, err := c.SummarizeSearchResultsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSummarizeSearchResultsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) SummarizeSearchResultsWithResponse(ctx context.Context, teamId openapi_types.UUID, body SummarizeSearchResultsJSONRequestBody, reqEditors ...RequestEditorFn) (*SummarizeSearchResultsHTTPResponse, error) {
+	rsp, err := c.SummarizeSearchResults(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSummarizeSearchResultsHTTPResponse(rsp)
 }
 
 // ListTeamSettingsAuditWithResponse request returning *ListTeamSettingsAuditHTTPResponse
@@ -41555,6 +41691,88 @@ func ParseSearchTeamResourcesHTTPResponse(rsp *http.Response) (*SearchTeamResour
 			return nil, err
 		}
 		response.ApplicationproblemJSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSummarizeSearchResultsHTTPResponse parses an HTTP response from a SummarizeSearchResultsWithResponse call
+func ParseSummarizeSearchResultsHTTPResponse(rsp *http.Response) (*SummarizeSearchResultsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SummarizeSearchResultsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SearchSummaryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON502 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON504 = &dest
 
 	}
 

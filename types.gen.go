@@ -1290,6 +1290,54 @@ func (e SearchResultItemType) Valid() bool {
 	}
 }
 
+// Defines values for SearchSummaryRequestTypes.
+const (
+	SearchSummaryRequestTypesArtifacts  SearchSummaryRequestTypes = "artifacts"
+	SearchSummaryRequestTypesBlueprints SearchSummaryRequestTypes = "blueprints"
+	SearchSummaryRequestTypesMemories   SearchSummaryRequestTypes = "memories"
+	SearchSummaryRequestTypesPrompts    SearchSummaryRequestTypes = "prompts"
+)
+
+// Valid indicates whether the value is a known member of the SearchSummaryRequestTypes enum.
+func (e SearchSummaryRequestTypes) Valid() bool {
+	switch e {
+	case SearchSummaryRequestTypesArtifacts:
+		return true
+	case SearchSummaryRequestTypesBlueprints:
+		return true
+	case SearchSummaryRequestTypesMemories:
+		return true
+	case SearchSummaryRequestTypesPrompts:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for SearchSummarySourceType.
+const (
+	SearchSummarySourceTypeArtifact  SearchSummarySourceType = "artifact"
+	SearchSummarySourceTypeBlueprint SearchSummarySourceType = "blueprint"
+	SearchSummarySourceTypeMemory    SearchSummarySourceType = "memory"
+	SearchSummarySourceTypePrompt    SearchSummarySourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the SearchSummarySourceType enum.
+func (e SearchSummarySourceType) Valid() bool {
+	switch e {
+	case SearchSummarySourceTypeArtifact:
+		return true
+	case SearchSummarySourceTypeBlueprint:
+		return true
+	case SearchSummarySourceTypeMemory:
+		return true
+	case SearchSummarySourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for SendInvitationsRequestRole.
 const (
 	SendInvitationsRequestRoleAdmin  SendInvitationsRequestRole = "admin"
@@ -2705,19 +2753,19 @@ func (e GetMetadataKeysParamsResourceType) Valid() bool {
 
 // Defines values for GetMetadataValuesParamsResourceType.
 const (
-	Artifacts  GetMetadataValuesParamsResourceType = "artifacts"
-	Blueprints GetMetadataValuesParamsResourceType = "blueprints"
-	Memories   GetMetadataValuesParamsResourceType = "memories"
+	GetMetadataValuesParamsResourceTypeArtifacts  GetMetadataValuesParamsResourceType = "artifacts"
+	GetMetadataValuesParamsResourceTypeBlueprints GetMetadataValuesParamsResourceType = "blueprints"
+	GetMetadataValuesParamsResourceTypeMemories   GetMetadataValuesParamsResourceType = "memories"
 )
 
 // Valid indicates whether the value is a known member of the GetMetadataValuesParamsResourceType enum.
 func (e GetMetadataValuesParamsResourceType) Valid() bool {
 	switch e {
-	case Artifacts:
+	case GetMetadataValuesParamsResourceTypeArtifacts:
 		return true
-	case Blueprints:
+	case GetMetadataValuesParamsResourceTypeBlueprints:
 		return true
-	case Memories:
+	case GetMetadataValuesParamsResourceTypeMemories:
 		return true
 	default:
 		return false
@@ -6619,6 +6667,84 @@ type SearchResultsResponse struct {
 	TotalPages int `json:"total_pages"`
 }
 
+// SearchSummaryRequest defines model for SearchSummaryRequest.
+type SearchSummaryRequest struct {
+	// ProjectId Optional project UUID. When set, only documents in this project are used.
+	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
+
+	// Query The question to answer. It is run through the team's search, and the top matching documents are what the answer is grounded in.
+	Query string `json:"query"`
+
+	// Types Resource types to draw documents from. Omit or leave empty to use all four types. Unknown values are rejected with a 400.
+	Types *[]SearchSummaryRequestTypes `json:"types,omitempty"`
+}
+
+// SearchSummaryRequestTypes defines model for SearchSummaryRequest.Types.
+type SearchSummaryRequestTypes string
+
+// SearchSummaryResponse defines model for SearchSummaryResponse.
+type SearchSummaryResponse struct {
+	// GeneratedAt When the summary was generated
+	GeneratedAt time.Time `json:"generated_at"`
+
+	// Model Model that generated the summary
+	Model string `json:"model"`
+
+	// ProviderId ID of the team model provider that generated the summary
+	ProviderId openapi_types.UUID `json:"provider_id"`
+
+	// Sources The documents given to the model, in citation order. Only documents that were actually included are listed.
+	Sources []SearchSummarySource `json:"sources"`
+
+	// Summary Markdown answer to the query, grounded in `sources` and citing them as `[n]`. When the documents do not contain the answer, the summary says so.
+	Summary string `json:"summary"`
+
+	// Usage Token usage the model provider reported for the completion.
+	Usage *SearchSummaryUsage `json:"usage,omitempty"`
+}
+
+// SearchSummarySource One document the summary was grounded in. Its `index` is the number the summary cites it by (`[1]`, `[2]`, ...).
+type SearchSummarySource struct {
+	// Id ID of the document
+	Id openapi_types.UUID `json:"id"`
+
+	// Index Citation number of this document in the summary, starting at 1
+	Index int `json:"index"`
+
+	// ProjectId UUID of the document's project
+	ProjectId openapi_types.UUID `json:"project_id"`
+
+	// ProjectName Human-readable name of the document's project
+	ProjectName string `json:"project_name"`
+
+	// Slug Slug of the document, used to build slug-based detail-page links. Empty for memories, which are routed by id.
+	Slug string `json:"slug"`
+
+	// Title Title of the document
+	Title string `json:"title"`
+
+	// Truncated True when only the beginning of the document was given to the model, because it exceeded the per-document or total context budget.
+	Truncated bool `json:"truncated"`
+
+	// Type Singular resource type of the document
+	Type SearchSummarySourceType `json:"type"`
+
+	// UpdatedAt Last-updated timestamp of the document
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// SearchSummarySourceType Singular resource type of the document
+type SearchSummarySourceType string
+
+// SearchSummaryUsage Token usage the model provider reported for the completion.
+type SearchSummaryUsage struct {
+	// CompletionTokens Tokens in the generated summary
+	CompletionTokens int `json:"completion_tokens"`
+
+	// PromptTokens Tokens in the prompt sent to the model
+	PromptTokens int `json:"prompt_tokens"`
+}
+
 // SendInvitationsRequest Request body for sending team invitations (1–50 email addresses per request)
 type SendInvitationsRequest struct {
 	Emails []openapi_types.Email `json:"emails"`
@@ -8805,6 +8931,9 @@ type CreateRelationJSONRequestBody = CreateRelationRequest
 
 // SearchTeamResourcesJSONRequestBody defines body for SearchTeamResources for application/json ContentType.
 type SearchTeamResourcesJSONRequestBody = SearchRequest
+
+// SummarizeSearchResultsJSONRequestBody defines body for SummarizeSearchResults for application/json ContentType.
+type SummarizeSearchResultsJSONRequestBody = SearchSummaryRequest
 
 // UpsertTeamEmailProviderSettingsJSONRequestBody defines body for UpsertTeamEmailProviderSettings for application/json ContentType.
 type UpsertTeamEmailProviderSettingsJSONRequestBody = UpsertTeamEmailProviderRequest
