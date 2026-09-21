@@ -719,6 +719,11 @@ type ClientInterface interface {
 
 	CreateModelProvider(ctx context.Context, teamId openapi_types.UUID, body CreateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListProviderModelsWithBody request with any body
+	ListProviderModelsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ListProviderModels(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ValidateModelProviderWithBody request with any body
 	ValidateModelProviderWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -948,6 +953,11 @@ type ClientInterface interface {
 	CopyModelProviderFromTeamWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CopyModelProviderFromTeam(ctx context.Context, teamId openapi_types.UUID, body CopyModelProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListProviderModelsSettingsWithBody request with any body
+	ListProviderModelsSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ListProviderModelsSettings(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ValidateModelProviderSettingsWithBody request with any body
 	ValidateModelProviderSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3702,6 +3712,30 @@ func (c *Client) CreateModelProvider(ctx context.Context, teamId openapi_types.U
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListProviderModelsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListProviderModelsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListProviderModels(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListProviderModelsRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ValidateModelProviderWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewValidateModelProviderRequestWithBody(c.Server, teamId, contentType, body)
 	if err != nil {
@@ -4700,6 +4734,30 @@ func (c *Client) CopyModelProviderFromTeamWithBody(ctx context.Context, teamId o
 
 func (c *Client) CopyModelProviderFromTeam(ctx context.Context, teamId openapi_types.UUID, body CopyModelProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCopyModelProviderFromTeamRequest(c.Server, teamId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListProviderModelsSettingsWithBody(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListProviderModelsSettingsRequestWithBody(c.Server, teamId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListProviderModelsSettings(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListProviderModelsSettingsRequest(c.Server, teamId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -14607,6 +14665,53 @@ func NewCreateModelProviderRequestWithBody(server string, teamId openapi_types.U
 	return req, nil
 }
 
+// NewListProviderModelsRequest calls the generic ListProviderModels builder with application/json body
+func NewListProviderModelsRequest(server string, teamId openapi_types.UUID, body ListProviderModelsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewListProviderModelsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewListProviderModelsRequestWithBody generates requests for ListProviderModels with any type of body
+func NewListProviderModelsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/model-providers/models", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewValidateModelProviderRequest calls the generic ValidateModelProvider builder with application/json body
 func NewValidateModelProviderRequest(server string, teamId openapi_types.UUID, body ValidateModelProviderJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -17597,6 +17702,53 @@ func NewCopyModelProviderFromTeamRequestWithBody(server string, teamId openapi_t
 	return req, nil
 }
 
+// NewListProviderModelsSettingsRequest calls the generic ListProviderModelsSettings builder with application/json body
+func NewListProviderModelsSettingsRequest(server string, teamId openapi_types.UUID, body ListProviderModelsSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewListProviderModelsSettingsRequestWithBody(server, teamId, "application/json", bodyReader)
+}
+
+// NewListProviderModelsSettingsRequestWithBody generates requests for ListProviderModelsSettings with any type of body
+func NewListProviderModelsSettingsRequestWithBody(server string, teamId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/settings/model-providers/models", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewValidateModelProviderSettingsRequest calls the generic ValidateModelProviderSettings builder with application/json body
 func NewValidateModelProviderSettingsRequest(server string, teamId openapi_types.UUID, body ValidateModelProviderSettingsJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -18879,6 +19031,11 @@ type ClientWithResponsesInterface interface {
 
 	CreateModelProviderWithResponse(ctx context.Context, teamId openapi_types.UUID, body CreateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelProviderHTTPResponse, error)
 
+	// ListProviderModelsWithBodyWithResponse request with any body
+	ListProviderModelsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ListProviderModelsHTTPResponse, error)
+
+	ListProviderModelsWithResponse(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsJSONRequestBody, reqEditors ...RequestEditorFn) (*ListProviderModelsHTTPResponse, error)
+
 	// ValidateModelProviderWithBodyWithResponse request with any body
 	ValidateModelProviderWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ValidateModelProviderHTTPResponse, error)
 
@@ -19108,6 +19265,11 @@ type ClientWithResponsesInterface interface {
 	CopyModelProviderFromTeamWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CopyModelProviderFromTeamHTTPResponse, error)
 
 	CopyModelProviderFromTeamWithResponse(ctx context.Context, teamId openapi_types.UUID, body CopyModelProviderFromTeamJSONRequestBody, reqEditors ...RequestEditorFn) (*CopyModelProviderFromTeamHTTPResponse, error)
+
+	// ListProviderModelsSettingsWithBodyWithResponse request with any body
+	ListProviderModelsSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ListProviderModelsSettingsHTTPResponse, error)
+
+	ListProviderModelsSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*ListProviderModelsSettingsHTTPResponse, error)
 
 	// ValidateModelProviderSettingsWithBodyWithResponse request with any body
 	ValidateModelProviderSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ValidateModelProviderSettingsHTTPResponse, error)
@@ -25127,6 +25289,41 @@ func (r CreateModelProviderHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ListProviderModelsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ProviderModelList
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListProviderModelsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListProviderModelsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListProviderModelsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ValidateModelProviderHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -27209,6 +27406,41 @@ func (r CopyModelProviderFromTeamHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r CopyModelProviderFromTeamHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListProviderModelsSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ProviderModelList
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListProviderModelsSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListProviderModelsSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListProviderModelsSettingsHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -29660,6 +29892,23 @@ func (c *ClientWithResponses) CreateModelProviderWithResponse(ctx context.Contex
 	return ParseCreateModelProviderHTTPResponse(rsp)
 }
 
+// ListProviderModelsWithBodyWithResponse request with arbitrary body returning *ListProviderModelsHTTPResponse
+func (c *ClientWithResponses) ListProviderModelsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ListProviderModelsHTTPResponse, error) {
+	rsp, err := c.ListProviderModelsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListProviderModelsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) ListProviderModelsWithResponse(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsJSONRequestBody, reqEditors ...RequestEditorFn) (*ListProviderModelsHTTPResponse, error) {
+	rsp, err := c.ListProviderModels(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListProviderModelsHTTPResponse(rsp)
+}
+
 // ValidateModelProviderWithBodyWithResponse request with arbitrary body returning *ValidateModelProviderHTTPResponse
 func (c *ClientWithResponses) ValidateModelProviderWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ValidateModelProviderHTTPResponse, error) {
 	rsp, err := c.ValidateModelProviderWithBody(ctx, teamId, contentType, body, reqEditors...)
@@ -30392,6 +30641,23 @@ func (c *ClientWithResponses) CopyModelProviderFromTeamWithResponse(ctx context.
 		return nil, err
 	}
 	return ParseCopyModelProviderFromTeamHTTPResponse(rsp)
+}
+
+// ListProviderModelsSettingsWithBodyWithResponse request with arbitrary body returning *ListProviderModelsSettingsHTTPResponse
+func (c *ClientWithResponses) ListProviderModelsSettingsWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ListProviderModelsSettingsHTTPResponse, error) {
+	rsp, err := c.ListProviderModelsSettingsWithBody(ctx, teamId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListProviderModelsSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) ListProviderModelsSettingsWithResponse(ctx context.Context, teamId openapi_types.UUID, body ListProviderModelsSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*ListProviderModelsSettingsHTTPResponse, error) {
+	rsp, err := c.ListProviderModelsSettings(ctx, teamId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListProviderModelsSettingsHTTPResponse(rsp)
 }
 
 // ValidateModelProviderSettingsWithBodyWithResponse request with arbitrary body returning *ValidateModelProviderSettingsHTTPResponse
@@ -39379,6 +39645,67 @@ func ParseCreateModelProviderHTTPResponse(rsp *http.Response) (*CreateModelProvi
 	return response, nil
 }
 
+// ParseListProviderModelsHTTPResponse parses an HTTP response from a ListProviderModelsWithResponse call
+func ParseListProviderModelsHTTPResponse(rsp *http.Response) (*ListProviderModelsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListProviderModelsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ProviderModelList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseValidateModelProviderHTTPResponse parses an HTTP response from a ValidateModelProviderWithResponse call
 func ParseValidateModelProviderHTTPResponse(rsp *http.Response) (*ValidateModelProviderHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -42574,6 +42901,67 @@ func ParseCopyModelProviderFromTeamHTTPResponse(rsp *http.Response) (*CopyModelP
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListProviderModelsSettingsHTTPResponse parses an HTTP response from a ListProviderModelsSettingsWithResponse call
+func ParseListProviderModelsSettingsHTTPResponse(rsp *http.Response) (*ListProviderModelsSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListProviderModelsSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ProviderModelList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

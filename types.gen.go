@@ -1014,6 +1014,30 @@ func (e PromptStatus) Valid() bool {
 	}
 }
 
+// Defines values for ProviderModelListMessage.
+const (
+	ProviderModelListMessageConnectionFailed      ProviderModelListMessage = "connection_failed"
+	ProviderModelListMessageDestinationNotAllowed ProviderModelListMessage = "destination_not_allowed"
+	ProviderModelListMessageMisconfiguredProvider ProviderModelListMessage = "misconfigured_provider"
+	ProviderModelListMessageUnauthorized          ProviderModelListMessage = "unauthorized"
+)
+
+// Valid indicates whether the value is a known member of the ProviderModelListMessage enum.
+func (e ProviderModelListMessage) Valid() bool {
+	switch e {
+	case ProviderModelListMessageConnectionFailed:
+		return true
+	case ProviderModelListMessageDestinationNotAllowed:
+		return true
+	case ProviderModelListMessageMisconfiguredProvider:
+		return true
+	case ProviderModelListMessageUnauthorized:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for RelatedResourceDirection.
 const (
 	Incoming RelatedResourceDirection = "incoming"
@@ -1811,25 +1835,25 @@ func (e UpsertTeamEmailProviderRequestProviderType) Valid() bool {
 
 // Defines values for ValidateGitHubAppConfigDetailsErrorDetails.
 const (
-	AppNotFound             ValidateGitHubAppConfigDetailsErrorDetails = "app_not_found"
-	ConnectionFailed        ValidateGitHubAppConfigDetailsErrorDetails = "connection_failed"
-	InsufficientPermissions ValidateGitHubAppConfigDetailsErrorDetails = "insufficient_permissions"
-	InvalidCredentials      ValidateGitHubAppConfigDetailsErrorDetails = "invalid_credentials"
-	SlugMismatch            ValidateGitHubAppConfigDetailsErrorDetails = "slug_mismatch"
+	ValidateGitHubAppConfigDetailsErrorDetailsAppNotFound             ValidateGitHubAppConfigDetailsErrorDetails = "app_not_found"
+	ValidateGitHubAppConfigDetailsErrorDetailsConnectionFailed        ValidateGitHubAppConfigDetailsErrorDetails = "connection_failed"
+	ValidateGitHubAppConfigDetailsErrorDetailsInsufficientPermissions ValidateGitHubAppConfigDetailsErrorDetails = "insufficient_permissions"
+	ValidateGitHubAppConfigDetailsErrorDetailsInvalidCredentials      ValidateGitHubAppConfigDetailsErrorDetails = "invalid_credentials"
+	ValidateGitHubAppConfigDetailsErrorDetailsSlugMismatch            ValidateGitHubAppConfigDetailsErrorDetails = "slug_mismatch"
 )
 
 // Valid indicates whether the value is a known member of the ValidateGitHubAppConfigDetailsErrorDetails enum.
 func (e ValidateGitHubAppConfigDetailsErrorDetails) Valid() bool {
 	switch e {
-	case AppNotFound:
+	case ValidateGitHubAppConfigDetailsErrorDetailsAppNotFound:
 		return true
-	case ConnectionFailed:
+	case ValidateGitHubAppConfigDetailsErrorDetailsConnectionFailed:
 		return true
-	case InsufficientPermissions:
+	case ValidateGitHubAppConfigDetailsErrorDetailsInsufficientPermissions:
 		return true
-	case InvalidCredentials:
+	case ValidateGitHubAppConfigDetailsErrorDetailsInvalidCredentials:
 		return true
-	case SlugMismatch:
+	case ValidateGitHubAppConfigDetailsErrorDetailsSlugMismatch:
 		return true
 	default:
 		return false
@@ -5582,6 +5606,17 @@ type InviterInfo struct {
 	Name  *string              `json:"name,omitempty"`
 }
 
+// ListProviderModelsRequest Inline connection details for the provider whose models to list. The provider does not have to be saved yet: this is what lets a model be picked while the base URL and key are still being entered.
+type ListProviderModelsRequest struct {
+	// ApiKey Bearer key for the provider. Leave it blank together with `provider_id` to reuse that saved provider's stored key — the same rule an update applies to a blank key.
+	ApiKey  *string `json:"api_key,omitempty"`
+	BaseUrl string  `json:"base_url"`
+
+	// ProviderId A saved provider in this team whose stored API key is used when `api_key` is blank. Ignored when `api_key` is supplied.
+	ProviderId   *openapi_types.UUID `json:"provider_id,omitempty"`
+	ProviderType string              `json:"provider_type"`
+}
+
 // LoginResponse Response body returned by GET /api/v1/auth/login containing the authorization URL
 type LoginResponse struct {
 	// Url Identity-provider authorization URL to redirect the user to for authentication
@@ -6184,6 +6219,30 @@ type PromptVersionListResponse struct {
 	// Versions Content-version snapshots for the prompt, newest first
 	Versions []ContentVersion `json:"versions"`
 }
+
+// ProviderModel defines model for ProviderModel.
+type ProviderModel struct {
+	// Id Model identifier, exactly as the provider reports it.
+	Id string `json:"id"`
+
+	// OwnedBy Owner the provider reports for the model, when it reports one.
+	OwnedBy *string `json:"owned_by,omitempty"`
+}
+
+// ProviderModelList defines model for ProviderModelList.
+type ProviderModelList struct {
+	// Message Why the listing failed, as a fixed category — never the provider's raw response or the URL. Omitted on success and when the provider simply does not implement model listing.
+	Message *ProviderModelListMessage `json:"message,omitempty"`
+
+	// Models Every model the provider reported, sorted by `id` and unfiltered. Empty when `supported` is `false`.
+	Models []ProviderModel `json:"models"`
+
+	// Supported Whether the provider answered its model listing. `false` when it does not implement `GET {base_url}/models` (many gateways expose only `/chat/completions`) or could not be reached; a client falls back to free-text model entry.
+	Supported bool `json:"supported"`
+}
+
+// ProviderModelListMessage Why the listing failed, as a fixed category — never the provider's raw response or the URL. Omitted on success and when the provider simply does not implement model listing.
+type ProviderModelListMessage string
 
 // ProvidersResponse Response body returned by GET /api/v1/auth/providers listing the login
 // providers enabled in this deployment's configuration.
@@ -8711,6 +8770,9 @@ type UpdateMemoryJSONRequestBody = UpdateMemoryRequest
 // CreateModelProviderJSONRequestBody defines body for CreateModelProvider for application/json ContentType.
 type CreateModelProviderJSONRequestBody = CreateModelProviderRequest
 
+// ListProviderModelsJSONRequestBody defines body for ListProviderModels for application/json ContentType.
+type ListProviderModelsJSONRequestBody = ListProviderModelsRequest
+
 // ValidateModelProviderJSONRequestBody defines body for ValidateModelProvider for application/json ContentType.
 type ValidateModelProviderJSONRequestBody = ValidateModelProviderRequest
 
@@ -8776,6 +8838,9 @@ type CreateModelProviderSettingsJSONRequestBody = CreateModelProviderRequest
 
 // CopyModelProviderFromTeamJSONRequestBody defines body for CopyModelProviderFromTeam for application/json ContentType.
 type CopyModelProviderFromTeamJSONRequestBody = CopyModelProviderRequest
+
+// ListProviderModelsSettingsJSONRequestBody defines body for ListProviderModelsSettings for application/json ContentType.
+type ListProviderModelsSettingsJSONRequestBody = ListProviderModelsRequest
 
 // ValidateModelProviderSettingsJSONRequestBody defines body for ValidateModelProviderSettings for application/json ContentType.
 type ValidateModelProviderSettingsJSONRequestBody = ValidateModelProviderRequest
