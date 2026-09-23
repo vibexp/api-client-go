@@ -23948,6 +23948,7 @@ type ListFeedItemsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *FeedItemListResponse
+	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 }
@@ -24184,6 +24185,7 @@ type ListFeedsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *FeedListResponse
+	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 }
@@ -37678,6 +37680,13 @@ func ParseListFeedItemsHTTPResponse(rsp *http.Response) (*ListFeedItemsHTTPRespo
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -38041,6 +38050,13 @@ func ParseListFeedsHTTPResponse(rsp *http.Response) (*ListFeedsHTTPResponse, err
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse
