@@ -6522,6 +6522,7 @@ type RenderPromptRequest struct {
 
 // RenderPromptResponse defines model for RenderPromptResponse.
 type RenderPromptResponse struct {
+	// PlaceholdersMissing Template placeholder keys ({{key}}) that had no supplied value, including keys from referenced prompts, deduplicated in first-occurrence order. An unfilled {{key}} stays in rendered_body as-is. A key supplied with an empty string counts as filled. Only resolvable references contribute keys. Omitted when every placeholder was filled.
 	PlaceholdersMissing *[]string `json:"placeholders_missing,omitempty"`
 	ReferencesUsed      *[]string `json:"references_used,omitempty"`
 	RenderedBody        string    `json:"rendered_body"`
