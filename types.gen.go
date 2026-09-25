@@ -78,6 +78,48 @@ func (e AdminAISummaryValuesStyle) Valid() bool {
 	}
 }
 
+// Defines values for AdminProjectAccessMetricsGranularity.
+const (
+	AdminProjectAccessMetricsGranularityDay   AdminProjectAccessMetricsGranularity = "day"
+	AdminProjectAccessMetricsGranularityMonth AdminProjectAccessMetricsGranularity = "month"
+	AdminProjectAccessMetricsGranularityWeek  AdminProjectAccessMetricsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the AdminProjectAccessMetricsGranularity enum.
+func (e AdminProjectAccessMetricsGranularity) Valid() bool {
+	switch e {
+	case AdminProjectAccessMetricsGranularityDay:
+		return true
+	case AdminProjectAccessMetricsGranularityMonth:
+		return true
+	case AdminProjectAccessMetricsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminProjectResourceCreationMetricsGranularity.
+const (
+	AdminProjectResourceCreationMetricsGranularityDay   AdminProjectResourceCreationMetricsGranularity = "day"
+	AdminProjectResourceCreationMetricsGranularityMonth AdminProjectResourceCreationMetricsGranularity = "month"
+	AdminProjectResourceCreationMetricsGranularityWeek  AdminProjectResourceCreationMetricsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the AdminProjectResourceCreationMetricsGranularity enum.
+func (e AdminProjectResourceCreationMetricsGranularity) Valid() bool {
+	switch e {
+	case AdminProjectResourceCreationMetricsGranularityDay:
+		return true
+	case AdminProjectResourceCreationMetricsGranularityMonth:
+		return true
+	case AdminProjectResourceCreationMetricsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminTeamConfigSource.
 const (
 	AdminTeamConfigSourceInstance AdminTeamConfigSource = "instance"
@@ -2256,6 +2298,48 @@ func (e ListAdminProjectsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for GetAdminProjectResourceAccessMetricsParamsGranularity.
+const (
+	GetAdminProjectResourceAccessMetricsParamsGranularityDay   GetAdminProjectResourceAccessMetricsParamsGranularity = "day"
+	GetAdminProjectResourceAccessMetricsParamsGranularityMonth GetAdminProjectResourceAccessMetricsParamsGranularity = "month"
+	GetAdminProjectResourceAccessMetricsParamsGranularityWeek  GetAdminProjectResourceAccessMetricsParamsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the GetAdminProjectResourceAccessMetricsParamsGranularity enum.
+func (e GetAdminProjectResourceAccessMetricsParamsGranularity) Valid() bool {
+	switch e {
+	case GetAdminProjectResourceAccessMetricsParamsGranularityDay:
+		return true
+	case GetAdminProjectResourceAccessMetricsParamsGranularityMonth:
+		return true
+	case GetAdminProjectResourceAccessMetricsParamsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for GetAdminProjectResourceCreationMetricsParamsGranularity.
+const (
+	GetAdminProjectResourceCreationMetricsParamsGranularityDay   GetAdminProjectResourceCreationMetricsParamsGranularity = "day"
+	GetAdminProjectResourceCreationMetricsParamsGranularityMonth GetAdminProjectResourceCreationMetricsParamsGranularity = "month"
+	GetAdminProjectResourceCreationMetricsParamsGranularityWeek  GetAdminProjectResourceCreationMetricsParamsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the GetAdminProjectResourceCreationMetricsParamsGranularity enum.
+func (e GetAdminProjectResourceCreationMetricsParamsGranularity) Valid() bool {
+	switch e {
+	case GetAdminProjectResourceCreationMetricsParamsGranularityDay:
+		return true
+	case GetAdminProjectResourceCreationMetricsParamsGranularityMonth:
+		return true
+	case GetAdminProjectResourceCreationMetricsParamsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListAdminTeamsParamsSortBy.
 const (
 	ListAdminTeamsParamsSortByAdminCount         ListAdminTeamsParamsSortBy = "admin_count"
@@ -3752,6 +3836,58 @@ type AdminPostmarkSettings struct {
 	MessageStream string `json:"message_stream"`
 }
 
+// AdminProjectAccessMetrics Accesses to the project's resources and to the project itself per bucket and
+// source (GET /api/v1/admin/projects/{id}/resource-access-metrics). An event
+// is attributed to the project its resource belongs to now, so accesses to a
+// deleted resource drop out and a migrated resource brings its history with
+// it. Every bucket in the range is present with an explicit 0 for each source
+// that appears.
+type AdminProjectAccessMetrics struct {
+	// AccessBySource One point per (bucket, source), ascending by bucket then source.
+	AccessBySource []AdminSourcePoint `json:"access_by_source"`
+
+	// EarliestRetainedAt Oldest access event still retained (now minus
+	// `retention.access_event_days`); buckets before it read as zeros.
+	EarliestRetainedAt time.Time `json:"earliest_retained_at"`
+
+	// From Inclusive start of the range actually used, snapped DOWN to the start of
+	// its bucket (same rule as AdminTimeseriesResponse.from).
+	From time.Time `json:"from"`
+
+	// Granularity Bucket size actually used.
+	Granularity AdminProjectAccessMetricsGranularity `json:"granularity"`
+
+	// To Exclusive end of the range actually used (after defaulting); not snapped.
+	To time.Time `json:"to"`
+}
+
+// AdminProjectAccessMetricsGranularity Bucket size actually used.
+type AdminProjectAccessMetricsGranularity string
+
+// AdminProjectConfig The configuration that applies to a project
+// (GET /api/v1/admin/projects/{id}/config): the freshness rules scoped to it
+// and the team-wide rules that also apply. Both lists are oldest first and
+// include disabled rules.
+type AdminProjectConfig struct {
+	// ProjectRules Rules scoped to this project. `[]` when there are none.
+	ProjectRules []AdminFreshnessRule `json:"project_rules"`
+
+	// TeamWideRules Rules with no project scope, which apply to every project of the team. `[]` when there are none.
+	TeamWideRules []AdminFreshnessRule `json:"team_wide_rules"`
+}
+
+// AdminProjectCreationPoint How many resources of each project-scoped type were created in the project within one time bucket.
+type AdminProjectCreationPoint struct {
+	Artifacts  int64 `json:"artifacts"`
+	Blueprints int64 `json:"blueprints"`
+
+	// Bucket Start of the bucket, in UTC.
+	Bucket    time.Time `json:"bucket"`
+	FeedItems int64     `json:"feed_items"`
+	Memories  int64     `json:"memories"`
+	Prompts   int64     `json:"prompts"`
+}
+
 // AdminProjectDetail A single project with its team, owner and resource counts (GET /api/v1/admin/projects/{id}).
 type AdminProjectDetail struct {
 	CreatedAt time.Time `json:"created_at"`
@@ -3858,6 +3994,27 @@ type AdminProjectResourceCounts struct {
 	// Total Sum of the five project-scoped counts.
 	Total int64 `json:"total"`
 }
+
+// AdminProjectResourceCreationMetrics Resources created in the project per bucket, stacked by type
+// (GET /api/v1/admin/projects/{id}/resource-creation-metrics). Every bucket in
+// the range is present with an explicit 0 for every type.
+type AdminProjectResourceCreationMetrics struct {
+	// From Inclusive start of the range actually used, snapped DOWN to the start of
+	// its bucket (same rule as AdminTimeseriesResponse.from).
+	From time.Time `json:"from"`
+
+	// Granularity Bucket size actually used.
+	Granularity AdminProjectResourceCreationMetricsGranularity `json:"granularity"`
+
+	// Series One point per bucket, ascending by bucket.
+	Series []AdminProjectCreationPoint `json:"series"`
+
+	// To Exclusive end of the range actually used (after defaulting); not snapped.
+	To time.Time `json:"to"`
+}
+
+// AdminProjectResourceCreationMetricsGranularity Bucket size actually used.
+type AdminProjectResourceCreationMetricsGranularity string
 
 // AdminProjectTeam The team a project belongs to.
 type AdminProjectTeam struct {
@@ -4275,7 +4432,8 @@ type AdminTimeseriesResponse struct {
 type AdminTimeseriesResponseGranularity string
 
 // AdminTopAccessedResource One opaque most-accessed resource: its type, where it lives and how often
-// the user accessed it. Deliberately carries no title, slug or content — only
+// the user accessed it (or, for a project, how often it was accessed).
+// Deliberately carries no title, slug or content — only
 // the first 8 characters of the resource id. The identity fields share their
 // names with AdminUserTimelineEvent.
 type AdminTopAccessedResource struct {
@@ -4286,7 +4444,10 @@ type AdminTopAccessedResource struct {
 	ProjectId   *openapi_types.UUID `json:"project_id"`
 	ProjectName *string             `json:"project_name"`
 
-	// ResourceDeleted True when the resource no longer exists (access events outlive their resource until pruned).
+	// ResourceDeleted True when the resource no longer exists (access events outlive their
+	// resource until pruned). Always `false` for a project's top resources
+	// (GET /api/v1/admin/projects/{id}/top-accessed-resources), where a
+	// deleted resource has no current project and drops out.
 	ResourceDeleted bool `json:"resource_deleted"`
 
 	// ResourceShortId First 8 characters of the resource id.
@@ -4300,7 +4461,8 @@ type AdminTopAccessedResource struct {
 type AdminTopAccessedResourceResourceType string
 
 // AdminTopAccessedResourcesResponse The resources a user accessed most in a range
-// (GET /api/v1/admin/users/{id}/top-accessed-resources).
+// (GET /api/v1/admin/users/{id}/top-accessed-resources), or a project's
+// most-accessed resources (GET /api/v1/admin/projects/{id}/top-accessed-resources).
 type AdminTopAccessedResourcesResponse struct {
 	// EarliestRetainedAt Oldest access event still retained (now minus
 	// `retention.access_event_days`); accesses before it are not counted.
@@ -9106,6 +9268,48 @@ type ListAdminProjectsParamsSortBy string
 
 // ListAdminProjectsParamsSortOrder defines parameters for ListAdminProjects.
 type ListAdminProjectsParamsSortOrder string
+
+// GetAdminProjectResourceAccessMetricsParams defines parameters for GetAdminProjectResourceAccessMetrics.
+type GetAdminProjectResourceAccessMetricsParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Granularity Bucket size.
+	Granularity *GetAdminProjectResourceAccessMetricsParamsGranularity `form:"granularity,omitempty" json:"granularity,omitempty"`
+}
+
+// GetAdminProjectResourceAccessMetricsParamsGranularity defines parameters for GetAdminProjectResourceAccessMetrics.
+type GetAdminProjectResourceAccessMetricsParamsGranularity string
+
+// GetAdminProjectResourceCreationMetricsParams defines parameters for GetAdminProjectResourceCreationMetrics.
+type GetAdminProjectResourceCreationMetricsParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Granularity Bucket size.
+	Granularity *GetAdminProjectResourceCreationMetricsParamsGranularity `form:"granularity,omitempty" json:"granularity,omitempty"`
+}
+
+// GetAdminProjectResourceCreationMetricsParamsGranularity defines parameters for GetAdminProjectResourceCreationMetrics.
+type GetAdminProjectResourceCreationMetricsParamsGranularity string
+
+// GetAdminProjectTopAccessedResourcesParams defines parameters for GetAdminProjectTopAccessedResources.
+type GetAdminProjectTopAccessedResourcesParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Limit Maximum number of rows.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
 
 // ListAdminTeamsParams defines parameters for ListAdminTeams.
 type ListAdminTeamsParams struct {
