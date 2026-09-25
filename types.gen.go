@@ -114,6 +114,84 @@ func (e AdminUserListItemStatus) Valid() bool {
 	}
 }
 
+// Defines values for AdminUserResourceCreationMetricsGranularity.
+const (
+	AdminUserResourceCreationMetricsGranularityDay   AdminUserResourceCreationMetricsGranularity = "day"
+	AdminUserResourceCreationMetricsGranularityMonth AdminUserResourceCreationMetricsGranularity = "month"
+	AdminUserResourceCreationMetricsGranularityWeek  AdminUserResourceCreationMetricsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserResourceCreationMetricsGranularity enum.
+func (e AdminUserResourceCreationMetricsGranularity) Valid() bool {
+	switch e {
+	case AdminUserResourceCreationMetricsGranularityDay:
+		return true
+	case AdminUserResourceCreationMetricsGranularityMonth:
+		return true
+	case AdminUserResourceCreationMetricsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserTimelineEventAction.
+const (
+	AdminUserTimelineEventActionCreated AdminUserTimelineEventAction = "created"
+	AdminUserTimelineEventActionUpdated AdminUserTimelineEventAction = "updated"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserTimelineEventAction enum.
+func (e AdminUserTimelineEventAction) Valid() bool {
+	switch e {
+	case AdminUserTimelineEventActionCreated:
+		return true
+	case AdminUserTimelineEventActionUpdated:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserTimelineEventResourceType.
+const (
+	AdminUserTimelineEventResourceTypeAgent      AdminUserTimelineEventResourceType = "agent"
+	AdminUserTimelineEventResourceTypeArtifact   AdminUserTimelineEventResourceType = "artifact"
+	AdminUserTimelineEventResourceTypeAttachment AdminUserTimelineEventResourceType = "attachment"
+	AdminUserTimelineEventResourceTypeBlueprint  AdminUserTimelineEventResourceType = "blueprint"
+	AdminUserTimelineEventResourceTypeComment    AdminUserTimelineEventResourceType = "comment"
+	AdminUserTimelineEventResourceTypeFeed       AdminUserTimelineEventResourceType = "feed"
+	AdminUserTimelineEventResourceTypeFeedItem   AdminUserTimelineEventResourceType = "feed_item"
+	AdminUserTimelineEventResourceTypeMemory     AdminUserTimelineEventResourceType = "memory"
+	AdminUserTimelineEventResourceTypePrompt     AdminUserTimelineEventResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserTimelineEventResourceType enum.
+func (e AdminUserTimelineEventResourceType) Valid() bool {
+	switch e {
+	case AdminUserTimelineEventResourceTypeAgent:
+		return true
+	case AdminUserTimelineEventResourceTypeArtifact:
+		return true
+	case AdminUserTimelineEventResourceTypeAttachment:
+		return true
+	case AdminUserTimelineEventResourceTypeBlueprint:
+		return true
+	case AdminUserTimelineEventResourceTypeComment:
+		return true
+	case AdminUserTimelineEventResourceTypeFeed:
+		return true
+	case AdminUserTimelineEventResourceTypeFeedItem:
+		return true
+	case AdminUserTimelineEventResourceTypeMemory:
+		return true
+	case AdminUserTimelineEventResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AgentStatus.
 const (
 	AgentStatusActive AgentStatus = "active"
@@ -395,22 +473,22 @@ func (e BlueprintDetailType) Valid() bool {
 
 // Defines values for BlueprintImportCompanionOutcome.
 const (
-	Imported BlueprintImportCompanionOutcome = "imported"
-	Removed  BlueprintImportCompanionOutcome = "removed"
-	Skipped  BlueprintImportCompanionOutcome = "skipped"
-	Updated  BlueprintImportCompanionOutcome = "updated"
+	BlueprintImportCompanionOutcomeImported BlueprintImportCompanionOutcome = "imported"
+	BlueprintImportCompanionOutcomeRemoved  BlueprintImportCompanionOutcome = "removed"
+	BlueprintImportCompanionOutcomeSkipped  BlueprintImportCompanionOutcome = "skipped"
+	BlueprintImportCompanionOutcomeUpdated  BlueprintImportCompanionOutcome = "updated"
 )
 
 // Valid indicates whether the value is a known member of the BlueprintImportCompanionOutcome enum.
 func (e BlueprintImportCompanionOutcome) Valid() bool {
 	switch e {
-	case Imported:
+	case BlueprintImportCompanionOutcomeImported:
 		return true
-	case Removed:
+	case BlueprintImportCompanionOutcomeRemoved:
 		return true
-	case Skipped:
+	case BlueprintImportCompanionOutcomeSkipped:
 		return true
-	case Updated:
+	case BlueprintImportCompanionOutcomeUpdated:
 		return true
 	default:
 		return false
@@ -2160,6 +2238,27 @@ func (e ListAdminUsersParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for GetAdminUserResourceCreationMetricsParamsGranularity.
+const (
+	GetAdminUserResourceCreationMetricsParamsGranularityDay   GetAdminUserResourceCreationMetricsParamsGranularity = "day"
+	GetAdminUserResourceCreationMetricsParamsGranularityMonth GetAdminUserResourceCreationMetricsParamsGranularity = "month"
+	GetAdminUserResourceCreationMetricsParamsGranularityWeek  GetAdminUserResourceCreationMetricsParamsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the GetAdminUserResourceCreationMetricsParamsGranularity enum.
+func (e GetAdminUserResourceCreationMetricsParamsGranularity) Valid() bool {
+	switch e {
+	case GetAdminUserResourceCreationMetricsParamsGranularityDay:
+		return true
+	case GetAdminUserResourceCreationMetricsParamsGranularityMonth:
+		return true
+	case GetAdminUserResourceCreationMetricsParamsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetTeamFeedCreationMetricsParamsRange.
 const (
 	GetTeamFeedCreationMetricsParamsRangeN14d  GetTeamFeedCreationMetricsParamsRange = "14d"
@@ -3539,6 +3638,22 @@ type AdminUserCreateRequest struct {
 	Name        string  `json:"name"`
 }
 
+// AdminUserCreationPoint How many resources of each type the user created within one time bucket.
+type AdminUserCreationPoint struct {
+	Agents      int64 `json:"agents"`
+	Artifacts   int64 `json:"artifacts"`
+	Attachments int64 `json:"attachments"`
+	Blueprints  int64 `json:"blueprints"`
+
+	// Bucket Start of the bucket, in UTC.
+	Bucket    time.Time `json:"bucket"`
+	Comments  int64     `json:"comments"`
+	FeedItems int64     `json:"feed_items"`
+	Feeds     int64     `json:"feeds"`
+	Memories  int64     `json:"memories"`
+	Prompts   int64     `json:"prompts"`
+}
+
 // AdminUserDeleteBlockedResponse Returned with 409 when a hard delete is refused. NOTHING was deleted: the
 // user and every listed team still exist.
 type AdminUserDeleteBlockedResponse struct {
@@ -3574,6 +3689,22 @@ type AdminUserDetail struct {
 // tokens stop working immediately, not at expiry. Instance-local: it does
 // not disable the account at the upstream identity provider.
 type AdminUserDetailStatus string
+
+// AdminUserInsights Per-type counts of the resources one user authored, instance-wide, per team
+// and per project (GET /api/v1/admin/users/{id}/insights). For every type the
+// per-team counts sum to `totals`. An attachment whose author was deleted
+// (user_id set to NULL) counts for nobody.
+type AdminUserInsights struct {
+	// Teams Teams the user authored at least one resource in, ordered by team name.
+	Teams []AdminUserTeamResourceCounts `json:"teams"`
+
+	// Totals How many resources of each type a user authored, counted by the author
+	// column of each table (feeds by creator, feed items by poster). Every row
+	// counts regardless of its status or archive state. `total` is the sum of the
+	// nine types.
+	Totals AdminResourceCounts `json:"totals"`
+	UserId openapi_types.UUID  `json:"user_id"`
+}
 
 // AdminUserListItem One user in the instance-wide admin user listing.
 type AdminUserListItem struct {
@@ -3630,6 +3761,107 @@ type AdminUserListResponse struct {
 
 	// Users Users on this page, newest first.
 	Users []AdminUserListItem `json:"users"`
+}
+
+// AdminUserNotificationPreferences A user's notification preferences, read-only
+// (GET /api/v1/admin/users/{id}/notification-preferences). When the user has
+// never saved preferences, the defaults are returned with `is_default: true`
+// and `updated_at: null`.
+type AdminUserNotificationPreferences struct {
+	EmailNotification EmailNotificationPreferences `json:"email_notification"`
+
+	// IsDefault True when the user has no stored preferences and the defaults are shown.
+	IsDefault     bool                    `json:"is_default"`
+	Notifications NotificationPreferences `json:"notifications"`
+
+	// UpdatedAt When the user last saved their preferences; null when defaults are returned.
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
+// AdminUserProjectResourceCounts How many PROJECT-SCOPED resources the user authored in one project. Only the
+// four types with a NOT NULL project_id are attributed to a project; every
+// other type is counted at the team level only.
+type AdminUserProjectResourceCounts struct {
+	// Counts How many of each PROJECT-SCOPED resource type the project contains.
+	//
+	// Only these four types belong to a project. Agents and feeds are deliberately
+	// absent: neither table has a project_id column (both are team-scoped), so
+	// reporting zero for them would read as "this project has no agents" rather
+	// than "agents do not belong to projects".
+	Counts      AdminProjectResourceCounts `json:"counts"`
+	ProjectId   openapi_types.UUID         `json:"project_id"`
+	ProjectName string                     `json:"project_name"`
+}
+
+// AdminUserResourceCreationMetrics Resources the user created per bucket, stacked by type
+// (GET /api/v1/admin/users/{id}/resource-creation-metrics). Every bucket in
+// the range is present with an explicit 0 for every type.
+type AdminUserResourceCreationMetrics struct {
+	// From Inclusive start of the range actually used, snapped DOWN to the start of
+	// its bucket (same rule as AdminTimeseriesResponse.from).
+	From time.Time `json:"from"`
+
+	// Granularity Bucket size actually used.
+	Granularity AdminUserResourceCreationMetricsGranularity `json:"granularity"`
+
+	// Series One point per bucket, ascending by bucket.
+	Series []AdminUserCreationPoint `json:"series"`
+
+	// To Exclusive end of the range actually used (after defaulting); not snapped.
+	To time.Time `json:"to"`
+}
+
+// AdminUserResourceCreationMetricsGranularity Bucket size actually used.
+type AdminUserResourceCreationMetricsGranularity string
+
+// AdminUserTeamResourceCounts How many resources the user authored in one team, with the per-project breakdown.
+type AdminUserTeamResourceCounts struct {
+	// Counts How many resources of each type a user authored, counted by the author
+	// column of each table (feeds by creator, feed items by poster). Every row
+	// counts regardless of its status or archive state. `total` is the sum of the
+	// nine types.
+	Counts AdminResourceCounts `json:"counts"`
+
+	// IsMember Whether the user is still a member of the team. A former member's
+	// authored resources stay in the team and are still counted here.
+	IsMember bool `json:"is_member"`
+
+	// Projects Per-project counts, ordered by project name.
+	Projects []AdminUserProjectResourceCounts `json:"projects"`
+	TeamId   openapi_types.UUID               `json:"team_id"`
+	TeamName string                           `json:"team_name"`
+}
+
+// AdminUserTimelineEvent One opaque timeline entry: which kind of resource the user created or last
+// updated, where, and when. Deliberately carries no title, slug or content —
+// only the first 8 characters of the resource id.
+type AdminUserTimelineEvent struct {
+	Action     AdminUserTimelineEventAction `json:"action"`
+	OccurredAt time.Time                    `json:"occurred_at"`
+
+	// ProjectId Null for team-scoped resources and for feed items posted without a project.
+	ProjectId   *openapi_types.UUID `json:"project_id"`
+	ProjectName *string             `json:"project_name"`
+
+	// ResourceShortId First 8 characters of the resource id.
+	ResourceShortId string                             `json:"resource_short_id"`
+	ResourceType    AdminUserTimelineEventResourceType `json:"resource_type"`
+	TeamId          openapi_types.UUID                 `json:"team_id"`
+	TeamName        string                             `json:"team_name"`
+}
+
+// AdminUserTimelineEventAction defines model for AdminUserTimelineEvent.Action.
+type AdminUserTimelineEventAction string
+
+// AdminUserTimelineEventResourceType defines model for AdminUserTimelineEvent.ResourceType.
+type AdminUserTimelineEventResourceType string
+
+// AdminUserTimelinePage One page of a user's resource timeline, newest first.
+type AdminUserTimelinePage struct {
+	Items []AdminUserTimelineEvent `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; null on the last page.
+	NextCursor *string `json:"next_cursor"`
 }
 
 // AdminUserUpdateRequest Fields an instance admin may change on a user. Deliberately minimal: email
@@ -8252,6 +8484,30 @@ type ListAdminUsersParamsSortBy string
 
 // ListAdminUsersParamsSortOrder defines parameters for ListAdminUsers.
 type ListAdminUsersParamsSortOrder string
+
+// GetAdminUserResourceCreationMetricsParams defines parameters for GetAdminUserResourceCreationMetrics.
+type GetAdminUserResourceCreationMetricsParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Granularity Bucket size.
+	Granularity *GetAdminUserResourceCreationMetricsParamsGranularity `form:"granularity,omitempty" json:"granularity,omitempty"`
+}
+
+// GetAdminUserResourceCreationMetricsParamsGranularity defines parameters for GetAdminUserResourceCreationMetrics.
+type GetAdminUserResourceCreationMetricsParamsGranularity string
+
+// GetAdminUserTimelineParams defines parameters for GetAdminUserTimeline.
+type GetAdminUserTimelineParams struct {
+	// Cursor Opaque cursor from a previous page's `next_cursor`.
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
 
 // ListAPIKeysParams defines parameters for ListAPIKeys.
 type ListAPIKeysParams struct {

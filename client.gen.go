@@ -150,11 +150,23 @@ type ClientInterface interface {
 
 	UpdateAdminUser(ctx context.Context, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAdminUserInsights request
+	GetAdminUserInsights(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminUserNotificationPreferences request
+	GetAdminUserNotificationPreferences(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ReactivateAdminUser request
 	ReactivateAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAdminUserResourceCreationMetrics request
+	GetAdminUserResourceCreationMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// SuspendAdminUser request
 	SuspendAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminUserTimeline request
+	GetAdminUserTimeline(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListAPIKeys request
 	ListAPIKeys(ctx context.Context, params *ListAPIKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1280,6 +1292,30 @@ func (c *Client) UpdateAdminUser(ctx context.Context, id openapi_types.UUID, bod
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetAdminUserInsights(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminUserInsightsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminUserNotificationPreferences(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminUserNotificationPreferencesRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ReactivateAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReactivateAdminUserRequest(c.Server, id)
 	if err != nil {
@@ -1292,8 +1328,32 @@ func (c *Client) ReactivateAdminUser(ctx context.Context, id openapi_types.UUID,
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetAdminUserResourceCreationMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminUserResourceCreationMetricsRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) SuspendAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSuspendAdminUserRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminUserTimeline(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminUserTimelineRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -6494,6 +6554,74 @@ func NewUpdateAdminUserRequestWithBody(server string, id openapi_types.UUID, con
 	return req, nil
 }
 
+// NewGetAdminUserInsightsRequest generates requests for GetAdminUserInsights
+func NewGetAdminUserInsightsRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/insights", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminUserNotificationPreferencesRequest generates requests for GetAdminUserNotificationPreferences
+func NewGetAdminUserNotificationPreferencesRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/notification-preferences", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewReactivateAdminUserRequest generates requests for ReactivateAdminUser
 func NewReactivateAdminUserRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -6528,6 +6656,91 @@ func NewReactivateAdminUserRequest(server string, id openapi_types.UUID) (*http.
 	return req, nil
 }
 
+// NewGetAdminUserResourceCreationMetricsRequest generates requests for GetAdminUserResourceCreationMetrics
+func NewGetAdminUserResourceCreationMetricsRequest(server string, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/resource-creation-metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Granularity != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "granularity", *params.Granularity, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewSuspendAdminUserRequest generates requests for SuspendAdminUser
 func NewSuspendAdminUserRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -6555,6 +6768,79 @@ func NewSuspendAdminUserRequest(server string, id openapi_types.UUID) (*http.Req
 	}
 
 	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminUserTimelineRequest generates requests for GetAdminUserTimeline
+func NewGetAdminUserTimelineRequest(server string, id openapi_types.UUID, params *GetAdminUserTimelineParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/timeline", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -19024,11 +19310,23 @@ type ClientWithResponsesInterface interface {
 
 	UpdateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, body UpdateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminUserHTTPResponse, error)
 
+	// GetAdminUserInsightsWithResponse request
+	GetAdminUserInsightsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserInsightsHTTPResponse, error)
+
+	// GetAdminUserNotificationPreferencesWithResponse request
+	GetAdminUserNotificationPreferencesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserNotificationPreferencesHTTPResponse, error)
+
 	// ReactivateAdminUserWithResponse request
 	ReactivateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReactivateAdminUserHTTPResponse, error)
 
+	// GetAdminUserResourceCreationMetricsWithResponse request
+	GetAdminUserResourceCreationMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceCreationMetricsHTTPResponse, error)
+
 	// SuspendAdminUserWithResponse request
 	SuspendAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*SuspendAdminUserHTTPResponse, error)
+
+	// GetAdminUserTimelineWithResponse request
+	GetAdminUserTimelineWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*GetAdminUserTimelineHTTPResponse, error)
 
 	// ListAPIKeysWithResponse request
 	ListAPIKeysWithResponse(ctx context.Context, params *ListAPIKeysParams, reqEditors ...RequestEditorFn) (*ListAPIKeysHTTPResponse, error)
@@ -20487,6 +20785,72 @@ func (r UpdateAdminUserHTTPResponse) ContentType() string {
 	return ""
 }
 
+type GetAdminUserInsightsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserInsights
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminUserInsightsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminUserInsightsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminUserInsightsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminUserNotificationPreferencesHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserNotificationPreferences
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminUserNotificationPreferencesHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminUserNotificationPreferencesHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminUserNotificationPreferencesHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ReactivateAdminUserHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -20514,6 +20878,39 @@ func (r ReactivateAdminUserHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ReactivateAdminUserHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminUserResourceCreationMetricsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserResourceCreationMetrics
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminUserResourceCreationMetricsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminUserResourceCreationMetricsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminUserResourceCreationMetricsHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -20548,6 +20945,39 @@ func (r SuspendAdminUserHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r SuspendAdminUserHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminUserTimelineHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserTimelinePage
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminUserTimelineHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminUserTimelineHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminUserTimelineHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -28818,6 +29248,24 @@ func (c *ClientWithResponses) UpdateAdminUserWithResponse(ctx context.Context, i
 	return ParseUpdateAdminUserHTTPResponse(rsp)
 }
 
+// GetAdminUserInsightsWithResponse request returning *GetAdminUserInsightsHTTPResponse
+func (c *ClientWithResponses) GetAdminUserInsightsWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserInsightsHTTPResponse, error) {
+	rsp, err := c.GetAdminUserInsights(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminUserInsightsHTTPResponse(rsp)
+}
+
+// GetAdminUserNotificationPreferencesWithResponse request returning *GetAdminUserNotificationPreferencesHTTPResponse
+func (c *ClientWithResponses) GetAdminUserNotificationPreferencesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserNotificationPreferencesHTTPResponse, error) {
+	rsp, err := c.GetAdminUserNotificationPreferences(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminUserNotificationPreferencesHTTPResponse(rsp)
+}
+
 // ReactivateAdminUserWithResponse request returning *ReactivateAdminUserHTTPResponse
 func (c *ClientWithResponses) ReactivateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReactivateAdminUserHTTPResponse, error) {
 	rsp, err := c.ReactivateAdminUser(ctx, id, reqEditors...)
@@ -28827,6 +29275,15 @@ func (c *ClientWithResponses) ReactivateAdminUserWithResponse(ctx context.Contex
 	return ParseReactivateAdminUserHTTPResponse(rsp)
 }
 
+// GetAdminUserResourceCreationMetricsWithResponse request returning *GetAdminUserResourceCreationMetricsHTTPResponse
+func (c *ClientWithResponses) GetAdminUserResourceCreationMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceCreationMetricsHTTPResponse, error) {
+	rsp, err := c.GetAdminUserResourceCreationMetrics(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminUserResourceCreationMetricsHTTPResponse(rsp)
+}
+
 // SuspendAdminUserWithResponse request returning *SuspendAdminUserHTTPResponse
 func (c *ClientWithResponses) SuspendAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*SuspendAdminUserHTTPResponse, error) {
 	rsp, err := c.SuspendAdminUser(ctx, id, reqEditors...)
@@ -28834,6 +29291,15 @@ func (c *ClientWithResponses) SuspendAdminUserWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseSuspendAdminUserHTTPResponse(rsp)
+}
+
+// GetAdminUserTimelineWithResponse request returning *GetAdminUserTimelineHTTPResponse
+func (c *ClientWithResponses) GetAdminUserTimelineWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*GetAdminUserTimelineHTTPResponse, error) {
+	rsp, err := c.GetAdminUserTimeline(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminUserTimelineHTTPResponse(rsp)
 }
 
 // ListAPIKeysWithResponse request returning *ListAPIKeysHTTPResponse
@@ -32380,6 +32846,100 @@ func ParseUpdateAdminUserHTTPResponse(rsp *http.Response) (*UpdateAdminUserHTTPR
 	return response, nil
 }
 
+// ParseGetAdminUserInsightsHTTPResponse parses an HTTP response from a GetAdminUserInsightsWithResponse call
+func ParseGetAdminUserInsightsHTTPResponse(rsp *http.Response) (*GetAdminUserInsightsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminUserInsightsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserInsights
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminUserNotificationPreferencesHTTPResponse parses an HTTP response from a GetAdminUserNotificationPreferencesWithResponse call
+func ParseGetAdminUserNotificationPreferencesHTTPResponse(rsp *http.Response) (*GetAdminUserNotificationPreferencesHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminUserNotificationPreferencesHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserNotificationPreferences
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseReactivateAdminUserHTTPResponse parses an HTTP response from a ReactivateAdminUserWithResponse call
 func ParseReactivateAdminUserHTTPResponse(rsp *http.Response) (*ReactivateAdminUserHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -32396,6 +32956,53 @@ func ParseReactivateAdminUserHTTPResponse(rsp *http.Response) (*ReactivateAdminU
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest AdminUserDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminUserResourceCreationMetricsHTTPResponse parses an HTTP response from a GetAdminUserResourceCreationMetricsWithResponse call
+func ParseGetAdminUserResourceCreationMetricsHTTPResponse(rsp *http.Response) (*GetAdminUserResourceCreationMetricsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminUserResourceCreationMetricsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserResourceCreationMetrics
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -32468,6 +33075,53 @@ func ParseSuspendAdminUserHTTPResponse(rsp *http.Response) (*SuspendAdminUserHTT
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminUserTimelineHTTPResponse parses an HTTP response from a GetAdminUserTimelineWithResponse call
+func ParseGetAdminUserTimelineHTTPResponse(rsp *http.Response) (*GetAdminUserTimelineHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminUserTimelineHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserTimelinePage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
