@@ -2319,6 +2319,63 @@ func (e ListAdminProjectsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for ExportAdminProjectsParamsSortBy.
+const (
+	ExportAdminProjectsParamsSortByArtifactCount         ExportAdminProjectsParamsSortBy = "artifact_count"
+	ExportAdminProjectsParamsSortByBlueprintCount        ExportAdminProjectsParamsSortBy = "blueprint_count"
+	ExportAdminProjectsParamsSortByCreatedAt             ExportAdminProjectsParamsSortBy = "created_at"
+	ExportAdminProjectsParamsSortByFeedItemCount         ExportAdminProjectsParamsSortBy = "feed_item_count"
+	ExportAdminProjectsParamsSortByLastResourceCreatedAt ExportAdminProjectsParamsSortBy = "last_resource_created_at"
+	ExportAdminProjectsParamsSortByMemoryCount           ExportAdminProjectsParamsSortBy = "memory_count"
+	ExportAdminProjectsParamsSortByName                  ExportAdminProjectsParamsSortBy = "name"
+	ExportAdminProjectsParamsSortByPromptCount           ExportAdminProjectsParamsSortBy = "prompt_count"
+	ExportAdminProjectsParamsSortByTotalResourceCount    ExportAdminProjectsParamsSortBy = "total_resource_count"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminProjectsParamsSortBy enum.
+func (e ExportAdminProjectsParamsSortBy) Valid() bool {
+	switch e {
+	case ExportAdminProjectsParamsSortByArtifactCount:
+		return true
+	case ExportAdminProjectsParamsSortByBlueprintCount:
+		return true
+	case ExportAdminProjectsParamsSortByCreatedAt:
+		return true
+	case ExportAdminProjectsParamsSortByFeedItemCount:
+		return true
+	case ExportAdminProjectsParamsSortByLastResourceCreatedAt:
+		return true
+	case ExportAdminProjectsParamsSortByMemoryCount:
+		return true
+	case ExportAdminProjectsParamsSortByName:
+		return true
+	case ExportAdminProjectsParamsSortByPromptCount:
+		return true
+	case ExportAdminProjectsParamsSortByTotalResourceCount:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExportAdminProjectsParamsSortOrder.
+const (
+	ExportAdminProjectsParamsSortOrderAsc  ExportAdminProjectsParamsSortOrder = "asc"
+	ExportAdminProjectsParamsSortOrderDesc ExportAdminProjectsParamsSortOrder = "desc"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminProjectsParamsSortOrder enum.
+func (e ExportAdminProjectsParamsSortOrder) Valid() bool {
+	switch e {
+	case ExportAdminProjectsParamsSortOrderAsc:
+		return true
+	case ExportAdminProjectsParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetAdminProjectResourceAccessMetricsParamsGranularity.
 const (
 	GetAdminProjectResourceAccessMetricsParamsGranularityDay   GetAdminProjectResourceAccessMetricsParamsGranularity = "day"
@@ -2439,6 +2496,84 @@ func (e ListAdminTeamsParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for ExportAdminTeamsParamsSortBy.
+const (
+	ExportAdminTeamsParamsSortByAdminCount         ExportAdminTeamsParamsSortBy = "admin_count"
+	ExportAdminTeamsParamsSortByAgentCount         ExportAdminTeamsParamsSortBy = "agent_count"
+	ExportAdminTeamsParamsSortByArtifactCount      ExportAdminTeamsParamsSortBy = "artifact_count"
+	ExportAdminTeamsParamsSortByAttachmentCount    ExportAdminTeamsParamsSortBy = "attachment_count"
+	ExportAdminTeamsParamsSortByBlueprintCount     ExportAdminTeamsParamsSortBy = "blueprint_count"
+	ExportAdminTeamsParamsSortByCommentCount       ExportAdminTeamsParamsSortBy = "comment_count"
+	ExportAdminTeamsParamsSortByCreatedAt          ExportAdminTeamsParamsSortBy = "created_at"
+	ExportAdminTeamsParamsSortByFeedCount          ExportAdminTeamsParamsSortBy = "feed_count"
+	ExportAdminTeamsParamsSortByFeedItemCount      ExportAdminTeamsParamsSortBy = "feed_item_count"
+	ExportAdminTeamsParamsSortByMemberCount        ExportAdminTeamsParamsSortBy = "member_count"
+	ExportAdminTeamsParamsSortByMemoryCount        ExportAdminTeamsParamsSortBy = "memory_count"
+	ExportAdminTeamsParamsSortByName               ExportAdminTeamsParamsSortBy = "name"
+	ExportAdminTeamsParamsSortByOwnerCount         ExportAdminTeamsParamsSortBy = "owner_count"
+	ExportAdminTeamsParamsSortByProjectCount       ExportAdminTeamsParamsSortBy = "project_count"
+	ExportAdminTeamsParamsSortByPromptCount        ExportAdminTeamsParamsSortBy = "prompt_count"
+	ExportAdminTeamsParamsSortByTotalResourceCount ExportAdminTeamsParamsSortBy = "total_resource_count"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminTeamsParamsSortBy enum.
+func (e ExportAdminTeamsParamsSortBy) Valid() bool {
+	switch e {
+	case ExportAdminTeamsParamsSortByAdminCount:
+		return true
+	case ExportAdminTeamsParamsSortByAgentCount:
+		return true
+	case ExportAdminTeamsParamsSortByArtifactCount:
+		return true
+	case ExportAdminTeamsParamsSortByAttachmentCount:
+		return true
+	case ExportAdminTeamsParamsSortByBlueprintCount:
+		return true
+	case ExportAdminTeamsParamsSortByCommentCount:
+		return true
+	case ExportAdminTeamsParamsSortByCreatedAt:
+		return true
+	case ExportAdminTeamsParamsSortByFeedCount:
+		return true
+	case ExportAdminTeamsParamsSortByFeedItemCount:
+		return true
+	case ExportAdminTeamsParamsSortByMemberCount:
+		return true
+	case ExportAdminTeamsParamsSortByMemoryCount:
+		return true
+	case ExportAdminTeamsParamsSortByName:
+		return true
+	case ExportAdminTeamsParamsSortByOwnerCount:
+		return true
+	case ExportAdminTeamsParamsSortByProjectCount:
+		return true
+	case ExportAdminTeamsParamsSortByPromptCount:
+		return true
+	case ExportAdminTeamsParamsSortByTotalResourceCount:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExportAdminTeamsParamsSortOrder.
+const (
+	ExportAdminTeamsParamsSortOrderAsc  ExportAdminTeamsParamsSortOrder = "asc"
+	ExportAdminTeamsParamsSortOrderDesc ExportAdminTeamsParamsSortOrder = "desc"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminTeamsParamsSortOrder enum.
+func (e ExportAdminTeamsParamsSortOrder) Valid() bool {
+	switch e {
+	case ExportAdminTeamsParamsSortOrderAsc:
+		return true
+	case ExportAdminTeamsParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListAdminUsersParamsStatus.
 const (
 	ListAdminUsersParamsStatusActive    ListAdminUsersParamsStatus = "active"
@@ -2529,6 +2664,102 @@ func (e ListAdminUsersParamsSortOrder) Valid() bool {
 	case ListAdminUsersParamsSortOrderAsc:
 		return true
 	case ListAdminUsersParamsSortOrderDesc:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExportAdminUsersParamsStatus.
+const (
+	ExportAdminUsersParamsStatusActive    ExportAdminUsersParamsStatus = "active"
+	ExportAdminUsersParamsStatusSuspended ExportAdminUsersParamsStatus = "suspended"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminUsersParamsStatus enum.
+func (e ExportAdminUsersParamsStatus) Valid() bool {
+	switch e {
+	case ExportAdminUsersParamsStatusActive:
+		return true
+	case ExportAdminUsersParamsStatusSuspended:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExportAdminUsersParamsSortBy.
+const (
+	ExportAdminUsersParamsSortByAgentCount            ExportAdminUsersParamsSortBy = "agent_count"
+	ExportAdminUsersParamsSortByArtifactCount         ExportAdminUsersParamsSortBy = "artifact_count"
+	ExportAdminUsersParamsSortByAttachmentCount       ExportAdminUsersParamsSortBy = "attachment_count"
+	ExportAdminUsersParamsSortByBlueprintCount        ExportAdminUsersParamsSortBy = "blueprint_count"
+	ExportAdminUsersParamsSortByCommentCount          ExportAdminUsersParamsSortBy = "comment_count"
+	ExportAdminUsersParamsSortByCreatedAt             ExportAdminUsersParamsSortBy = "created_at"
+	ExportAdminUsersParamsSortByEmail                 ExportAdminUsersParamsSortBy = "email"
+	ExportAdminUsersParamsSortByFeedCount             ExportAdminUsersParamsSortBy = "feed_count"
+	ExportAdminUsersParamsSortByFeedItemCount         ExportAdminUsersParamsSortBy = "feed_item_count"
+	ExportAdminUsersParamsSortByLastResourceCreatedAt ExportAdminUsersParamsSortBy = "last_resource_created_at"
+	ExportAdminUsersParamsSortByMemoryCount           ExportAdminUsersParamsSortBy = "memory_count"
+	ExportAdminUsersParamsSortByName                  ExportAdminUsersParamsSortBy = "name"
+	ExportAdminUsersParamsSortByProjectCount          ExportAdminUsersParamsSortBy = "project_count"
+	ExportAdminUsersParamsSortByPromptCount           ExportAdminUsersParamsSortBy = "prompt_count"
+	ExportAdminUsersParamsSortByTeamCount             ExportAdminUsersParamsSortBy = "team_count"
+	ExportAdminUsersParamsSortByTotalResourceCount    ExportAdminUsersParamsSortBy = "total_resource_count"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminUsersParamsSortBy enum.
+func (e ExportAdminUsersParamsSortBy) Valid() bool {
+	switch e {
+	case ExportAdminUsersParamsSortByAgentCount:
+		return true
+	case ExportAdminUsersParamsSortByArtifactCount:
+		return true
+	case ExportAdminUsersParamsSortByAttachmentCount:
+		return true
+	case ExportAdminUsersParamsSortByBlueprintCount:
+		return true
+	case ExportAdminUsersParamsSortByCommentCount:
+		return true
+	case ExportAdminUsersParamsSortByCreatedAt:
+		return true
+	case ExportAdminUsersParamsSortByEmail:
+		return true
+	case ExportAdminUsersParamsSortByFeedCount:
+		return true
+	case ExportAdminUsersParamsSortByFeedItemCount:
+		return true
+	case ExportAdminUsersParamsSortByLastResourceCreatedAt:
+		return true
+	case ExportAdminUsersParamsSortByMemoryCount:
+		return true
+	case ExportAdminUsersParamsSortByName:
+		return true
+	case ExportAdminUsersParamsSortByProjectCount:
+		return true
+	case ExportAdminUsersParamsSortByPromptCount:
+		return true
+	case ExportAdminUsersParamsSortByTeamCount:
+		return true
+	case ExportAdminUsersParamsSortByTotalResourceCount:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExportAdminUsersParamsSortOrder.
+const (
+	ExportAdminUsersParamsSortOrderAsc  ExportAdminUsersParamsSortOrder = "asc"
+	ExportAdminUsersParamsSortOrderDesc ExportAdminUsersParamsSortOrder = "desc"
+)
+
+// Valid indicates whether the value is a known member of the ExportAdminUsersParamsSortOrder enum.
+func (e ExportAdminUsersParamsSortOrder) Valid() bool {
+	switch e {
+	case ExportAdminUsersParamsSortOrderAsc:
+		return true
+	case ExportAdminUsersParamsSortOrderDesc:
 		return true
 	default:
 		return false
@@ -2726,19 +2957,19 @@ func (e GetTeamTopAccessedResourcesParamsSource) Valid() bool {
 
 // Defines values for ListAgentsParamsStatus.
 const (
-	ListAgentsParamsStatusActive ListAgentsParamsStatus = "active"
-	ListAgentsParamsStatusError  ListAgentsParamsStatus = "error"
-	ListAgentsParamsStatusPaused ListAgentsParamsStatus = "paused"
+	Active ListAgentsParamsStatus = "active"
+	Error  ListAgentsParamsStatus = "error"
+	Paused ListAgentsParamsStatus = "paused"
 )
 
 // Valid indicates whether the value is a known member of the ListAgentsParamsStatus enum.
 func (e ListAgentsParamsStatus) Valid() bool {
 	switch e {
-	case ListAgentsParamsStatusActive:
+	case Active:
 		return true
-	case ListAgentsParamsStatusError:
+	case Error:
 		return true
-	case ListAgentsParamsStatusPaused:
+	case Paused:
 		return true
 	default:
 		return false
@@ -3332,22 +3563,22 @@ func (e ListPromptsParamsFreshness) Valid() bool {
 
 // Defines values for ListPromptsParamsSortBy.
 const (
-	ListPromptsParamsSortByCreatedAt ListPromptsParamsSortBy = "created_at"
-	ListPromptsParamsSortByName      ListPromptsParamsSortBy = "name"
-	ListPromptsParamsSortByStatus    ListPromptsParamsSortBy = "status"
-	ListPromptsParamsSortByUpdatedAt ListPromptsParamsSortBy = "updated_at"
+	CreatedAt ListPromptsParamsSortBy = "created_at"
+	Name      ListPromptsParamsSortBy = "name"
+	Status    ListPromptsParamsSortBy = "status"
+	UpdatedAt ListPromptsParamsSortBy = "updated_at"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsSortBy enum.
 func (e ListPromptsParamsSortBy) Valid() bool {
 	switch e {
-	case ListPromptsParamsSortByCreatedAt:
+	case CreatedAt:
 		return true
-	case ListPromptsParamsSortByName:
+	case Name:
 		return true
-	case ListPromptsParamsSortByStatus:
+	case Status:
 		return true
-	case ListPromptsParamsSortByUpdatedAt:
+	case UpdatedAt:
 		return true
 	default:
 		return false
@@ -3356,16 +3587,16 @@ func (e ListPromptsParamsSortBy) Valid() bool {
 
 // Defines values for ListPromptsParamsSortOrder.
 const (
-	ListPromptsParamsSortOrderAsc  ListPromptsParamsSortOrder = "asc"
-	ListPromptsParamsSortOrderDesc ListPromptsParamsSortOrder = "desc"
+	Asc  ListPromptsParamsSortOrder = "asc"
+	Desc ListPromptsParamsSortOrder = "desc"
 )
 
 // Valid indicates whether the value is a known member of the ListPromptsParamsSortOrder enum.
 func (e ListPromptsParamsSortOrder) Valid() bool {
 	switch e {
-	case ListPromptsParamsSortOrderAsc:
+	case Asc:
 		return true
-	case ListPromptsParamsSortOrderDesc:
+	case Desc:
 		return true
 	default:
 		return false
@@ -9359,6 +9590,84 @@ type ListAdminProjectsParamsSortBy string
 // ListAdminProjectsParamsSortOrder defines parameters for ListAdminProjects.
 type ListAdminProjectsParamsSortOrder string
 
+// ExportAdminProjectsParams defines parameters for ExportAdminProjects.
+type ExportAdminProjectsParams struct {
+	// Search Case-insensitive substring match over the project name and slug.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// TeamId Narrow to projects belonging to one team.
+	TeamId *openapi_types.UUID `form:"team_id,omitempty" json:"team_id,omitempty"`
+
+	// CreatedFrom Only projects created at or after this instant (inclusive).
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Only projects created at or before this instant (inclusive).
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// PromptCountMin Only projects with at least this many prompts in the project (inclusive).
+	PromptCountMin *int64 `form:"prompt_count_min,omitempty" json:"prompt_count_min,omitempty"`
+
+	// PromptCountMax Only projects with at most this many prompts in the project (inclusive).
+	PromptCountMax *int64 `form:"prompt_count_max,omitempty" json:"prompt_count_max,omitempty"`
+
+	// MemoryCountMin Only projects with at least this many memories in the project (inclusive).
+	MemoryCountMin *int64 `form:"memory_count_min,omitempty" json:"memory_count_min,omitempty"`
+
+	// MemoryCountMax Only projects with at most this many memories in the project (inclusive).
+	MemoryCountMax *int64 `form:"memory_count_max,omitempty" json:"memory_count_max,omitempty"`
+
+	// ArtifactCountMin Only projects with at least this many artifacts in the project (inclusive).
+	ArtifactCountMin *int64 `form:"artifact_count_min,omitempty" json:"artifact_count_min,omitempty"`
+
+	// ArtifactCountMax Only projects with at most this many artifacts in the project (inclusive).
+	ArtifactCountMax *int64 `form:"artifact_count_max,omitempty" json:"artifact_count_max,omitempty"`
+
+	// BlueprintCountMin Only projects with at least this many blueprints in the project (inclusive).
+	BlueprintCountMin *int64 `form:"blueprint_count_min,omitempty" json:"blueprint_count_min,omitempty"`
+
+	// BlueprintCountMax Only projects with at most this many blueprints in the project (inclusive).
+	BlueprintCountMax *int64 `form:"blueprint_count_max,omitempty" json:"blueprint_count_max,omitempty"`
+
+	// FeedItemCountMin Only projects with at least this many feed items in the project (inclusive).
+	FeedItemCountMin *int64 `form:"feed_item_count_min,omitempty" json:"feed_item_count_min,omitempty"`
+
+	// FeedItemCountMax Only projects with at most this many feed items in the project (inclusive).
+	FeedItemCountMax *int64 `form:"feed_item_count_max,omitempty" json:"feed_item_count_max,omitempty"`
+
+	// TotalResourceCountMin Only projects with at least this many project-scoped resources in the project (inclusive). The total is the sum of the five project-scoped types.
+	TotalResourceCountMin *int64 `form:"total_resource_count_min,omitempty" json:"total_resource_count_min,omitempty"`
+
+	// TotalResourceCountMax Only projects with at most this many project-scoped resources in the project (inclusive). The total is the sum of the five project-scoped types.
+	TotalResourceCountMax *int64 `form:"total_resource_count_max,omitempty" json:"total_resource_count_max,omitempty"`
+
+	// OwnerEmail Case-insensitive exact match on the email of the project's creator (`projects.user_id`, the `owner` field), not the owning team's owner. For substring matching on name/slug use `search`.
+	OwnerEmail *openapi_types.Email `form:"owner_email,omitempty" json:"owner_email,omitempty"`
+
+	// LastResourceCreatedFrom Only projects whose most recent project-scoped resource (any of the five
+	// types) was created at or after this instant (inclusive). Projects with
+	// no resources never match.
+	LastResourceCreatedFrom *time.Time `form:"last_resource_created_from,omitempty" json:"last_resource_created_from,omitempty"`
+
+	// LastResourceCreatedTo Only projects whose most recent project-scoped resource (any of the five
+	// types) was created at or before this instant (inclusive). Projects with
+	// no resources never match.
+	LastResourceCreatedTo *time.Time `form:"last_resource_created_to,omitempty" json:"last_resource_created_to,omitempty"`
+
+	// SortBy Column to sort by. Ties are always broken by project id so paging is stable.
+	// Sorting by last_resource_created_at places projects with no resources
+	// last in both directions.
+	SortBy *ExportAdminProjectsParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+
+	// SortOrder Sort direction.
+	SortOrder *ExportAdminProjectsParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
+}
+
+// ExportAdminProjectsParamsSortBy defines parameters for ExportAdminProjects.
+type ExportAdminProjectsParamsSortBy string
+
+// ExportAdminProjectsParamsSortOrder defines parameters for ExportAdminProjects.
+type ExportAdminProjectsParamsSortOrder string
+
 // GetAdminProjectResourceAccessMetricsParams defines parameters for GetAdminProjectResourceAccessMetrics.
 type GetAdminProjectResourceAccessMetricsParams struct {
 	// From Inclusive start of the range. Defaults to 30 days before `to`.
@@ -9542,6 +9851,141 @@ type ListAdminTeamsParamsSortBy string
 // ListAdminTeamsParamsSortOrder defines parameters for ListAdminTeams.
 type ListAdminTeamsParamsSortOrder string
 
+// ExportAdminTeamsParams defines parameters for ExportAdminTeams.
+type ExportAdminTeamsParams struct {
+	// Search Case-insensitive substring match over the team name, team slug, and the owner's email.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// IsPersonal Narrow to personal workspaces (true) or shared team workspaces (false).
+	IsPersonal *bool `form:"is_personal,omitempty" json:"is_personal,omitempty"`
+
+	// CreatedFrom Only teams created at or after this instant (inclusive).
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Only teams created at or before this instant (inclusive).
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// MemberCountMin Only teams with at least this many members (inclusive).
+	MemberCountMin *int64 `form:"member_count_min,omitempty" json:"member_count_min,omitempty"`
+
+	// MemberCountMax Only teams with at most this many members (inclusive).
+	MemberCountMax *int64 `form:"member_count_max,omitempty" json:"member_count_max,omitempty"`
+
+	// OwnerCountMin Only teams with at least this many members holding the owner role (always 1 by application invariant; any other value is integrity drift) (inclusive).
+	OwnerCountMin *int64 `form:"owner_count_min,omitempty" json:"owner_count_min,omitempty"`
+
+	// OwnerCountMax Only teams with at most this many members holding the owner role (always 1 by application invariant; any other value is integrity drift) (inclusive).
+	OwnerCountMax *int64 `form:"owner_count_max,omitempty" json:"owner_count_max,omitempty"`
+
+	// AdminCountMin Only teams with at least this many members holding the admin role (inclusive).
+	AdminCountMin *int64 `form:"admin_count_min,omitempty" json:"admin_count_min,omitempty"`
+
+	// AdminCountMax Only teams with at most this many members holding the admin role (inclusive).
+	AdminCountMax *int64 `form:"admin_count_max,omitempty" json:"admin_count_max,omitempty"`
+
+	// ProjectCountMin Only teams with at least this many projects in the team (inclusive).
+	ProjectCountMin *int64 `form:"project_count_min,omitempty" json:"project_count_min,omitempty"`
+
+	// ProjectCountMax Only teams with at most this many projects in the team (inclusive).
+	ProjectCountMax *int64 `form:"project_count_max,omitempty" json:"project_count_max,omitempty"`
+
+	// PromptCountMin Only teams with at least this many prompts in the team (inclusive).
+	PromptCountMin *int64 `form:"prompt_count_min,omitempty" json:"prompt_count_min,omitempty"`
+
+	// PromptCountMax Only teams with at most this many prompts in the team (inclusive).
+	PromptCountMax *int64 `form:"prompt_count_max,omitempty" json:"prompt_count_max,omitempty"`
+
+	// MemoryCountMin Only teams with at least this many memories in the team (inclusive).
+	MemoryCountMin *int64 `form:"memory_count_min,omitempty" json:"memory_count_min,omitempty"`
+
+	// MemoryCountMax Only teams with at most this many memories in the team (inclusive).
+	MemoryCountMax *int64 `form:"memory_count_max,omitempty" json:"memory_count_max,omitempty"`
+
+	// ArtifactCountMin Only teams with at least this many artifacts in the team (inclusive).
+	ArtifactCountMin *int64 `form:"artifact_count_min,omitempty" json:"artifact_count_min,omitempty"`
+
+	// ArtifactCountMax Only teams with at most this many artifacts in the team (inclusive).
+	ArtifactCountMax *int64 `form:"artifact_count_max,omitempty" json:"artifact_count_max,omitempty"`
+
+	// BlueprintCountMin Only teams with at least this many blueprints in the team (inclusive).
+	BlueprintCountMin *int64 `form:"blueprint_count_min,omitempty" json:"blueprint_count_min,omitempty"`
+
+	// BlueprintCountMax Only teams with at most this many blueprints in the team (inclusive).
+	BlueprintCountMax *int64 `form:"blueprint_count_max,omitempty" json:"blueprint_count_max,omitempty"`
+
+	// AgentCountMin Only teams with at least this many agents in the team (inclusive).
+	AgentCountMin *int64 `form:"agent_count_min,omitempty" json:"agent_count_min,omitempty"`
+
+	// AgentCountMax Only teams with at most this many agents in the team (inclusive).
+	AgentCountMax *int64 `form:"agent_count_max,omitempty" json:"agent_count_max,omitempty"`
+
+	// FeedCountMin Only teams with at least this many feeds in the team (inclusive).
+	FeedCountMin *int64 `form:"feed_count_min,omitempty" json:"feed_count_min,omitempty"`
+
+	// FeedCountMax Only teams with at most this many feeds in the team (inclusive).
+	FeedCountMax *int64 `form:"feed_count_max,omitempty" json:"feed_count_max,omitempty"`
+
+	// FeedItemCountMin Only teams with at least this many feed items in the team (inclusive).
+	FeedItemCountMin *int64 `form:"feed_item_count_min,omitempty" json:"feed_item_count_min,omitempty"`
+
+	// FeedItemCountMax Only teams with at most this many feed items in the team (inclusive).
+	FeedItemCountMax *int64 `form:"feed_item_count_max,omitempty" json:"feed_item_count_max,omitempty"`
+
+	// CommentCountMin Only teams with at least this many comments in the team (inclusive).
+	CommentCountMin *int64 `form:"comment_count_min,omitempty" json:"comment_count_min,omitempty"`
+
+	// CommentCountMax Only teams with at most this many comments in the team (inclusive).
+	CommentCountMax *int64 `form:"comment_count_max,omitempty" json:"comment_count_max,omitempty"`
+
+	// AttachmentCountMin Only teams with at least this many attachments in the team (inclusive).
+	AttachmentCountMin *int64 `form:"attachment_count_min,omitempty" json:"attachment_count_min,omitempty"`
+
+	// AttachmentCountMax Only teams with at most this many attachments in the team (inclusive).
+	AttachmentCountMax *int64 `form:"attachment_count_max,omitempty" json:"attachment_count_max,omitempty"`
+
+	// TotalResourceCountMin Only teams with at least this many resources in the team across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMin *int64 `form:"total_resource_count_min,omitempty" json:"total_resource_count_min,omitempty"`
+
+	// TotalResourceCountMax Only teams with at most this many resources in the team across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMax *int64 `form:"total_resource_count_max,omitempty" json:"total_resource_count_max,omitempty"`
+
+	// OwnerEmail Case-insensitive exact match on the team owner's email (the user referenced by the team's owner). For substring matching use `search`.
+	OwnerEmail *openapi_types.Email `form:"owner_email,omitempty" json:"owner_email,omitempty"`
+
+	// EmbeddingConfigured true = the team has at least one embedding provider of its own; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	EmbeddingConfigured *bool `form:"embedding_configured,omitempty" json:"embedding_configured,omitempty"`
+
+	// LlmConfigured true = the team has at least one LLM model provider of its own; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	LlmConfigured *bool `form:"llm_configured,omitempty" json:"llm_configured,omitempty"`
+
+	// AiSummaryEnabled true = the team has its own AI summary settings with summaries enabled; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	AiSummaryEnabled *bool `form:"ai_summary_enabled,omitempty" json:"ai_summary_enabled,omitempty"`
+
+	// EmailConfigured true = the team has its own email provider (regardless of its delivery health); false = it does not; omit = any. Instance-level fallback configuration never counts.
+	EmailConfigured *bool `form:"email_configured,omitempty" json:"email_configured,omitempty"`
+
+	// GithubConfigured true = the team has its own GitHub App configuration or at least one GitHub App installation (suspended installations included); false = it does not; omit = any. Instance-level fallback configuration never counts.
+	GithubConfigured *bool `form:"github_configured,omitempty" json:"github_configured,omitempty"`
+
+	// SearchSettingsCustomized true = the team has its own search settings; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	SearchSettingsCustomized *bool `form:"search_settings_customized,omitempty" json:"search_settings_customized,omitempty"`
+
+	// FreshnessEnabled true = the team has at least one enabled freshness rule; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	FreshnessEnabled *bool `form:"freshness_enabled,omitempty" json:"freshness_enabled,omitempty"`
+
+	// SortBy Column to sort by. Ties are always broken by team id so paging is stable.
+	SortBy *ExportAdminTeamsParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+
+	// SortOrder Sort direction.
+	SortOrder *ExportAdminTeamsParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
+}
+
+// ExportAdminTeamsParamsSortBy defines parameters for ExportAdminTeams.
+type ExportAdminTeamsParamsSortBy string
+
+// ExportAdminTeamsParamsSortOrder defines parameters for ExportAdminTeams.
+type ExportAdminTeamsParamsSortOrder string
+
 // ListAdminTeamSettingsAuditParams defines parameters for ListAdminTeamSettingsAudit.
 type ListAdminTeamSettingsAuditParams struct {
 	// Page Page number (1-based).
@@ -9671,6 +10115,121 @@ type ListAdminUsersParamsSortBy string
 
 // ListAdminUsersParamsSortOrder defines parameters for ListAdminUsers.
 type ListAdminUsersParamsSortOrder string
+
+// ExportAdminUsersParams defines parameters for ExportAdminUsers.
+type ExportAdminUsersParams struct {
+	// Search Case-insensitive substring match over the user's email and name.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// IdpProvider Exact match on the user's identity-provider name (e.g. "google", "oidc").
+	IdpProvider *string `form:"idp_provider,omitempty" json:"idp_provider,omitempty"`
+
+	// CreatedFrom Only users created at or after this instant (inclusive).
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Only users created at or before this instant (inclusive).
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// Status Narrow to accounts in this lifecycle state.
+	Status *ExportAdminUsersParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+
+	// TeamCountMin Only users with at least this many teams the user belongs to (inclusive).
+	TeamCountMin *int64 `form:"team_count_min,omitempty" json:"team_count_min,omitempty"`
+
+	// TeamCountMax Only users with at most this many teams the user belongs to (inclusive).
+	TeamCountMax *int64 `form:"team_count_max,omitempty" json:"team_count_max,omitempty"`
+
+	// ProjectCountMin Only users with at least this many projects the user created (inclusive).
+	ProjectCountMin *int64 `form:"project_count_min,omitempty" json:"project_count_min,omitempty"`
+
+	// ProjectCountMax Only users with at most this many projects the user created (inclusive).
+	ProjectCountMax *int64 `form:"project_count_max,omitempty" json:"project_count_max,omitempty"`
+
+	// PromptCountMin Only users with at least this many prompts the user authored (inclusive).
+	PromptCountMin *int64 `form:"prompt_count_min,omitempty" json:"prompt_count_min,omitempty"`
+
+	// PromptCountMax Only users with at most this many prompts the user authored (inclusive).
+	PromptCountMax *int64 `form:"prompt_count_max,omitempty" json:"prompt_count_max,omitempty"`
+
+	// MemoryCountMin Only users with at least this many memories the user authored (inclusive).
+	MemoryCountMin *int64 `form:"memory_count_min,omitempty" json:"memory_count_min,omitempty"`
+
+	// MemoryCountMax Only users with at most this many memories the user authored (inclusive).
+	MemoryCountMax *int64 `form:"memory_count_max,omitempty" json:"memory_count_max,omitempty"`
+
+	// ArtifactCountMin Only users with at least this many artifacts the user authored (inclusive).
+	ArtifactCountMin *int64 `form:"artifact_count_min,omitempty" json:"artifact_count_min,omitempty"`
+
+	// ArtifactCountMax Only users with at most this many artifacts the user authored (inclusive).
+	ArtifactCountMax *int64 `form:"artifact_count_max,omitempty" json:"artifact_count_max,omitempty"`
+
+	// BlueprintCountMin Only users with at least this many blueprints the user authored (inclusive).
+	BlueprintCountMin *int64 `form:"blueprint_count_min,omitempty" json:"blueprint_count_min,omitempty"`
+
+	// BlueprintCountMax Only users with at most this many blueprints the user authored (inclusive).
+	BlueprintCountMax *int64 `form:"blueprint_count_max,omitempty" json:"blueprint_count_max,omitempty"`
+
+	// AgentCountMin Only users with at least this many agents the user created (inclusive).
+	AgentCountMin *int64 `form:"agent_count_min,omitempty" json:"agent_count_min,omitempty"`
+
+	// AgentCountMax Only users with at most this many agents the user created (inclusive).
+	AgentCountMax *int64 `form:"agent_count_max,omitempty" json:"agent_count_max,omitempty"`
+
+	// FeedCountMin Only users with at least this many feeds the user created (inclusive).
+	FeedCountMin *int64 `form:"feed_count_min,omitempty" json:"feed_count_min,omitempty"`
+
+	// FeedCountMax Only users with at most this many feeds the user created (inclusive).
+	FeedCountMax *int64 `form:"feed_count_max,omitempty" json:"feed_count_max,omitempty"`
+
+	// FeedItemCountMin Only users with at least this many feed items the user posted (inclusive).
+	FeedItemCountMin *int64 `form:"feed_item_count_min,omitempty" json:"feed_item_count_min,omitempty"`
+
+	// FeedItemCountMax Only users with at most this many feed items the user posted (inclusive).
+	FeedItemCountMax *int64 `form:"feed_item_count_max,omitempty" json:"feed_item_count_max,omitempty"`
+
+	// CommentCountMin Only users with at least this many comments the user wrote (inclusive).
+	CommentCountMin *int64 `form:"comment_count_min,omitempty" json:"comment_count_min,omitempty"`
+
+	// CommentCountMax Only users with at most this many comments the user wrote (inclusive).
+	CommentCountMax *int64 `form:"comment_count_max,omitempty" json:"comment_count_max,omitempty"`
+
+	// AttachmentCountMin Only users with at least this many attachments the user uploaded (inclusive).
+	AttachmentCountMin *int64 `form:"attachment_count_min,omitempty" json:"attachment_count_min,omitempty"`
+
+	// AttachmentCountMax Only users with at most this many attachments the user uploaded (inclusive).
+	AttachmentCountMax *int64 `form:"attachment_count_max,omitempty" json:"attachment_count_max,omitempty"`
+
+	// TotalResourceCountMin Only users with at least this many resources the user authored across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMin *int64 `form:"total_resource_count_min,omitempty" json:"total_resource_count_min,omitempty"`
+
+	// TotalResourceCountMax Only users with at most this many resources the user authored across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMax *int64 `form:"total_resource_count_max,omitempty" json:"total_resource_count_max,omitempty"`
+
+	// LastResourceCreatedFrom Only users whose most recent resource (any of the nine types) was created
+	// at or after this instant (inclusive). Users with no resources never match.
+	LastResourceCreatedFrom *time.Time `form:"last_resource_created_from,omitempty" json:"last_resource_created_from,omitempty"`
+
+	// LastResourceCreatedTo Only users whose most recent resource (any of the nine types) was created
+	// at or before this instant (inclusive). Users with no resources never match.
+	LastResourceCreatedTo *time.Time `form:"last_resource_created_to,omitempty" json:"last_resource_created_to,omitempty"`
+
+	// SortBy Column to sort by. Ties are always broken by user id so paging is stable.
+	// Sorting by last_resource_created_at places users with no resources last
+	// in both directions.
+	SortBy *ExportAdminUsersParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
+
+	// SortOrder Sort direction.
+	SortOrder *ExportAdminUsersParamsSortOrder `form:"sort_order,omitempty" json:"sort_order,omitempty"`
+}
+
+// ExportAdminUsersParamsStatus defines parameters for ExportAdminUsers.
+type ExportAdminUsersParamsStatus string
+
+// ExportAdminUsersParamsSortBy defines parameters for ExportAdminUsers.
+type ExportAdminUsersParamsSortBy string
+
+// ExportAdminUsersParamsSortOrder defines parameters for ExportAdminUsers.
+type ExportAdminUsersParamsSortOrder string
 
 // GetAdminUserResourceAccessMetricsParams defines parameters for GetAdminUserResourceAccessMetrics.
 type GetAdminUserResourceAccessMetricsParams struct {

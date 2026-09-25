@@ -119,6 +119,9 @@ type ClientInterface interface {
 	// ListAdminProjects request
 	ListAdminProjects(ctx context.Context, params *ListAdminProjectsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ExportAdminProjects request
+	ExportAdminProjects(ctx context.Context, params *ExportAdminProjectsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminProject request
 	GetAdminProject(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -147,6 +150,9 @@ type ClientInterface interface {
 
 	// ListAdminTeams request
 	ListAdminTeams(ctx context.Context, params *ListAdminTeamsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExportAdminTeams request
+	ExportAdminTeams(ctx context.Context, params *ExportAdminTeamsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAdminTeam request
 	GetAdminTeam(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -185,6 +191,9 @@ type ClientInterface interface {
 	CreateAdminUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreateAdminUser(ctx context.Context, body CreateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExportAdminUsers request
+	ExportAdminUsers(ctx context.Context, params *ExportAdminUsersParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteAdminUser request
 	DeleteAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1213,6 +1222,18 @@ func (c *Client) ListAdminProjects(ctx context.Context, params *ListAdminProject
 	return c.Client.Do(req)
 }
 
+func (c *Client) ExportAdminProjects(ctx context.Context, params *ExportAdminProjectsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExportAdminProjectsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAdminProject(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAdminProjectRequest(c.Server, id)
 	if err != nil {
@@ -1323,6 +1344,18 @@ func (c *Client) GetAdminStats(ctx context.Context, reqEditors ...RequestEditorF
 
 func (c *Client) ListAdminTeams(ctx context.Context, params *ListAdminTeamsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAdminTeamsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExportAdminTeams(ctx context.Context, params *ExportAdminTeamsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExportAdminTeamsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1479,6 +1512,18 @@ func (c *Client) CreateAdminUserWithBody(ctx context.Context, contentType string
 
 func (c *Client) CreateAdminUser(ctx context.Context, body CreateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateAdminUserRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExportAdminUsers(ctx context.Context, params *ExportAdminUsersParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExportAdminUsersRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -6153,6 +6198,300 @@ func NewListAdminProjectsRequest(server string, params *ListAdminProjectsParams)
 	return req, nil
 }
 
+// NewExportAdminProjectsRequest generates requests for ExportAdminProjects
+func NewExportAdminProjectsRequest(server string, params *ExportAdminProjectsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/projects/export")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TeamId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "team_id", *params.TeamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_from", *params.CreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_to", *params.CreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_min", *params.PromptCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_max", *params.PromptCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_min", *params.MemoryCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_max", *params.MemoryCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_min", *params.ArtifactCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_max", *params.ArtifactCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_min", *params.BlueprintCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_max", *params.BlueprintCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_min", *params.FeedItemCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_max", *params.FeedItemCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_min", *params.TotalResourceCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_max", *params.TotalResourceCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.OwnerEmail != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "owner_email", *params.OwnerEmail, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "email"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LastResourceCreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "last_resource_created_from", *params.LastResourceCreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LastResourceCreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "last_resource_created_to", *params.LastResourceCreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_by", *params.SortBy, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortOrder != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_order", *params.SortOrder, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAdminProjectRequest generates requests for GetAdminProject
 func NewGetAdminProjectRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -6635,6 +6974,552 @@ func NewListAdminTeamsRequest(server string, params *ListAdminTeamsParams) (*htt
 			}
 
 		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.IsPersonal != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "is_personal", *params.IsPersonal, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_from", *params.CreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_to", *params.CreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemberCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "member_count_min", *params.MemberCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemberCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "member_count_max", *params.MemberCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.OwnerCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "owner_count_min", *params.OwnerCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.OwnerCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "owner_count_max", *params.OwnerCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AdminCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "admin_count_min", *params.AdminCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AdminCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "admin_count_max", *params.AdminCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ProjectCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_count_min", *params.ProjectCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ProjectCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_count_max", *params.ProjectCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_min", *params.PromptCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_max", *params.PromptCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_min", *params.MemoryCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_max", *params.MemoryCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_min", *params.ArtifactCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_max", *params.ArtifactCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_min", *params.BlueprintCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_max", *params.BlueprintCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AgentCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "agent_count_min", *params.AgentCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AgentCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "agent_count_max", *params.AgentCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_count_min", *params.FeedCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_count_max", *params.FeedCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_min", *params.FeedItemCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_max", *params.FeedItemCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CommentCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "comment_count_min", *params.CommentCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CommentCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "comment_count_max", *params.CommentCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AttachmentCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "attachment_count_min", *params.AttachmentCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AttachmentCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "attachment_count_max", *params.AttachmentCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_min", *params.TotalResourceCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_max", *params.TotalResourceCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.OwnerEmail != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "owner_email", *params.OwnerEmail, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "email"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.EmbeddingConfigured != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "embedding_configured", *params.EmbeddingConfigured, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LlmConfigured != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "llm_configured", *params.LlmConfigured, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AiSummaryEnabled != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "ai_summary_enabled", *params.AiSummaryEnabled, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.EmailConfigured != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "email_configured", *params.EmailConfigured, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.GithubConfigured != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "github_configured", *params.GithubConfigured, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SearchSettingsCustomized != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search_settings_customized", *params.SearchSettingsCustomized, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FreshnessEnabled != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness_enabled", *params.FreshnessEnabled, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_by", *params.SortBy, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortOrder != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_order", *params.SortOrder, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewExportAdminTeamsRequest generates requests for ExportAdminTeams
+func NewExportAdminTeamsRequest(server string, params *ExportAdminTeamsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/teams/export")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
 
 		if params.Search != nil {
 
@@ -8031,6 +8916,444 @@ func NewCreateAdminUserRequestWithBody(server string, contentType string, body i
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewExportAdminUsersRequest generates requests for ExportAdminUsers
+func NewExportAdminUsersRequest(server string, params *ExportAdminUsersParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/export")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.IdpProvider != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "idp_provider", *params.IdpProvider, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_from", *params.CreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_to", *params.CreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TeamCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "team_count_min", *params.TeamCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TeamCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "team_count_max", *params.TeamCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ProjectCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_count_min", *params.ProjectCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ProjectCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_count_max", *params.ProjectCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_min", *params.PromptCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_max", *params.PromptCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_min", *params.MemoryCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_max", *params.MemoryCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_min", *params.ArtifactCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_max", *params.ArtifactCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_min", *params.BlueprintCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_max", *params.BlueprintCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AgentCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "agent_count_min", *params.AgentCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AgentCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "agent_count_max", *params.AgentCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_count_min", *params.FeedCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_count_max", *params.FeedCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_min", *params.FeedItemCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_max", *params.FeedItemCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CommentCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "comment_count_min", *params.CommentCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CommentCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "comment_count_max", *params.CommentCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AttachmentCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "attachment_count_min", *params.AttachmentCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AttachmentCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "attachment_count_max", *params.AttachmentCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_min", *params.TotalResourceCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_max", *params.TotalResourceCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LastResourceCreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "last_resource_created_from", *params.LastResourceCreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LastResourceCreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "last_resource_created_to", *params.LastResourceCreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_by", *params.SortBy, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortOrder != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_order", *params.SortOrder, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -21045,6 +22368,9 @@ type ClientWithResponsesInterface interface {
 	// ListAdminProjectsWithResponse request
 	ListAdminProjectsWithResponse(ctx context.Context, params *ListAdminProjectsParams, reqEditors ...RequestEditorFn) (*ListAdminProjectsHTTPResponse, error)
 
+	// ExportAdminProjectsWithResponse request
+	ExportAdminProjectsWithResponse(ctx context.Context, params *ExportAdminProjectsParams, reqEditors ...RequestEditorFn) (*ExportAdminProjectsHTTPResponse, error)
+
 	// GetAdminProjectWithResponse request
 	GetAdminProjectWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminProjectHTTPResponse, error)
 
@@ -21073,6 +22399,9 @@ type ClientWithResponsesInterface interface {
 
 	// ListAdminTeamsWithResponse request
 	ListAdminTeamsWithResponse(ctx context.Context, params *ListAdminTeamsParams, reqEditors ...RequestEditorFn) (*ListAdminTeamsHTTPResponse, error)
+
+	// ExportAdminTeamsWithResponse request
+	ExportAdminTeamsWithResponse(ctx context.Context, params *ExportAdminTeamsParams, reqEditors ...RequestEditorFn) (*ExportAdminTeamsHTTPResponse, error)
 
 	// GetAdminTeamWithResponse request
 	GetAdminTeamWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamHTTPResponse, error)
@@ -21111,6 +22440,9 @@ type ClientWithResponsesInterface interface {
 	CreateAdminUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateAdminUserHTTPResponse, error)
 
 	CreateAdminUserWithResponse(ctx context.Context, body CreateAdminUserJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAdminUserHTTPResponse, error)
+
+	// ExportAdminUsersWithResponse request
+	ExportAdminUsersWithResponse(ctx context.Context, params *ExportAdminUsersParams, reqEditors ...RequestEditorFn) (*ExportAdminUsersHTTPResponse, error)
 
 	// DeleteAdminUserWithResponse request
 	DeleteAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAdminUserHTTPResponse, error)
@@ -22309,6 +23641,38 @@ func (r ListAdminProjectsHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ExportAdminProjectsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ExportAdminProjectsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExportAdminProjectsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ExportAdminProjectsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetAdminProjectHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -22600,6 +23964,38 @@ func (r ListAdminTeamsHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListAdminTeamsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ExportAdminTeamsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ExportAdminTeamsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExportAdminTeamsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ExportAdminTeamsHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -22996,6 +24392,38 @@ func (r CreateAdminUserHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r CreateAdminUserHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ExportAdminUsersHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ExportAdminUsersHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExportAdminUsersHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ExportAdminUsersHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -31532,6 +32960,15 @@ func (c *ClientWithResponses) ListAdminProjectsWithResponse(ctx context.Context,
 	return ParseListAdminProjectsHTTPResponse(rsp)
 }
 
+// ExportAdminProjectsWithResponse request returning *ExportAdminProjectsHTTPResponse
+func (c *ClientWithResponses) ExportAdminProjectsWithResponse(ctx context.Context, params *ExportAdminProjectsParams, reqEditors ...RequestEditorFn) (*ExportAdminProjectsHTTPResponse, error) {
+	rsp, err := c.ExportAdminProjects(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportAdminProjectsHTTPResponse(rsp)
+}
+
 // GetAdminProjectWithResponse request returning *GetAdminProjectHTTPResponse
 func (c *ClientWithResponses) GetAdminProjectWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminProjectHTTPResponse, error) {
 	rsp, err := c.GetAdminProject(ctx, id, reqEditors...)
@@ -31619,6 +33056,15 @@ func (c *ClientWithResponses) ListAdminTeamsWithResponse(ctx context.Context, pa
 		return nil, err
 	}
 	return ParseListAdminTeamsHTTPResponse(rsp)
+}
+
+// ExportAdminTeamsWithResponse request returning *ExportAdminTeamsHTTPResponse
+func (c *ClientWithResponses) ExportAdminTeamsWithResponse(ctx context.Context, params *ExportAdminTeamsParams, reqEditors ...RequestEditorFn) (*ExportAdminTeamsHTTPResponse, error) {
+	rsp, err := c.ExportAdminTeams(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportAdminTeamsHTTPResponse(rsp)
 }
 
 // GetAdminTeamWithResponse request returning *GetAdminTeamHTTPResponse
@@ -31735,6 +33181,15 @@ func (c *ClientWithResponses) CreateAdminUserWithResponse(ctx context.Context, b
 		return nil, err
 	}
 	return ParseCreateAdminUserHTTPResponse(rsp)
+}
+
+// ExportAdminUsersWithResponse request returning *ExportAdminUsersHTTPResponse
+func (c *ClientWithResponses) ExportAdminUsersWithResponse(ctx context.Context, params *ExportAdminUsersParams, reqEditors ...RequestEditorFn) (*ExportAdminUsersHTTPResponse, error) {
+	rsp, err := c.ExportAdminUsers(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportAdminUsersHTTPResponse(rsp)
 }
 
 // DeleteAdminUserWithResponse request returning *DeleteAdminUserHTTPResponse
@@ -34979,6 +36434,46 @@ func ParseListAdminProjectsHTTPResponse(rsp *http.Response) (*ListAdminProjectsH
 	return response, nil
 }
 
+// ParseExportAdminProjectsHTTPResponse parses an HTTP response from a ExportAdminProjectsWithResponse call
+func ParseExportAdminProjectsHTTPResponse(rsp *http.Response) (*ExportAdminProjectsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExportAdminProjectsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAdminProjectHTTPResponse parses an HTTP response from a GetAdminProjectWithResponse call
 func ParseGetAdminProjectHTTPResponse(rsp *http.Response) (*GetAdminProjectHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -35376,6 +36871,46 @@ func ParseListAdminTeamsHTTPResponse(rsp *http.Response) (*ListAdminTeamsHTTPRes
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExportAdminTeamsHTTPResponse parses an HTTP response from a ExportAdminTeamsWithResponse call
+func ParseExportAdminTeamsHTTPResponse(rsp *http.Response) (*ExportAdminTeamsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExportAdminTeamsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -35953,6 +37488,46 @@ func ParseCreateAdminUserHTTPResponse(rsp *http.Response) (*CreateAdminUserHTTPR
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExportAdminUsersHTTPResponse parses an HTTP response from a ExportAdminUsersWithResponse call
+func ParseExportAdminUsersHTTPResponse(rsp *http.Response) (*ExportAdminUsersHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExportAdminUsersHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
