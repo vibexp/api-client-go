@@ -78,6 +78,57 @@ func (e AdminTimeseriesResponseGranularity) Valid() bool {
 	}
 }
 
+// Defines values for AdminTopAccessedResourceResourceType.
+const (
+	AdminTopAccessedResourceResourceTypeAgent     AdminTopAccessedResourceResourceType = "agent"
+	AdminTopAccessedResourceResourceTypeArtifact  AdminTopAccessedResourceResourceType = "artifact"
+	AdminTopAccessedResourceResourceTypeBlueprint AdminTopAccessedResourceResourceType = "blueprint"
+	AdminTopAccessedResourceResourceTypeMemory    AdminTopAccessedResourceResourceType = "memory"
+	AdminTopAccessedResourceResourceTypeProject   AdminTopAccessedResourceResourceType = "project"
+	AdminTopAccessedResourceResourceTypePrompt    AdminTopAccessedResourceResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the AdminTopAccessedResourceResourceType enum.
+func (e AdminTopAccessedResourceResourceType) Valid() bool {
+	switch e {
+	case AdminTopAccessedResourceResourceTypeAgent:
+		return true
+	case AdminTopAccessedResourceResourceTypeArtifact:
+		return true
+	case AdminTopAccessedResourceResourceTypeBlueprint:
+		return true
+	case AdminTopAccessedResourceResourceTypeMemory:
+		return true
+	case AdminTopAccessedResourceResourceTypeProject:
+		return true
+	case AdminTopAccessedResourceResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserAccessMetricsGranularity.
+const (
+	AdminUserAccessMetricsGranularityDay   AdminUserAccessMetricsGranularity = "day"
+	AdminUserAccessMetricsGranularityMonth AdminUserAccessMetricsGranularity = "month"
+	AdminUserAccessMetricsGranularityWeek  AdminUserAccessMetricsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserAccessMetricsGranularity enum.
+func (e AdminUserAccessMetricsGranularity) Valid() bool {
+	switch e {
+	case AdminUserAccessMetricsGranularityDay:
+		return true
+	case AdminUserAccessMetricsGranularityMonth:
+		return true
+	case AdminUserAccessMetricsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminUserDetailStatus.
 const (
 	AdminUserDetailStatusActive    AdminUserDetailStatus = "active"
@@ -2238,6 +2289,27 @@ func (e ListAdminUsersParamsSortOrder) Valid() bool {
 	}
 }
 
+// Defines values for GetAdminUserResourceAccessMetricsParamsGranularity.
+const (
+	GetAdminUserResourceAccessMetricsParamsGranularityDay   GetAdminUserResourceAccessMetricsParamsGranularity = "day"
+	GetAdminUserResourceAccessMetricsParamsGranularityMonth GetAdminUserResourceAccessMetricsParamsGranularity = "month"
+	GetAdminUserResourceAccessMetricsParamsGranularityWeek  GetAdminUserResourceAccessMetricsParamsGranularity = "week"
+)
+
+// Valid indicates whether the value is a known member of the GetAdminUserResourceAccessMetricsParamsGranularity enum.
+func (e GetAdminUserResourceAccessMetricsParamsGranularity) Valid() bool {
+	switch e {
+	case GetAdminUserResourceAccessMetricsParamsGranularityDay:
+		return true
+	case GetAdminUserResourceAccessMetricsParamsGranularityMonth:
+		return true
+	case GetAdminUserResourceAccessMetricsParamsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetAdminUserResourceCreationMetricsParamsGranularity.
 const (
 	GetAdminUserResourceCreationMetricsParamsGranularityDay   GetAdminUserResourceCreationMetricsParamsGranularity = "day"
@@ -3623,6 +3695,73 @@ type AdminTimeseriesResponse struct {
 
 // AdminTimeseriesResponseGranularity Bucket size actually used.
 type AdminTimeseriesResponseGranularity string
+
+// AdminTopAccessedResource One opaque most-accessed resource: its type, where it lives and how often
+// the user accessed it. Deliberately carries no title, slug or content — only
+// the first 8 characters of the resource id. The identity fields share their
+// names with AdminUserTimelineEvent.
+type AdminTopAccessedResource struct {
+	AccessCount int64 `json:"access_count"`
+
+	// ProjectId The resource's project (for a `project` row, the project itself). Null
+	// for agents and for deleted resources.
+	ProjectId   *openapi_types.UUID `json:"project_id"`
+	ProjectName *string             `json:"project_name"`
+
+	// ResourceDeleted True when the resource no longer exists (access events outlive their resource until pruned).
+	ResourceDeleted bool `json:"resource_deleted"`
+
+	// ResourceShortId First 8 characters of the resource id.
+	ResourceShortId string                               `json:"resource_short_id"`
+	ResourceType    AdminTopAccessedResourceResourceType `json:"resource_type"`
+	TeamId          openapi_types.UUID                   `json:"team_id"`
+	TeamName        string                               `json:"team_name"`
+}
+
+// AdminTopAccessedResourceResourceType defines model for AdminTopAccessedResource.ResourceType.
+type AdminTopAccessedResourceResourceType string
+
+// AdminTopAccessedResourcesResponse The resources a user accessed most in a range
+// (GET /api/v1/admin/users/{id}/top-accessed-resources).
+type AdminTopAccessedResourcesResponse struct {
+	// EarliestRetainedAt Oldest access event still retained (now minus
+	// `retention.access_event_days`); accesses before it are not counted.
+	EarliestRetainedAt time.Time `json:"earliest_retained_at"`
+
+	// From Inclusive start of the range actually used (after defaulting); not snapped.
+	From time.Time `json:"from"`
+
+	// Items Most accessed first; ties broken by resource id.
+	Items []AdminTopAccessedResource `json:"items"`
+
+	// To Exclusive end of the range actually used (after defaulting).
+	To time.Time `json:"to"`
+}
+
+// AdminUserAccessMetrics Resource accesses by the user per bucket and source, across every team
+// (GET /api/v1/admin/users/{id}/resource-access-metrics). Every bucket in the
+// range is present with an explicit 0 for each source that appears.
+type AdminUserAccessMetrics struct {
+	// AccessBySource One point per (bucket, source), ascending by bucket then source.
+	AccessBySource []AdminSourcePoint `json:"access_by_source"`
+
+	// EarliestRetainedAt Oldest access event still retained (now minus
+	// `retention.access_event_days`); buckets before it read as zeros.
+	EarliestRetainedAt time.Time `json:"earliest_retained_at"`
+
+	// From Inclusive start of the range actually used, snapped DOWN to the start of
+	// its bucket (same rule as AdminTimeseriesResponse.from).
+	From time.Time `json:"from"`
+
+	// Granularity Bucket size actually used.
+	Granularity AdminUserAccessMetricsGranularity `json:"granularity"`
+
+	// To Exclusive end of the range actually used (after defaulting); not snapped.
+	To time.Time `json:"to"`
+}
+
+// AdminUserAccessMetricsGranularity Bucket size actually used.
+type AdminUserAccessMetricsGranularity string
 
 // AdminUserCreateRequest A user to create directly, without waiting for them to complete an
 // identity-provider sign-in. No password is set: VibeXP has no password
@@ -8485,6 +8624,21 @@ type ListAdminUsersParamsSortBy string
 // ListAdminUsersParamsSortOrder defines parameters for ListAdminUsers.
 type ListAdminUsersParamsSortOrder string
 
+// GetAdminUserResourceAccessMetricsParams defines parameters for GetAdminUserResourceAccessMetrics.
+type GetAdminUserResourceAccessMetricsParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Granularity Bucket size.
+	Granularity *GetAdminUserResourceAccessMetricsParamsGranularity `form:"granularity,omitempty" json:"granularity,omitempty"`
+}
+
+// GetAdminUserResourceAccessMetricsParamsGranularity defines parameters for GetAdminUserResourceAccessMetrics.
+type GetAdminUserResourceAccessMetricsParamsGranularity string
+
 // GetAdminUserResourceCreationMetricsParams defines parameters for GetAdminUserResourceCreationMetrics.
 type GetAdminUserResourceCreationMetricsParams struct {
 	// From Inclusive start of the range. Defaults to 30 days before `to`.
@@ -8506,6 +8660,18 @@ type GetAdminUserTimelineParams struct {
 	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
 
 	// Limit Page size.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// GetAdminUserTopAccessedResourcesParams defines parameters for GetAdminUserTopAccessedResources.
+type GetAdminUserTopAccessedResourcesParams struct {
+	// From Inclusive start of the range. Defaults to 30 days before `to`.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive end of the range. Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Limit Maximum number of rows.
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 

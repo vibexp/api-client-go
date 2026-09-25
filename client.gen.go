@@ -159,6 +159,9 @@ type ClientInterface interface {
 	// ReactivateAdminUser request
 	ReactivateAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAdminUserResourceAccessMetrics request
+	GetAdminUserResourceAccessMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminUserResourceCreationMetrics request
 	GetAdminUserResourceCreationMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -167,6 +170,9 @@ type ClientInterface interface {
 
 	// GetAdminUserTimeline request
 	GetAdminUserTimeline(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminUserTopAccessedResources request
+	GetAdminUserTopAccessedResources(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListAPIKeys request
 	ListAPIKeys(ctx context.Context, params *ListAPIKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1328,6 +1334,18 @@ func (c *Client) ReactivateAdminUser(ctx context.Context, id openapi_types.UUID,
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetAdminUserResourceAccessMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminUserResourceAccessMetricsRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAdminUserResourceCreationMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAdminUserResourceCreationMetricsRequest(c.Server, id, params)
 	if err != nil {
@@ -1354,6 +1372,18 @@ func (c *Client) SuspendAdminUser(ctx context.Context, id openapi_types.UUID, re
 
 func (c *Client) GetAdminUserTimeline(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAdminUserTimelineRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminUserTopAccessedResources(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminUserTopAccessedResourcesRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -6656,6 +6686,91 @@ func NewReactivateAdminUserRequest(server string, id openapi_types.UUID) (*http.
 	return req, nil
 }
 
+// NewGetAdminUserResourceAccessMetricsRequest generates requests for GetAdminUserResourceAccessMetrics
+func NewGetAdminUserResourceAccessMetricsRequest(server string, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/resource-access-metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Granularity != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "granularity", *params.Granularity, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAdminUserResourceCreationMetricsRequest generates requests for GetAdminUserResourceCreationMetrics
 func NewGetAdminUserResourceCreationMetricsRequest(server string, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams) (*http.Request, error) {
 	var err error
@@ -6813,6 +6928,91 @@ func NewGetAdminUserTimelineRequest(server string, id openapi_types.UUID, params
 		if params.Cursor != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminUserTopAccessedResourcesRequest generates requests for GetAdminUserTopAccessedResources
+func NewGetAdminUserTopAccessedResourcesRequest(server string, id openapi_types.UUID, params *GetAdminUserTopAccessedResourcesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/top-accessed-resources", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
 				return nil, err
 			} else {
 				for _, qp := range strings.Split(queryFrag, "&") {
@@ -19319,6 +19519,9 @@ type ClientWithResponsesInterface interface {
 	// ReactivateAdminUserWithResponse request
 	ReactivateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReactivateAdminUserHTTPResponse, error)
 
+	// GetAdminUserResourceAccessMetricsWithResponse request
+	GetAdminUserResourceAccessMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceAccessMetricsHTTPResponse, error)
+
 	// GetAdminUserResourceCreationMetricsWithResponse request
 	GetAdminUserResourceCreationMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceCreationMetricsHTTPResponse, error)
 
@@ -19327,6 +19530,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetAdminUserTimelineWithResponse request
 	GetAdminUserTimelineWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTimelineParams, reqEditors ...RequestEditorFn) (*GetAdminUserTimelineHTTPResponse, error)
+
+	// GetAdminUserTopAccessedResourcesWithResponse request
+	GetAdminUserTopAccessedResourcesWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*GetAdminUserTopAccessedResourcesHTTPResponse, error)
 
 	// ListAPIKeysWithResponse request
 	ListAPIKeysWithResponse(ctx context.Context, params *ListAPIKeysParams, reqEditors ...RequestEditorFn) (*ListAPIKeysHTTPResponse, error)
@@ -20884,6 +21090,39 @@ func (r ReactivateAdminUserHTTPResponse) ContentType() string {
 	return ""
 }
 
+type GetAdminUserResourceAccessMetricsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserAccessMetrics
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminUserResourceAccessMetricsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminUserResourceAccessMetricsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminUserResourceAccessMetricsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetAdminUserResourceCreationMetricsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -20978,6 +21217,39 @@ func (r GetAdminUserTimelineHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetAdminUserTimelineHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminUserTopAccessedResourcesHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminTopAccessedResourcesResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminUserTopAccessedResourcesHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminUserTopAccessedResourcesHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminUserTopAccessedResourcesHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -29275,6 +29547,15 @@ func (c *ClientWithResponses) ReactivateAdminUserWithResponse(ctx context.Contex
 	return ParseReactivateAdminUserHTTPResponse(rsp)
 }
 
+// GetAdminUserResourceAccessMetricsWithResponse request returning *GetAdminUserResourceAccessMetricsHTTPResponse
+func (c *ClientWithResponses) GetAdminUserResourceAccessMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceAccessMetricsHTTPResponse, error) {
+	rsp, err := c.GetAdminUserResourceAccessMetrics(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminUserResourceAccessMetricsHTTPResponse(rsp)
+}
+
 // GetAdminUserResourceCreationMetricsWithResponse request returning *GetAdminUserResourceCreationMetricsHTTPResponse
 func (c *ClientWithResponses) GetAdminUserResourceCreationMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceCreationMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceCreationMetricsHTTPResponse, error) {
 	rsp, err := c.GetAdminUserResourceCreationMetrics(ctx, id, params, reqEditors...)
@@ -29300,6 +29581,15 @@ func (c *ClientWithResponses) GetAdminUserTimelineWithResponse(ctx context.Conte
 		return nil, err
 	}
 	return ParseGetAdminUserTimelineHTTPResponse(rsp)
+}
+
+// GetAdminUserTopAccessedResourcesWithResponse request returning *GetAdminUserTopAccessedResourcesHTTPResponse
+func (c *ClientWithResponses) GetAdminUserTopAccessedResourcesWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*GetAdminUserTopAccessedResourcesHTTPResponse, error) {
+	rsp, err := c.GetAdminUserTopAccessedResources(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminUserTopAccessedResourcesHTTPResponse(rsp)
 }
 
 // ListAPIKeysWithResponse request returning *ListAPIKeysHTTPResponse
@@ -32987,6 +33277,53 @@ func ParseReactivateAdminUserHTTPResponse(rsp *http.Response) (*ReactivateAdminU
 	return response, nil
 }
 
+// ParseGetAdminUserResourceAccessMetricsHTTPResponse parses an HTTP response from a GetAdminUserResourceAccessMetricsWithResponse call
+func ParseGetAdminUserResourceAccessMetricsHTTPResponse(rsp *http.Response) (*GetAdminUserResourceAccessMetricsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminUserResourceAccessMetricsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserAccessMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAdminUserResourceCreationMetricsHTTPResponse parses an HTTP response from a GetAdminUserResourceCreationMetricsWithResponse call
 func ParseGetAdminUserResourceCreationMetricsHTTPResponse(rsp *http.Response) (*GetAdminUserResourceCreationMetricsHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -33104,6 +33441,53 @@ func ParseGetAdminUserTimelineHTTPResponse(rsp *http.Response) (*GetAdminUserTim
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest AdminUserTimelinePage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminUserTopAccessedResourcesHTTPResponse parses an HTTP response from a GetAdminUserTopAccessedResourcesWithResponse call
+func ParseGetAdminUserTopAccessedResourcesHTTPResponse(rsp *http.Response) (*GetAdminUserTopAccessedResourcesHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminUserTopAccessedResourcesHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminTopAccessedResourcesResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
