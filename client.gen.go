@@ -5831,6 +5831,186 @@ func NewListAdminProjectsRequest(server string, params *ListAdminProjectsParams)
 
 		}
 
+		if params.PromptCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_min", *params.PromptCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PromptCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "prompt_count_max", *params.PromptCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_min", *params.MemoryCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.MemoryCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "memory_count_max", *params.MemoryCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_min", *params.ArtifactCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ArtifactCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_count_max", *params.ArtifactCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_min", *params.BlueprintCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.BlueprintCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "blueprint_count_max", *params.BlueprintCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_min", *params.FeedItemCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.FeedItemCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "feed_item_count_max", *params.FeedItemCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_min", *params.TotalResourceCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TotalResourceCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "total_resource_count_max", *params.TotalResourceCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.OwnerEmail != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "owner_email", *params.OwnerEmail, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "email"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LastResourceCreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "last_resource_created_from", *params.LastResourceCreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.LastResourceCreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "last_resource_created_to", *params.LastResourceCreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.SortBy != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sort_by", *params.SortBy, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
