@@ -2156,19 +2156,58 @@ func (e ListAdminProjectsParamsSortOrder) Valid() bool {
 
 // Defines values for ListAdminTeamsParamsSortBy.
 const (
-	ListAdminTeamsParamsSortByCreatedAt   ListAdminTeamsParamsSortBy = "created_at"
-	ListAdminTeamsParamsSortByMemberCount ListAdminTeamsParamsSortBy = "member_count"
-	ListAdminTeamsParamsSortByName        ListAdminTeamsParamsSortBy = "name"
+	ListAdminTeamsParamsSortByAdminCount         ListAdminTeamsParamsSortBy = "admin_count"
+	ListAdminTeamsParamsSortByAgentCount         ListAdminTeamsParamsSortBy = "agent_count"
+	ListAdminTeamsParamsSortByArtifactCount      ListAdminTeamsParamsSortBy = "artifact_count"
+	ListAdminTeamsParamsSortByAttachmentCount    ListAdminTeamsParamsSortBy = "attachment_count"
+	ListAdminTeamsParamsSortByBlueprintCount     ListAdminTeamsParamsSortBy = "blueprint_count"
+	ListAdminTeamsParamsSortByCommentCount       ListAdminTeamsParamsSortBy = "comment_count"
+	ListAdminTeamsParamsSortByCreatedAt          ListAdminTeamsParamsSortBy = "created_at"
+	ListAdminTeamsParamsSortByFeedCount          ListAdminTeamsParamsSortBy = "feed_count"
+	ListAdminTeamsParamsSortByFeedItemCount      ListAdminTeamsParamsSortBy = "feed_item_count"
+	ListAdminTeamsParamsSortByMemberCount        ListAdminTeamsParamsSortBy = "member_count"
+	ListAdminTeamsParamsSortByMemoryCount        ListAdminTeamsParamsSortBy = "memory_count"
+	ListAdminTeamsParamsSortByName               ListAdminTeamsParamsSortBy = "name"
+	ListAdminTeamsParamsSortByOwnerCount         ListAdminTeamsParamsSortBy = "owner_count"
+	ListAdminTeamsParamsSortByProjectCount       ListAdminTeamsParamsSortBy = "project_count"
+	ListAdminTeamsParamsSortByPromptCount        ListAdminTeamsParamsSortBy = "prompt_count"
+	ListAdminTeamsParamsSortByTotalResourceCount ListAdminTeamsParamsSortBy = "total_resource_count"
 )
 
 // Valid indicates whether the value is a known member of the ListAdminTeamsParamsSortBy enum.
 func (e ListAdminTeamsParamsSortBy) Valid() bool {
 	switch e {
+	case ListAdminTeamsParamsSortByAdminCount:
+		return true
+	case ListAdminTeamsParamsSortByAgentCount:
+		return true
+	case ListAdminTeamsParamsSortByArtifactCount:
+		return true
+	case ListAdminTeamsParamsSortByAttachmentCount:
+		return true
+	case ListAdminTeamsParamsSortByBlueprintCount:
+		return true
+	case ListAdminTeamsParamsSortByCommentCount:
+		return true
 	case ListAdminTeamsParamsSortByCreatedAt:
+		return true
+	case ListAdminTeamsParamsSortByFeedCount:
+		return true
+	case ListAdminTeamsParamsSortByFeedItemCount:
 		return true
 	case ListAdminTeamsParamsSortByMemberCount:
 		return true
+	case ListAdminTeamsParamsSortByMemoryCount:
+		return true
 	case ListAdminTeamsParamsSortByName:
+		return true
+	case ListAdminTeamsParamsSortByOwnerCount:
+		return true
+	case ListAdminTeamsParamsSortByProjectCount:
+		return true
+	case ListAdminTeamsParamsSortByPromptCount:
+		return true
+	case ListAdminTeamsParamsSortByTotalResourceCount:
 		return true
 	default:
 		return false
@@ -3519,10 +3558,11 @@ type AdminProjectTeam struct {
 	Slug string             `json:"slug"`
 }
 
-// AdminResourceCounts How many resources of each type a user authored, counted by the author
-// column of each table (feeds by creator, feed items by poster). Every row
-// counts regardless of its status or archive state. `total` is the sum of the
-// nine types.
+// AdminResourceCounts How many resources of each type belong to the listed row. On a user row
+// these are the resources the user authored, counted by the author column of
+// each table (feeds by creator, feed items by poster); on a team row they are
+// the resources in the team, counted by team_id. Every row counts regardless
+// of its status or archive state. `total` is the sum of the nine types.
 type AdminResourceCounts struct {
 	Agents      int64 `json:"agents"`
 	Artifacts   int64 `json:"artifacts"`
@@ -3575,6 +3615,32 @@ type AdminTableStat struct {
 	Table         string `json:"table"`
 }
 
+// AdminTeamConfiguration Which settings a team has configured itself. Each flag reflects the team's
+// OWN rows only; instance-level fallback configuration (config.yaml) never
+// counts as configured.
+type AdminTeamConfiguration struct {
+	// AiSummaryEnabled The team has its own AI summary settings with summaries enabled.
+	AiSummaryEnabled bool `json:"ai_summary_enabled"`
+
+	// EmailConfigured The team has its own email provider, regardless of its delivery health.
+	EmailConfigured bool `json:"email_configured"`
+
+	// EmbeddingConfigured The team has at least one embedding provider of its own.
+	EmbeddingConfigured bool `json:"embedding_configured"`
+
+	// FreshnessEnabled The team has at least one enabled freshness rule.
+	FreshnessEnabled bool `json:"freshness_enabled"`
+
+	// GithubConfigured The team has its own GitHub App configuration or at least one GitHub App installation (suspended installations included).
+	GithubConfigured bool `json:"github_configured"`
+
+	// LlmConfigured The team has at least one LLM model provider of its own.
+	LlmConfigured bool `json:"llm_configured"`
+
+	// SearchSettingsCustomized The team has its own search settings.
+	SearchSettingsCustomized bool `json:"search_settings_customized"`
+}
+
 // AdminTeamDetail A single team with its owner and member list (GET /api/v1/admin/teams/{id}).
 type AdminTeamDetail struct {
 	CreatedAt time.Time          `json:"created_at"`
@@ -3598,8 +3664,15 @@ type AdminTeamDetail struct {
 
 // AdminTeamListItem One team in the instance-wide admin team listing.
 type AdminTeamListItem struct {
-	CreatedAt time.Time          `json:"created_at"`
-	Id        openapi_types.UUID `json:"id"`
+	// AdminCount Number of members holding the admin role.
+	AdminCount int64 `json:"admin_count"`
+
+	// Configuration Which settings a team has configured itself. Each flag reflects the team's
+	// OWN rows only; instance-level fallback configuration (config.yaml) never
+	// counts as configured.
+	Configuration AdminTeamConfiguration `json:"configuration"`
+	CreatedAt     time.Time              `json:"created_at"`
+	Id            openapi_types.UUID     `json:"id"`
 
 	// IsPersonal True for a user's default personal workspace, false for a shared team workspace.
 	IsPersonal bool `json:"is_personal"`
@@ -3612,6 +3685,19 @@ type AdminTeamListItem struct {
 	// the creator of a project (#453). The shape is id/email/name in both cases;
 	// which relationship it represents is stated on the referencing property.
 	Owner AdminTeamOwner `json:"owner"`
+
+	// OwnerCount Number of members holding the owner role. Always 1 by application invariant; any other value signals integrity drift.
+	OwnerCount int64 `json:"owner_count"`
+
+	// ProjectCount Number of projects in the team.
+	ProjectCount int64 `json:"project_count"`
+
+	// ResourceCounts How many resources of each type belong to the listed row. On a user row
+	// these are the resources the user authored, counted by the author column of
+	// each table (feeds by creator, feed items by poster); on a team row they are
+	// the resources in the team, counted by team_id. Every row counts regardless
+	// of its status or archive state. `total` is the sum of the nine types.
+	ResourceCounts AdminResourceCounts `json:"resource_counts"`
 
 	// Slug URL-safe team identifier.
 	Slug string `json:"slug"`
@@ -3837,10 +3923,11 @@ type AdminUserInsights struct {
 	// Teams Teams the user authored at least one resource in, ordered by team name.
 	Teams []AdminUserTeamResourceCounts `json:"teams"`
 
-	// Totals How many resources of each type a user authored, counted by the author
-	// column of each table (feeds by creator, feed items by poster). Every row
-	// counts regardless of its status or archive state. `total` is the sum of the
-	// nine types.
+	// Totals How many resources of each type belong to the listed row. On a user row
+	// these are the resources the user authored, counted by the author column of
+	// each table (feeds by creator, feed items by poster); on a team row they are
+	// the resources in the team, counted by team_id. Every row counts regardless
+	// of its status or archive state. `total` is the sum of the nine types.
 	Totals AdminResourceCounts `json:"totals"`
 	UserId openapi_types.UUID  `json:"user_id"`
 }
@@ -3862,10 +3949,11 @@ type AdminUserListItem struct {
 	// ProjectCount Number of projects the user created.
 	ProjectCount int64 `json:"project_count"`
 
-	// ResourceCounts How many resources of each type a user authored, counted by the author
-	// column of each table (feeds by creator, feed items by poster). Every row
-	// counts regardless of its status or archive state. `total` is the sum of the
-	// nine types.
+	// ResourceCounts How many resources of each type belong to the listed row. On a user row
+	// these are the resources the user authored, counted by the author column of
+	// each table (feeds by creator, feed items by poster); on a team row they are
+	// the resources in the team, counted by team_id. Every row counts regardless
+	// of its status or archive state. `total` is the sum of the nine types.
 	ResourceCounts AdminResourceCounts `json:"resource_counts"`
 
 	// Status Account lifecycle. A suspended account is rejected at every
@@ -3955,10 +4043,11 @@ type AdminUserResourceCreationMetricsGranularity string
 
 // AdminUserTeamResourceCounts How many resources the user authored in one team, with the per-project breakdown.
 type AdminUserTeamResourceCounts struct {
-	// Counts How many resources of each type a user authored, counted by the author
-	// column of each table (feeds by creator, feed items by poster). Every row
-	// counts regardless of its status or archive state. `total` is the sum of the
-	// nine types.
+	// Counts How many resources of each type belong to the listed row. On a user row
+	// these are the resources the user authored, counted by the author column of
+	// each table (feeds by creator, feed items by poster); on a team row they are
+	// the resources in the team, counted by team_id. Every row counts regardless
+	// of its status or archive state. `total` is the sum of the nine types.
 	Counts AdminResourceCounts `json:"counts"`
 
 	// IsMember Whether the user is still a member of the team. A former member's
@@ -8489,6 +8578,114 @@ type ListAdminTeamsParams struct {
 
 	// CreatedTo Only teams created at or before this instant (inclusive).
 	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// MemberCountMin Only teams with at least this many members (inclusive).
+	MemberCountMin *int64 `form:"member_count_min,omitempty" json:"member_count_min,omitempty"`
+
+	// MemberCountMax Only teams with at most this many members (inclusive).
+	MemberCountMax *int64 `form:"member_count_max,omitempty" json:"member_count_max,omitempty"`
+
+	// OwnerCountMin Only teams with at least this many members holding the owner role (always 1 by application invariant; any other value is integrity drift) (inclusive).
+	OwnerCountMin *int64 `form:"owner_count_min,omitempty" json:"owner_count_min,omitempty"`
+
+	// OwnerCountMax Only teams with at most this many members holding the owner role (always 1 by application invariant; any other value is integrity drift) (inclusive).
+	OwnerCountMax *int64 `form:"owner_count_max,omitempty" json:"owner_count_max,omitempty"`
+
+	// AdminCountMin Only teams with at least this many members holding the admin role (inclusive).
+	AdminCountMin *int64 `form:"admin_count_min,omitempty" json:"admin_count_min,omitempty"`
+
+	// AdminCountMax Only teams with at most this many members holding the admin role (inclusive).
+	AdminCountMax *int64 `form:"admin_count_max,omitempty" json:"admin_count_max,omitempty"`
+
+	// ProjectCountMin Only teams with at least this many projects in the team (inclusive).
+	ProjectCountMin *int64 `form:"project_count_min,omitempty" json:"project_count_min,omitempty"`
+
+	// ProjectCountMax Only teams with at most this many projects in the team (inclusive).
+	ProjectCountMax *int64 `form:"project_count_max,omitempty" json:"project_count_max,omitempty"`
+
+	// PromptCountMin Only teams with at least this many prompts in the team (inclusive).
+	PromptCountMin *int64 `form:"prompt_count_min,omitempty" json:"prompt_count_min,omitempty"`
+
+	// PromptCountMax Only teams with at most this many prompts in the team (inclusive).
+	PromptCountMax *int64 `form:"prompt_count_max,omitempty" json:"prompt_count_max,omitempty"`
+
+	// MemoryCountMin Only teams with at least this many memories in the team (inclusive).
+	MemoryCountMin *int64 `form:"memory_count_min,omitempty" json:"memory_count_min,omitempty"`
+
+	// MemoryCountMax Only teams with at most this many memories in the team (inclusive).
+	MemoryCountMax *int64 `form:"memory_count_max,omitempty" json:"memory_count_max,omitempty"`
+
+	// ArtifactCountMin Only teams with at least this many artifacts in the team (inclusive).
+	ArtifactCountMin *int64 `form:"artifact_count_min,omitempty" json:"artifact_count_min,omitempty"`
+
+	// ArtifactCountMax Only teams with at most this many artifacts in the team (inclusive).
+	ArtifactCountMax *int64 `form:"artifact_count_max,omitempty" json:"artifact_count_max,omitempty"`
+
+	// BlueprintCountMin Only teams with at least this many blueprints in the team (inclusive).
+	BlueprintCountMin *int64 `form:"blueprint_count_min,omitempty" json:"blueprint_count_min,omitempty"`
+
+	// BlueprintCountMax Only teams with at most this many blueprints in the team (inclusive).
+	BlueprintCountMax *int64 `form:"blueprint_count_max,omitempty" json:"blueprint_count_max,omitempty"`
+
+	// AgentCountMin Only teams with at least this many agents in the team (inclusive).
+	AgentCountMin *int64 `form:"agent_count_min,omitempty" json:"agent_count_min,omitempty"`
+
+	// AgentCountMax Only teams with at most this many agents in the team (inclusive).
+	AgentCountMax *int64 `form:"agent_count_max,omitempty" json:"agent_count_max,omitempty"`
+
+	// FeedCountMin Only teams with at least this many feeds in the team (inclusive).
+	FeedCountMin *int64 `form:"feed_count_min,omitempty" json:"feed_count_min,omitempty"`
+
+	// FeedCountMax Only teams with at most this many feeds in the team (inclusive).
+	FeedCountMax *int64 `form:"feed_count_max,omitempty" json:"feed_count_max,omitempty"`
+
+	// FeedItemCountMin Only teams with at least this many feed items in the team (inclusive).
+	FeedItemCountMin *int64 `form:"feed_item_count_min,omitempty" json:"feed_item_count_min,omitempty"`
+
+	// FeedItemCountMax Only teams with at most this many feed items in the team (inclusive).
+	FeedItemCountMax *int64 `form:"feed_item_count_max,omitempty" json:"feed_item_count_max,omitempty"`
+
+	// CommentCountMin Only teams with at least this many comments in the team (inclusive).
+	CommentCountMin *int64 `form:"comment_count_min,omitempty" json:"comment_count_min,omitempty"`
+
+	// CommentCountMax Only teams with at most this many comments in the team (inclusive).
+	CommentCountMax *int64 `form:"comment_count_max,omitempty" json:"comment_count_max,omitempty"`
+
+	// AttachmentCountMin Only teams with at least this many attachments in the team (inclusive).
+	AttachmentCountMin *int64 `form:"attachment_count_min,omitempty" json:"attachment_count_min,omitempty"`
+
+	// AttachmentCountMax Only teams with at most this many attachments in the team (inclusive).
+	AttachmentCountMax *int64 `form:"attachment_count_max,omitempty" json:"attachment_count_max,omitempty"`
+
+	// TotalResourceCountMin Only teams with at least this many resources in the team across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMin *int64 `form:"total_resource_count_min,omitempty" json:"total_resource_count_min,omitempty"`
+
+	// TotalResourceCountMax Only teams with at most this many resources in the team across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMax *int64 `form:"total_resource_count_max,omitempty" json:"total_resource_count_max,omitempty"`
+
+	// OwnerEmail Case-insensitive exact match on the team owner's email (the user referenced by the team's owner). For substring matching use `search`.
+	OwnerEmail *openapi_types.Email `form:"owner_email,omitempty" json:"owner_email,omitempty"`
+
+	// EmbeddingConfigured true = the team has at least one embedding provider of its own; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	EmbeddingConfigured *bool `form:"embedding_configured,omitempty" json:"embedding_configured,omitempty"`
+
+	// LlmConfigured true = the team has at least one LLM model provider of its own; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	LlmConfigured *bool `form:"llm_configured,omitempty" json:"llm_configured,omitempty"`
+
+	// AiSummaryEnabled true = the team has its own AI summary settings with summaries enabled; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	AiSummaryEnabled *bool `form:"ai_summary_enabled,omitempty" json:"ai_summary_enabled,omitempty"`
+
+	// EmailConfigured true = the team has its own email provider (regardless of its delivery health); false = it does not; omit = any. Instance-level fallback configuration never counts.
+	EmailConfigured *bool `form:"email_configured,omitempty" json:"email_configured,omitempty"`
+
+	// GithubConfigured true = the team has its own GitHub App configuration or at least one GitHub App installation (suspended installations included); false = it does not; omit = any. Instance-level fallback configuration never counts.
+	GithubConfigured *bool `form:"github_configured,omitempty" json:"github_configured,omitempty"`
+
+	// SearchSettingsCustomized true = the team has its own search settings; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	SearchSettingsCustomized *bool `form:"search_settings_customized,omitempty" json:"search_settings_customized,omitempty"`
+
+	// FreshnessEnabled true = the team has at least one enabled freshness rule; false = it does not; omit = any. Instance-level fallback configuration never counts.
+	FreshnessEnabled *bool `form:"freshness_enabled,omitempty" json:"freshness_enabled,omitempty"`
 
 	// SortBy Column to sort by. Ties are always broken by team id so paging is stable.
 	SortBy *ListAdminTeamsParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
