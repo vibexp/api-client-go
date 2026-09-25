@@ -2084,22 +2084,58 @@ func (e ListAdminUsersParamsStatus) Valid() bool {
 
 // Defines values for ListAdminUsersParamsSortBy.
 const (
-	ListAdminUsersParamsSortByCreatedAt ListAdminUsersParamsSortBy = "created_at"
-	ListAdminUsersParamsSortByEmail     ListAdminUsersParamsSortBy = "email"
-	ListAdminUsersParamsSortByName      ListAdminUsersParamsSortBy = "name"
-	ListAdminUsersParamsSortByTeamCount ListAdminUsersParamsSortBy = "team_count"
+	ListAdminUsersParamsSortByAgentCount            ListAdminUsersParamsSortBy = "agent_count"
+	ListAdminUsersParamsSortByArtifactCount         ListAdminUsersParamsSortBy = "artifact_count"
+	ListAdminUsersParamsSortByAttachmentCount       ListAdminUsersParamsSortBy = "attachment_count"
+	ListAdminUsersParamsSortByBlueprintCount        ListAdminUsersParamsSortBy = "blueprint_count"
+	ListAdminUsersParamsSortByCommentCount          ListAdminUsersParamsSortBy = "comment_count"
+	ListAdminUsersParamsSortByCreatedAt             ListAdminUsersParamsSortBy = "created_at"
+	ListAdminUsersParamsSortByEmail                 ListAdminUsersParamsSortBy = "email"
+	ListAdminUsersParamsSortByFeedCount             ListAdminUsersParamsSortBy = "feed_count"
+	ListAdminUsersParamsSortByFeedItemCount         ListAdminUsersParamsSortBy = "feed_item_count"
+	ListAdminUsersParamsSortByLastResourceCreatedAt ListAdminUsersParamsSortBy = "last_resource_created_at"
+	ListAdminUsersParamsSortByMemoryCount           ListAdminUsersParamsSortBy = "memory_count"
+	ListAdminUsersParamsSortByName                  ListAdminUsersParamsSortBy = "name"
+	ListAdminUsersParamsSortByProjectCount          ListAdminUsersParamsSortBy = "project_count"
+	ListAdminUsersParamsSortByPromptCount           ListAdminUsersParamsSortBy = "prompt_count"
+	ListAdminUsersParamsSortByTeamCount             ListAdminUsersParamsSortBy = "team_count"
+	ListAdminUsersParamsSortByTotalResourceCount    ListAdminUsersParamsSortBy = "total_resource_count"
 )
 
 // Valid indicates whether the value is a known member of the ListAdminUsersParamsSortBy enum.
 func (e ListAdminUsersParamsSortBy) Valid() bool {
 	switch e {
+	case ListAdminUsersParamsSortByAgentCount:
+		return true
+	case ListAdminUsersParamsSortByArtifactCount:
+		return true
+	case ListAdminUsersParamsSortByAttachmentCount:
+		return true
+	case ListAdminUsersParamsSortByBlueprintCount:
+		return true
+	case ListAdminUsersParamsSortByCommentCount:
+		return true
 	case ListAdminUsersParamsSortByCreatedAt:
 		return true
 	case ListAdminUsersParamsSortByEmail:
 		return true
+	case ListAdminUsersParamsSortByFeedCount:
+		return true
+	case ListAdminUsersParamsSortByFeedItemCount:
+		return true
+	case ListAdminUsersParamsSortByLastResourceCreatedAt:
+		return true
+	case ListAdminUsersParamsSortByMemoryCount:
+		return true
 	case ListAdminUsersParamsSortByName:
 		return true
+	case ListAdminUsersParamsSortByProjectCount:
+		return true
+	case ListAdminUsersParamsSortByPromptCount:
+		return true
 	case ListAdminUsersParamsSortByTeamCount:
+		return true
+	case ListAdminUsersParamsSortByTotalResourceCount:
 		return true
 	default:
 		return false
@@ -3312,6 +3348,25 @@ type AdminProjectTeam struct {
 	Slug string             `json:"slug"`
 }
 
+// AdminResourceCounts How many resources of each type a user authored, counted by the author
+// column of each table (feeds by creator, feed items by poster). Every row
+// counts regardless of its status or archive state. `total` is the sum of the
+// nine types.
+type AdminResourceCounts struct {
+	Agents      int64 `json:"agents"`
+	Artifacts   int64 `json:"artifacts"`
+	Attachments int64 `json:"attachments"`
+	Blueprints  int64 `json:"blueprints"`
+	Comments    int64 `json:"comments"`
+	FeedItems   int64 `json:"feed_items"`
+	Feeds       int64 `json:"feeds"`
+	Memories    int64 `json:"memories"`
+	Prompts     int64 `json:"prompts"`
+
+	// Total Sum of the nine per-type counts.
+	Total int64 `json:"total"`
+}
+
 // AdminSourcePoint A count for one access source within one time bucket.
 type AdminSourcePoint struct {
 	// Bucket Start of the bucket, in UTC.
@@ -3528,7 +3583,20 @@ type AdminUserListItem struct {
 
 	// IdpProvider Identity provider name (e.g. "google", "oidc"); null for accounts without one.
 	IdpProvider *string `json:"idp_provider,omitempty"`
-	Name        string  `json:"name"`
+
+	// LastResourceCreatedAt When the user's most recent resource (any of the nine types counted in
+	// resource_counts) was created; null for a user who has authored none.
+	LastResourceCreatedAt *time.Time `json:"last_resource_created_at,omitempty"`
+	Name                  string     `json:"name"`
+
+	// ProjectCount Number of projects the user created.
+	ProjectCount int64 `json:"project_count"`
+
+	// ResourceCounts How many resources of each type a user authored, counted by the author
+	// column of each table (feeds by creator, feed items by poster). Every row
+	// counts regardless of its status or archive state. `total` is the sum of the
+	// nine types.
+	ResourceCounts AdminResourceCounts `json:"resource_counts"`
 
 	// Status Account lifecycle. A suspended account is rejected at every
 	// authentication entry point — existing sessions, API keys and MCP/OAuth
@@ -8087,7 +8155,89 @@ type ListAdminUsersParams struct {
 	// Status Narrow to accounts in this lifecycle state.
 	Status *ListAdminUsersParamsStatus `form:"status,omitempty" json:"status,omitempty"`
 
+	// TeamCountMin Only users with at least this many teams the user belongs to (inclusive).
+	TeamCountMin *int64 `form:"team_count_min,omitempty" json:"team_count_min,omitempty"`
+
+	// TeamCountMax Only users with at most this many teams the user belongs to (inclusive).
+	TeamCountMax *int64 `form:"team_count_max,omitempty" json:"team_count_max,omitempty"`
+
+	// ProjectCountMin Only users with at least this many projects the user created (inclusive).
+	ProjectCountMin *int64 `form:"project_count_min,omitempty" json:"project_count_min,omitempty"`
+
+	// ProjectCountMax Only users with at most this many projects the user created (inclusive).
+	ProjectCountMax *int64 `form:"project_count_max,omitempty" json:"project_count_max,omitempty"`
+
+	// PromptCountMin Only users with at least this many prompts the user authored (inclusive).
+	PromptCountMin *int64 `form:"prompt_count_min,omitempty" json:"prompt_count_min,omitempty"`
+
+	// PromptCountMax Only users with at most this many prompts the user authored (inclusive).
+	PromptCountMax *int64 `form:"prompt_count_max,omitempty" json:"prompt_count_max,omitempty"`
+
+	// MemoryCountMin Only users with at least this many memories the user authored (inclusive).
+	MemoryCountMin *int64 `form:"memory_count_min,omitempty" json:"memory_count_min,omitempty"`
+
+	// MemoryCountMax Only users with at most this many memories the user authored (inclusive).
+	MemoryCountMax *int64 `form:"memory_count_max,omitempty" json:"memory_count_max,omitempty"`
+
+	// ArtifactCountMin Only users with at least this many artifacts the user authored (inclusive).
+	ArtifactCountMin *int64 `form:"artifact_count_min,omitempty" json:"artifact_count_min,omitempty"`
+
+	// ArtifactCountMax Only users with at most this many artifacts the user authored (inclusive).
+	ArtifactCountMax *int64 `form:"artifact_count_max,omitempty" json:"artifact_count_max,omitempty"`
+
+	// BlueprintCountMin Only users with at least this many blueprints the user authored (inclusive).
+	BlueprintCountMin *int64 `form:"blueprint_count_min,omitempty" json:"blueprint_count_min,omitempty"`
+
+	// BlueprintCountMax Only users with at most this many blueprints the user authored (inclusive).
+	BlueprintCountMax *int64 `form:"blueprint_count_max,omitempty" json:"blueprint_count_max,omitempty"`
+
+	// AgentCountMin Only users with at least this many agents the user created (inclusive).
+	AgentCountMin *int64 `form:"agent_count_min,omitempty" json:"agent_count_min,omitempty"`
+
+	// AgentCountMax Only users with at most this many agents the user created (inclusive).
+	AgentCountMax *int64 `form:"agent_count_max,omitempty" json:"agent_count_max,omitempty"`
+
+	// FeedCountMin Only users with at least this many feeds the user created (inclusive).
+	FeedCountMin *int64 `form:"feed_count_min,omitempty" json:"feed_count_min,omitempty"`
+
+	// FeedCountMax Only users with at most this many feeds the user created (inclusive).
+	FeedCountMax *int64 `form:"feed_count_max,omitempty" json:"feed_count_max,omitempty"`
+
+	// FeedItemCountMin Only users with at least this many feed items the user posted (inclusive).
+	FeedItemCountMin *int64 `form:"feed_item_count_min,omitempty" json:"feed_item_count_min,omitempty"`
+
+	// FeedItemCountMax Only users with at most this many feed items the user posted (inclusive).
+	FeedItemCountMax *int64 `form:"feed_item_count_max,omitempty" json:"feed_item_count_max,omitempty"`
+
+	// CommentCountMin Only users with at least this many comments the user wrote (inclusive).
+	CommentCountMin *int64 `form:"comment_count_min,omitempty" json:"comment_count_min,omitempty"`
+
+	// CommentCountMax Only users with at most this many comments the user wrote (inclusive).
+	CommentCountMax *int64 `form:"comment_count_max,omitempty" json:"comment_count_max,omitempty"`
+
+	// AttachmentCountMin Only users with at least this many attachments the user uploaded (inclusive).
+	AttachmentCountMin *int64 `form:"attachment_count_min,omitempty" json:"attachment_count_min,omitempty"`
+
+	// AttachmentCountMax Only users with at most this many attachments the user uploaded (inclusive).
+	AttachmentCountMax *int64 `form:"attachment_count_max,omitempty" json:"attachment_count_max,omitempty"`
+
+	// TotalResourceCountMin Only users with at least this many resources the user authored across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMin *int64 `form:"total_resource_count_min,omitempty" json:"total_resource_count_min,omitempty"`
+
+	// TotalResourceCountMax Only users with at most this many resources the user authored across all nine types (the sum of resource_counts) (inclusive).
+	TotalResourceCountMax *int64 `form:"total_resource_count_max,omitempty" json:"total_resource_count_max,omitempty"`
+
+	// LastResourceCreatedFrom Only users whose most recent resource (any of the nine types) was created
+	// at or after this instant (inclusive). Users with no resources never match.
+	LastResourceCreatedFrom *time.Time `form:"last_resource_created_from,omitempty" json:"last_resource_created_from,omitempty"`
+
+	// LastResourceCreatedTo Only users whose most recent resource (any of the nine types) was created
+	// at or before this instant (inclusive). Users with no resources never match.
+	LastResourceCreatedTo *time.Time `form:"last_resource_created_to,omitempty" json:"last_resource_created_to,omitempty"`
+
 	// SortBy Column to sort by. Ties are always broken by user id so paging is stable.
+	// Sorting by last_resource_created_at places users with no resources last
+	// in both directions.
 	SortBy *ListAdminUsersParamsSortBy `form:"sort_by,omitempty" json:"sort_by,omitempty"`
 
 	// SortOrder Sort direction.
