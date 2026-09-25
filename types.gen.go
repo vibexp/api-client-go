@@ -96,6 +96,27 @@ func (e AdminTeamConfigSource) Valid() bool {
 	}
 }
 
+// Defines values for AdminTeamEmailProviderConfigStatus.
+const (
+	Failing AdminTeamEmailProviderConfigStatus = "failing"
+	Healthy AdminTeamEmailProviderConfigStatus = "healthy"
+	Unknown AdminTeamEmailProviderConfigStatus = "unknown"
+)
+
+// Valid indicates whether the value is a known member of the AdminTeamEmailProviderConfigStatus enum.
+func (e AdminTeamEmailProviderConfigStatus) Valid() bool {
+	switch e {
+	case Failing:
+		return true
+	case Healthy:
+		return true
+	case Unknown:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminTeamSettingsAuditEntrySurface.
 const (
 	AdminTeamSettingsAuditEntrySurfaceCustomTypes       AdminTeamSettingsAuditEntrySurface = "custom_types"
@@ -3504,6 +3525,65 @@ type AdminDeleteBlocker struct {
 	TeamName    string             `json:"team_name"`
 }
 
+// AdminEmailSettings The team provider's non-secret settings; only the block matching its type is present.
+type AdminEmailSettings struct {
+	// Mailgun Non-secret Mailgun settings.
+	Mailgun *AdminMailgunSettings `json:"mailgun,omitempty"`
+
+	// Postmark Non-secret Postmark settings.
+	Postmark *AdminPostmarkSettings `json:"postmark,omitempty"`
+
+	// Smtp Non-secret SMTP settings. The SMTP username is deliberately omitted.
+	Smtp *AdminSMTPSettings `json:"smtp,omitempty"`
+}
+
+// AdminEmbeddingCoverage How much of the team's embeddable content has an embedding under its active
+// provider's model.
+type AdminEmbeddingCoverage struct {
+	// ActiveModel The active provider's model; `null` when the team has no provider.
+	ActiveModel       *string `json:"active_model"`
+	HasActiveProvider bool    `json:"has_active_provider"`
+
+	// Items One entry per entity type. Serializes as `[]`, never `null`.
+	Items []AdminEmbeddingCoverageItem `json:"items"`
+}
+
+// AdminEmbeddingCoverageItem Embedding coverage for one entity type (counts only).
+type AdminEmbeddingCoverageItem struct {
+	Embedded        int64  `json:"embedded"`
+	EmbeddedPercent int    `json:"embedded_percent"`
+	EntityType      string `json:"entity_type"`
+	Pending         int64  `json:"pending"`
+	Total           int64  `json:"total"`
+}
+
+// AdminEmbeddingProvider One embedding provider, credentials redacted.
+type AdminEmbeddingProvider struct {
+	// BaseUrl The provider's base URL with any userinfo, query string and fragment
+	// removed. `null` when unset or not an absolute URL.
+	BaseUrl      *string `json:"base_url"`
+	ChunkOverlap int     `json:"chunk_overlap"`
+	ChunkSize    int     `json:"chunk_size"`
+	Concurrency  int     `json:"concurrency"`
+
+	// ConfigurationKeys Sorted top-level key names of the provider's `configuration` object. The
+	// values are never returned. `[]` when the configuration is empty or not a
+	// JSON object.
+	ConfigurationKeys []string  `json:"configuration_keys"`
+	CreatedAt         time.Time `json:"created_at"`
+	DocumentPrefix    *string   `json:"document_prefix"`
+
+	// HasApiKey Whether an API key is stored. The key itself is never returned.
+	HasApiKey    bool               `json:"has_api_key"`
+	Id           openapi_types.UUID `json:"id"`
+	IsDefault    bool               `json:"is_default"`
+	Model        string             `json:"model"`
+	Name         string             `json:"name"`
+	ProviderType string             `json:"provider_type"`
+	QueryPrefix  *string            `json:"query_prefix"`
+	UpdatedAt    time.Time          `json:"updated_at"`
+}
+
 // AdminEntityBreakdown A GROUP BY over one status/type column of one entity table.
 type AdminEntityBreakdown struct {
 	// Buckets One entry per distinct value, most frequent first.
@@ -3553,6 +3633,38 @@ type AdminFreshnessValues struct {
 	ReversibilityEnabled bool `json:"reversibility_enabled"`
 }
 
+// AdminGitHubAppConfig A team's GitHub App registration, secrets redacted.
+type AdminGitHubAppConfig struct {
+	AppId            string             `json:"app_id"`
+	AppSlug          string             `json:"app_slug"`
+	ClientId         string             `json:"client_id"`
+	CreatedAt        time.Time          `json:"created_at"`
+	HasClientSecret  bool               `json:"has_client_secret"`
+	HasPrivateKey    bool               `json:"has_private_key"`
+	HasWebhookSecret bool               `json:"has_webhook_secret"`
+	Id               openapi_types.UUID `json:"id"`
+	UpdatedAt        time.Time          `json:"updated_at"`
+
+	// WebhookConfigured Whether VibeXP can give GitHub a webhook delivery URL for this App (a
+	// routing token exists and the instance has a public base URL). It does
+	// NOT mean GitHub is delivering. The URL itself is never returned.
+	WebhookConfigured bool `json:"webhook_configured"`
+}
+
+// AdminGitHubInstallation The team's GitHub App installation, as last recorded (no live GitHub call).
+type AdminGitHubInstallation struct {
+	// AccountLogin The GitHub account the App is installed on; `null` when not installed.
+	AccountLogin *string `json:"account_login"`
+
+	// InstallationId `null` when not installed.
+	InstallationId *int64 `json:"installation_id"`
+	Installed      bool   `json:"installed"`
+
+	// InstalledAt `null` when not installed.
+	InstalledAt *time.Time `json:"installed_at"`
+	Suspended   bool       `json:"suspended"`
+}
+
 // AdminGrowthPoint New rows created per entity within one time bucket.
 type AdminGrowthPoint struct {
 	Artifacts int64 `json:"artifacts"`
@@ -3582,6 +3694,41 @@ type AdminInstanceCounts struct {
 
 	// Users Total number of user accounts.
 	Users int64 `json:"users"`
+}
+
+// AdminMailgunSettings Non-secret Mailgun settings.
+type AdminMailgunSettings struct {
+	// BaseUrl The Mailgun API base URL with any userinfo, query string and fragment
+	// removed. `null` when unset or not an absolute URL.
+	BaseUrl *string `json:"base_url"`
+	Domain  string  `json:"domain"`
+}
+
+// AdminModelProvider One model (LLM) provider, credentials redacted.
+type AdminModelProvider struct {
+	// BaseUrl The provider's base URL with any userinfo, query string and fragment
+	// removed. `null` when unset or not an absolute URL.
+	BaseUrl *string `json:"base_url"`
+
+	// ConfigurationKeys Sorted top-level key names of the provider's `configuration` object. The
+	// values are never returned. `[]` when the configuration is empty or not a
+	// JSON object.
+	ConfigurationKeys []string  `json:"configuration_keys"`
+	CreatedAt         time.Time `json:"created_at"`
+
+	// HasApiKey Whether an API key is stored. The key itself is never returned.
+	HasApiKey    bool               `json:"has_api_key"`
+	Id           openapi_types.UUID `json:"id"`
+	IsDefault    bool               `json:"is_default"`
+	Model        string             `json:"model"`
+	Name         string             `json:"name"`
+	ProviderType string             `json:"provider_type"`
+	UpdatedAt    time.Time          `json:"updated_at"`
+}
+
+// AdminPostmarkSettings Non-secret Postmark settings.
+type AdminPostmarkSettings struct {
+	MessageStream string `json:"message_stream"`
 }
 
 // AdminProjectDetail A single project with its team, owner and resource counts (GET /api/v1/admin/projects/{id}).
@@ -3684,6 +3831,12 @@ type AdminResourceCounts struct {
 
 	// Total Sum of the nine per-type counts.
 	Total int64 `json:"total"`
+}
+
+// AdminSMTPSettings Non-secret SMTP settings. The SMTP username is deliberately omitted.
+type AdminSMTPSettings struct {
+	Host string `json:"host"`
+	Port string `json:"port"`
 }
 
 // AdminSearchValues A complete search ranking profile.
@@ -3816,6 +3969,57 @@ type AdminTeamDetail struct {
 	Slug string `json:"slug"`
 }
 
+// AdminTeamEmailProviderConfig A team's effective email provider (GET /api/v1/admin/teams/{id}/config/email-provider).
+// The provider's secret, its last error text and the SMTP username are never
+// returned.
+type AdminTeamEmailProviderConfig struct {
+	// Configured Whether the team has its own provider.
+	Configured bool `json:"configured"`
+
+	// EffectiveFromAddress The address the team's mail is actually sent from.
+	EffectiveFromAddress string  `json:"effective_from_address"`
+	FromAddress          *string `json:"from_address"`
+	FromName             *string `json:"from_name"`
+
+	// HasSecret Whether a provider credential is stored. The credential itself is never returned.
+	HasSecret     bool       `json:"has_secret"`
+	LastErrorAt   *time.Time `json:"last_error_at"`
+	LastSuccessAt *time.Time `json:"last_success_at"`
+
+	// ProviderType The team provider's type; `null` when inheriting the instance provider.
+	ProviderType *string `json:"provider_type"`
+	ReplyTo      *string `json:"reply_to"`
+
+	// Settings `null` when inheriting the instance provider, or when the stored settings
+	// could not be decoded.
+	Settings *AdminEmailSettings `json:"settings"`
+
+	// Source Where the values in effect came from: `team` when the team stored its own
+	// profile, `instance` when it has none and inherits the deployment defaults.
+	Source AdminTeamConfigSource `json:"source"`
+
+	// Status Derived from the two timestamps: `unknown` when inheriting or never used,
+	// `healthy` when the last send succeeded (or none failed), `failing` when
+	// the last recorded send failed.
+	Status AdminTeamEmailProviderConfigStatus `json:"status"`
+}
+
+// AdminTeamEmailProviderConfigStatus Derived from the two timestamps: `unknown` when inheriting or never used,
+// `healthy` when the last send succeeded (or none failed), `failing` when
+// the last recorded send failed.
+type AdminTeamEmailProviderConfigStatus string
+
+// AdminTeamEmbeddingProvidersConfig A team's embedding providers and embedding coverage
+// (GET /api/v1/admin/teams/{id}/config/embedding-providers).
+type AdminTeamEmbeddingProvidersConfig struct {
+	// Coverage How much of the team's embeddable content has an embedding under its active
+	// provider's model.
+	Coverage AdminEmbeddingCoverage `json:"coverage"`
+
+	// Providers Serializes as `[]` when the team has none, never `null`.
+	Providers []AdminEmbeddingProvider `json:"providers"`
+}
+
 // AdminTeamFreshnessConfig A team's freshness settings and rules (GET /api/v1/admin/teams/{id}/config/freshness).
 type AdminTeamFreshnessConfig struct {
 	// Defaults A team's freshness evaluation settings.
@@ -3830,6 +4034,15 @@ type AdminTeamFreshnessConfig struct {
 
 	// Values A team's freshness evaluation settings.
 	Values AdminFreshnessValues `json:"values"`
+}
+
+// AdminTeamGitHubConfig A team's GitHub integration (GET /api/v1/admin/teams/{id}/config/github).
+type AdminTeamGitHubConfig struct {
+	// AppConfig `null` when the team has not registered a GitHub App.
+	AppConfig *AdminGitHubAppConfig `json:"app_config"`
+
+	// Installation The team's GitHub App installation, as last recorded (no live GitHub call).
+	Installation AdminGitHubInstallation `json:"installation"`
 }
 
 // AdminTeamListItem One team in the instance-wide admin team listing.
@@ -3903,6 +4116,12 @@ type AdminTeamMembership struct {
 	Role     string             `json:"role"`
 	TeamId   openapi_types.UUID `json:"team_id"`
 	TeamName string             `json:"team_name"`
+}
+
+// AdminTeamModelProvidersConfig A team's model providers (GET /api/v1/admin/teams/{id}/config/model-providers).
+type AdminTeamModelProvidersConfig struct {
+	// Providers Serializes as `[]` when the team has none, never `null`.
+	Providers []AdminModelProvider `json:"providers"`
 }
 
 // AdminTeamOwner A user shown as the responsible party for a resource: the owner of a team, or

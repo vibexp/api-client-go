@@ -137,8 +137,20 @@ type ClientInterface interface {
 	// GetAdminTeamArtifactTypes request
 	GetAdminTeamArtifactTypes(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAdminTeamEmailProvider request
+	GetAdminTeamEmailProvider(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminTeamEmbeddingProviders request
+	GetAdminTeamEmbeddingProviders(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminTeamFreshnessConfig request
 	GetAdminTeamFreshnessConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminTeamGitHubConfig request
+	GetAdminTeamGitHubConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminTeamModelProviders request
+	GetAdminTeamModelProviders(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAdminTeamSearchConfig request
 	GetAdminTeamSearchConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1253,8 +1265,56 @@ func (c *Client) GetAdminTeamArtifactTypes(ctx context.Context, id openapi_types
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetAdminTeamEmailProvider(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminTeamEmailProviderRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminTeamEmbeddingProviders(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminTeamEmbeddingProvidersRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAdminTeamFreshnessConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAdminTeamFreshnessConfigRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminTeamGitHubConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminTeamGitHubConfigRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminTeamModelProviders(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminTeamModelProvidersRequest(c.Server, id)
 	if err != nil {
 		return nil, err
 	}
@@ -6542,6 +6602,74 @@ func NewGetAdminTeamArtifactTypesRequest(server string, id openapi_types.UUID) (
 	return req, nil
 }
 
+// NewGetAdminTeamEmailProviderRequest generates requests for GetAdminTeamEmailProvider
+func NewGetAdminTeamEmailProviderRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/teams/%s/config/email-provider", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminTeamEmbeddingProvidersRequest generates requests for GetAdminTeamEmbeddingProviders
+func NewGetAdminTeamEmbeddingProvidersRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/teams/%s/config/embedding-providers", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAdminTeamFreshnessConfigRequest generates requests for GetAdminTeamFreshnessConfig
 func NewGetAdminTeamFreshnessConfigRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -6559,6 +6687,74 @@ func NewGetAdminTeamFreshnessConfigRequest(server string, id openapi_types.UUID)
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/admin/teams/%s/config/freshness", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminTeamGitHubConfigRequest generates requests for GetAdminTeamGitHubConfig
+func NewGetAdminTeamGitHubConfigRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/teams/%s/config/github", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminTeamModelProvidersRequest generates requests for GetAdminTeamModelProviders
+func NewGetAdminTeamModelProvidersRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/teams/%s/config/model-providers", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20213,8 +20409,20 @@ type ClientWithResponsesInterface interface {
 	// GetAdminTeamArtifactTypesWithResponse request
 	GetAdminTeamArtifactTypesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamArtifactTypesHTTPResponse, error)
 
+	// GetAdminTeamEmailProviderWithResponse request
+	GetAdminTeamEmailProviderWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamEmailProviderHTTPResponse, error)
+
+	// GetAdminTeamEmbeddingProvidersWithResponse request
+	GetAdminTeamEmbeddingProvidersWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamEmbeddingProvidersHTTPResponse, error)
+
 	// GetAdminTeamFreshnessConfigWithResponse request
 	GetAdminTeamFreshnessConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamFreshnessConfigHTTPResponse, error)
+
+	// GetAdminTeamGitHubConfigWithResponse request
+	GetAdminTeamGitHubConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamGitHubConfigHTTPResponse, error)
+
+	// GetAdminTeamModelProvidersWithResponse request
+	GetAdminTeamModelProvidersWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamModelProvidersHTTPResponse, error)
 
 	// GetAdminTeamSearchConfigWithResponse request
 	GetAdminTeamSearchConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamSearchConfigHTTPResponse, error)
@@ -21623,6 +21831,72 @@ func (r GetAdminTeamArtifactTypesHTTPResponse) ContentType() string {
 	return ""
 }
 
+type GetAdminTeamEmailProviderHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminTeamEmailProviderConfig
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminTeamEmailProviderHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminTeamEmailProviderHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminTeamEmailProviderHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminTeamEmbeddingProvidersHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminTeamEmbeddingProvidersConfig
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminTeamEmbeddingProvidersHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminTeamEmbeddingProvidersHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminTeamEmbeddingProvidersHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetAdminTeamFreshnessConfigHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -21650,6 +21924,72 @@ func (r GetAdminTeamFreshnessConfigHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetAdminTeamFreshnessConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminTeamGitHubConfigHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminTeamGitHubConfig
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminTeamGitHubConfigHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminTeamGitHubConfigHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminTeamGitHubConfigHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminTeamModelProvidersHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminTeamModelProvidersConfig
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminTeamModelProvidersHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminTeamModelProvidersHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminTeamModelProvidersHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -30373,6 +30713,24 @@ func (c *ClientWithResponses) GetAdminTeamArtifactTypesWithResponse(ctx context.
 	return ParseGetAdminTeamArtifactTypesHTTPResponse(rsp)
 }
 
+// GetAdminTeamEmailProviderWithResponse request returning *GetAdminTeamEmailProviderHTTPResponse
+func (c *ClientWithResponses) GetAdminTeamEmailProviderWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamEmailProviderHTTPResponse, error) {
+	rsp, err := c.GetAdminTeamEmailProvider(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminTeamEmailProviderHTTPResponse(rsp)
+}
+
+// GetAdminTeamEmbeddingProvidersWithResponse request returning *GetAdminTeamEmbeddingProvidersHTTPResponse
+func (c *ClientWithResponses) GetAdminTeamEmbeddingProvidersWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamEmbeddingProvidersHTTPResponse, error) {
+	rsp, err := c.GetAdminTeamEmbeddingProviders(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminTeamEmbeddingProvidersHTTPResponse(rsp)
+}
+
 // GetAdminTeamFreshnessConfigWithResponse request returning *GetAdminTeamFreshnessConfigHTTPResponse
 func (c *ClientWithResponses) GetAdminTeamFreshnessConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamFreshnessConfigHTTPResponse, error) {
 	rsp, err := c.GetAdminTeamFreshnessConfig(ctx, id, reqEditors...)
@@ -30380,6 +30738,24 @@ func (c *ClientWithResponses) GetAdminTeamFreshnessConfigWithResponse(ctx contex
 		return nil, err
 	}
 	return ParseGetAdminTeamFreshnessConfigHTTPResponse(rsp)
+}
+
+// GetAdminTeamGitHubConfigWithResponse request returning *GetAdminTeamGitHubConfigHTTPResponse
+func (c *ClientWithResponses) GetAdminTeamGitHubConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamGitHubConfigHTTPResponse, error) {
+	rsp, err := c.GetAdminTeamGitHubConfig(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminTeamGitHubConfigHTTPResponse(rsp)
+}
+
+// GetAdminTeamModelProvidersWithResponse request returning *GetAdminTeamModelProvidersHTTPResponse
+func (c *ClientWithResponses) GetAdminTeamModelProvidersWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminTeamModelProvidersHTTPResponse, error) {
+	rsp, err := c.GetAdminTeamModelProviders(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminTeamModelProvidersHTTPResponse(rsp)
 }
 
 // GetAdminTeamSearchConfigWithResponse request returning *GetAdminTeamSearchConfigHTTPResponse
@@ -33936,6 +34312,100 @@ func ParseGetAdminTeamArtifactTypesHTTPResponse(rsp *http.Response) (*GetAdminTe
 	return response, nil
 }
 
+// ParseGetAdminTeamEmailProviderHTTPResponse parses an HTTP response from a GetAdminTeamEmailProviderWithResponse call
+func ParseGetAdminTeamEmailProviderHTTPResponse(rsp *http.Response) (*GetAdminTeamEmailProviderHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminTeamEmailProviderHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminTeamEmailProviderConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminTeamEmbeddingProvidersHTTPResponse parses an HTTP response from a GetAdminTeamEmbeddingProvidersWithResponse call
+func ParseGetAdminTeamEmbeddingProvidersHTTPResponse(rsp *http.Response) (*GetAdminTeamEmbeddingProvidersHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminTeamEmbeddingProvidersHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminTeamEmbeddingProvidersConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAdminTeamFreshnessConfigHTTPResponse parses an HTTP response from a GetAdminTeamFreshnessConfigWithResponse call
 func ParseGetAdminTeamFreshnessConfigHTTPResponse(rsp *http.Response) (*GetAdminTeamFreshnessConfigHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -33952,6 +34422,100 @@ func ParseGetAdminTeamFreshnessConfigHTTPResponse(rsp *http.Response) (*GetAdmin
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest AdminTeamFreshnessConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminTeamGitHubConfigHTTPResponse parses an HTTP response from a GetAdminTeamGitHubConfigWithResponse call
+func ParseGetAdminTeamGitHubConfigHTTPResponse(rsp *http.Response) (*GetAdminTeamGitHubConfigHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminTeamGitHubConfigHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminTeamGitHubConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminTeamModelProvidersHTTPResponse parses an HTTP response from a GetAdminTeamModelProvidersWithResponse call
+func ParseGetAdminTeamModelProvidersHTTPResponse(rsp *http.Response) (*GetAdminTeamModelProvidersHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminTeamModelProvidersHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminTeamModelProvidersConfig
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
