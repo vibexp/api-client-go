@@ -120,6 +120,27 @@ func (e AdminProjectResourceCreationMetricsGranularity) Valid() bool {
 	}
 }
 
+// Defines values for AdminSavedFilterListName.
+const (
+	Projects AdminSavedFilterListName = "projects"
+	Teams    AdminSavedFilterListName = "teams"
+	Users    AdminSavedFilterListName = "users"
+)
+
+// Valid indicates whether the value is a known member of the AdminSavedFilterListName enum.
+func (e AdminSavedFilterListName) Valid() bool {
+	switch e {
+	case Projects:
+		return true
+	case Teams:
+		return true
+	case Users:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminTeamConfigSource.
 const (
 	AdminTeamConfigSourceInstance AdminTeamConfigSource = "instance"
@@ -4047,6 +4068,75 @@ type AdminResourceCounts struct {
 type AdminSMTPSettings struct {
 	Host string `json:"host"`
 	Port string `json:"port"`
+}
+
+// AdminSavedFilterListName The admin list a set of saved filter presets belongs to.
+type AdminSavedFilterListName string
+
+// AdminSavedFilterPreset One named filter preset saved by an instance admin.
+type AdminSavedFilterPreset struct {
+	// Id Stable preset id. Kept across renames.
+	Id openapi_types.UUID `json:"id"`
+
+	// Name Display name, unique (case-insensitively) within the list.
+	Name string `json:"name"`
+
+	// Query The list's filter state as URL query parameters (parameter name → value).
+	// Stored as given and never executed server-side; the client owns its meaning.
+	// At most 40 keys, each matching `^[a-z0-9_]{1,64}$`, each value at most 512
+	// characters.
+	Query AdminSavedFilterQuery `json:"query"`
+}
+
+// AdminSavedFilterPresetInput A preset as sent in a replace request. Omit `id` for a new preset and the
+// server assigns one; send the existing `id` to keep it (e.g. on rename).
+type AdminSavedFilterPresetInput struct {
+	// Id Existing preset id to keep; omitted for a new preset.
+	Id *openapi_types.UUID `json:"id,omitempty"`
+
+	// Name Display name. Surrounding whitespace is trimmed; must be unique
+	// (case-insensitively) within the list.
+	Name string `json:"name"`
+
+	// Query The list's filter state as URL query parameters (parameter name → value).
+	// Stored as given and never executed server-side; the client owns its meaning.
+	// At most 40 keys, each matching `^[a-z0-9_]{1,64}$`, each value at most 512
+	// characters.
+	Query AdminSavedFilterQuery `json:"query"`
+}
+
+// AdminSavedFilterQuery The list's filter state as URL query parameters (parameter name → value).
+// Stored as given and never executed server-side; the client owns its meaning.
+// At most 40 keys, each matching `^[a-z0-9_]{1,64}$`, each value at most 512
+// characters.
+type AdminSavedFilterQuery map[string]string
+
+// AdminSavedFilters The calling instance admin's saved filter presets for one admin list
+// (GET/PUT /api/v1/admin/saved-filters/{list}). Presets are private to the
+// admin who saved them.
+type AdminSavedFilters struct {
+	// List The admin list a set of saved filter presets belongs to.
+	List AdminSavedFilterListName `json:"list"`
+
+	// Presets The presets in their saved order. `[]` when there are none.
+	Presets []AdminSavedFilterPreset `json:"presets"`
+
+	// Version Optimistic-lock version of the admin's preferences record. `0` when
+	// nothing has been saved yet. Send it back unchanged in the next replace
+	// request; it is shared with the user's other preferences, so a change
+	// made elsewhere also advances it.
+	Version int64 `json:"version"`
+}
+
+// AdminSavedFiltersReplaceRequest Replaces the whole preset list for one admin list. Renaming and deleting are
+// done by sending the edited list.
+type AdminSavedFiltersReplaceRequest struct {
+	// Presets The complete new preset list, in order (at most 20).
+	Presets []AdminSavedFilterPresetInput `json:"presets"`
+
+	// Version The `version` last read. A stale value is rejected with 409 and nothing
+	// is saved.
+	Version int64 `json:"version"`
 }
 
 // AdminSearchValues A complete search ranking profile.
@@ -10414,6 +10504,9 @@ type GetUsageAndGrowthParams struct {
 
 // CreateActivityJSONRequestBody defines body for CreateActivity for application/json ContentType.
 type CreateActivityJSONRequestBody = CreateActivityRequest
+
+// ReplaceAdminSavedFiltersJSONRequestBody defines body for ReplaceAdminSavedFilters for application/json ContentType.
+type ReplaceAdminSavedFiltersJSONRequestBody = AdminSavedFiltersReplaceRequest
 
 // CreateAdminUserJSONRequestBody defines body for CreateAdminUser for application/json ContentType.
 type CreateAdminUserJSONRequestBody = AdminUserCreateRequest

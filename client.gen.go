@@ -134,6 +134,14 @@ type ClientInterface interface {
 	// GetAdminProjectTopAccessedResources request
 	GetAdminProjectTopAccessedResources(ctx context.Context, id openapi_types.UUID, params *GetAdminProjectTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAdminSavedFilters request
+	GetAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReplaceAdminSavedFiltersWithBody request with any body
+	ReplaceAdminSavedFiltersWithBody(ctx context.Context, list AdminSavedFilterListName, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ReplaceAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminStats request
 	GetAdminStats(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1255,6 +1263,42 @@ func (c *Client) GetAdminProjectResourceCreationMetrics(ctx context.Context, id 
 
 func (c *Client) GetAdminProjectTopAccessedResources(ctx context.Context, id openapi_types.UUID, params *GetAdminProjectTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAdminProjectTopAccessedResourcesRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminSavedFiltersRequest(c.Server, list)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplaceAdminSavedFiltersWithBody(ctx context.Context, list AdminSavedFilterListName, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplaceAdminSavedFiltersRequestWithBody(c.Server, list, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReplaceAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReplaceAdminSavedFiltersRequest(c.Server, list, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6428,6 +6472,87 @@ func NewGetAdminProjectTopAccessedResourcesRequest(server string, id openapi_typ
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewGetAdminSavedFiltersRequest generates requests for GetAdminSavedFilters
+func NewGetAdminSavedFiltersRequest(server string, list AdminSavedFilterListName) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "list", list, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/saved-filters/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewReplaceAdminSavedFiltersRequest calls the generic ReplaceAdminSavedFilters builder with application/json body
+func NewReplaceAdminSavedFiltersRequest(server string, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReplaceAdminSavedFiltersRequestWithBody(server, list, "application/json", bodyReader)
+}
+
+// NewReplaceAdminSavedFiltersRequestWithBody generates requests for ReplaceAdminSavedFilters with any type of body
+func NewReplaceAdminSavedFiltersRequestWithBody(server string, list AdminSavedFilterListName, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "list", list, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/saved-filters/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -20935,6 +21060,14 @@ type ClientWithResponsesInterface interface {
 	// GetAdminProjectTopAccessedResourcesWithResponse request
 	GetAdminProjectTopAccessedResourcesWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminProjectTopAccessedResourcesParams, reqEditors ...RequestEditorFn) (*GetAdminProjectTopAccessedResourcesHTTPResponse, error)
 
+	// GetAdminSavedFiltersWithResponse request
+	GetAdminSavedFiltersWithResponse(ctx context.Context, list AdminSavedFilterListName, reqEditors ...RequestEditorFn) (*GetAdminSavedFiltersHTTPResponse, error)
+
+	// ReplaceAdminSavedFiltersWithBodyWithResponse request with any body
+	ReplaceAdminSavedFiltersWithBodyWithResponse(ctx context.Context, list AdminSavedFilterListName, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplaceAdminSavedFiltersHTTPResponse, error)
+
+	ReplaceAdminSavedFiltersWithResponse(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplaceAdminSavedFiltersHTTPResponse, error)
+
 	// GetAdminStatsWithResponse request
 	GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error)
 
@@ -22335,6 +22468,73 @@ func (r GetAdminProjectTopAccessedResourcesHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetAdminProjectTopAccessedResourcesHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminSavedFiltersHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminSavedFilters
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminSavedFiltersHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminSavedFiltersHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminSavedFiltersHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ReplaceAdminSavedFiltersHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminSavedFilters
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ReplaceAdminSavedFiltersHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReplaceAdminSavedFiltersHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ReplaceAdminSavedFiltersHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -31377,6 +31577,32 @@ func (c *ClientWithResponses) GetAdminProjectTopAccessedResourcesWithResponse(ct
 	return ParseGetAdminProjectTopAccessedResourcesHTTPResponse(rsp)
 }
 
+// GetAdminSavedFiltersWithResponse request returning *GetAdminSavedFiltersHTTPResponse
+func (c *ClientWithResponses) GetAdminSavedFiltersWithResponse(ctx context.Context, list AdminSavedFilterListName, reqEditors ...RequestEditorFn) (*GetAdminSavedFiltersHTTPResponse, error) {
+	rsp, err := c.GetAdminSavedFilters(ctx, list, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminSavedFiltersHTTPResponse(rsp)
+}
+
+// ReplaceAdminSavedFiltersWithBodyWithResponse request with arbitrary body returning *ReplaceAdminSavedFiltersHTTPResponse
+func (c *ClientWithResponses) ReplaceAdminSavedFiltersWithBodyWithResponse(ctx context.Context, list AdminSavedFilterListName, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReplaceAdminSavedFiltersHTTPResponse, error) {
+	rsp, err := c.ReplaceAdminSavedFiltersWithBody(ctx, list, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplaceAdminSavedFiltersHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) ReplaceAdminSavedFiltersWithResponse(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplaceAdminSavedFiltersHTTPResponse, error) {
+	rsp, err := c.ReplaceAdminSavedFilters(ctx, list, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReplaceAdminSavedFiltersHTTPResponse(rsp)
+}
+
 // GetAdminStatsWithResponse request returning *GetAdminStatsHTTPResponse
 func (c *ClientWithResponses) GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error) {
 	rsp, err := c.GetAdminStats(ctx, reqEditors...)
@@ -34975,6 +35201,107 @@ func ParseGetAdminProjectTopAccessedResourcesHTTPResponse(rsp *http.Response) (*
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminSavedFiltersHTTPResponse parses an HTTP response from a GetAdminSavedFiltersWithResponse call
+func ParseGetAdminSavedFiltersHTTPResponse(rsp *http.Response) (*GetAdminSavedFiltersHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminSavedFiltersHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminSavedFilters
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReplaceAdminSavedFiltersHTTPResponse parses an HTTP response from a ReplaceAdminSavedFiltersWithResponse call
+func ParseReplaceAdminSavedFiltersHTTPResponse(rsp *http.Response) (*ReplaceAdminSavedFiltersHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReplaceAdminSavedFiltersHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminSavedFilters
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
