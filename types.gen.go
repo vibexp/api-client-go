@@ -8026,6 +8026,9 @@ type RelationListResponse struct {
 // RenderPromptRequest defines model for RenderPromptRequest.
 type RenderPromptRequest struct {
 	Placeholders map[string]string `json:"placeholders"`
+
+	// Strict When true, only explicit @prompt:slug references are resolved (a bare @word such as an email, handle or git@host remote stays literal text), and an unresolved @prompt:slug fails the render with 422 instead of a warning. Recommended for unattended agents.
+	Strict *bool `json:"strict,omitempty"`
 }
 
 // RenderPromptResponse defines model for RenderPromptResponse.
@@ -8035,7 +8038,7 @@ type RenderPromptResponse struct {
 	ReferencesUsed      *[]string `json:"references_used,omitempty"`
 	RenderedBody        string    `json:"rendered_body"`
 
-	// Warnings Warnings about issues during rendering (e.g., missing references)
+	// Warnings Warnings about issues during rendering, such as an explicit @prompt:slug reference that does not resolve (kept as-is in rendered_body). A bare @word that does not resolve is plain text and never produces a warning.
 	Warnings *[]string `json:"warnings,omitempty"`
 }
 
