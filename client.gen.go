@@ -145,6 +145,20 @@ type ClientInterface interface {
 
 	ReplaceAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ResetAdminAISummarySettings request
+	ResetAdminAISummarySettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminAISummarySettings request
+	GetAdminAISummarySettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAdminAISummarySettingsWithBody request with any body
+	UpdateAdminAISummarySettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAdminAISummarySettings(ctx context.Context, body UpdateAdminAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAdminAISummarySettingsAudit request
+	ListAdminAISummarySettingsAudit(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteAdminInstanceEmailSettings request
 	DeleteAdminInstanceEmailSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -163,6 +177,20 @@ type ClientInterface interface {
 	TestAdminInstanceEmailSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	TestAdminInstanceEmailSettings(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ResetAdminSearchSettings request
+	ResetAdminSearchSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminSearchSettings request
+	GetAdminSearchSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAdminSearchSettingsWithBody request with any body
+	UpdateAdminSearchSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAdminSearchSettings(ctx context.Context, body UpdateAdminSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAdminSearchSettingsAudit request
+	ListAdminSearchSettingsAudit(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAdminStats request
 	GetAdminStats(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1349,6 +1377,66 @@ func (c *Client) ReplaceAdminSavedFilters(ctx context.Context, list AdminSavedFi
 	return c.Client.Do(req)
 }
 
+func (c *Client) ResetAdminAISummarySettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetAdminAISummarySettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminAISummarySettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminAISummarySettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminAISummarySettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminAISummarySettingsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminAISummarySettings(ctx context.Context, body UpdateAdminAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminAISummarySettingsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAdminAISummarySettingsAudit(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAdminAISummarySettingsAuditRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteAdminInstanceEmailSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteAdminInstanceEmailSettingsRequest(c.Server)
 	if err != nil {
@@ -1423,6 +1511,66 @@ func (c *Client) TestAdminInstanceEmailSettingsWithBody(ctx context.Context, con
 
 func (c *Client) TestAdminInstanceEmailSettings(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTestAdminInstanceEmailSettingsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResetAdminSearchSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetAdminSearchSettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminSearchSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminSearchSettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminSearchSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminSearchSettingsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminSearchSettings(ctx context.Context, body UpdateAdminSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminSearchSettingsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAdminSearchSettingsAudit(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAdminSearchSettingsAuditRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -6999,6 +7147,166 @@ func NewReplaceAdminSavedFiltersRequestWithBody(server string, list AdminSavedFi
 	return req, nil
 }
 
+// NewResetAdminAISummarySettingsRequest generates requests for ResetAdminAISummarySettings
+func NewResetAdminAISummarySettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/ai-summary")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminAISummarySettingsRequest generates requests for GetAdminAISummarySettings
+func NewGetAdminAISummarySettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/ai-summary")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAdminAISummarySettingsRequest calls the generic UpdateAdminAISummarySettings builder with application/json body
+func NewUpdateAdminAISummarySettingsRequest(server string, body UpdateAdminAISummarySettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAdminAISummarySettingsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpdateAdminAISummarySettingsRequestWithBody generates requests for UpdateAdminAISummarySettings with any type of body
+func NewUpdateAdminAISummarySettingsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/ai-summary")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAdminAISummarySettingsAuditRequest generates requests for ListAdminAISummarySettingsAudit
+func NewListAdminAISummarySettingsAuditRequest(server string, params *ListAdminAISummarySettingsAuditParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/ai-summary/audit")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteAdminInstanceEmailSettingsRequest generates requests for DeleteAdminInstanceEmailSettings
 func NewDeleteAdminInstanceEmailSettingsRequest(server string) (*http.Request, error) {
 	var err error
@@ -7195,6 +7503,166 @@ func NewTestAdminInstanceEmailSettingsRequestWithBody(server string, contentType
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewResetAdminSearchSettingsRequest generates requests for ResetAdminSearchSettings
+func NewResetAdminSearchSettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/search")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminSearchSettingsRequest generates requests for GetAdminSearchSettings
+func NewGetAdminSearchSettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/search")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAdminSearchSettingsRequest calls the generic UpdateAdminSearchSettings builder with application/json body
+func NewUpdateAdminSearchSettingsRequest(server string, body UpdateAdminSearchSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAdminSearchSettingsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpdateAdminSearchSettingsRequestWithBody generates requests for UpdateAdminSearchSettings with any type of body
+func NewUpdateAdminSearchSettingsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/search")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAdminSearchSettingsAuditRequest generates requests for ListAdminSearchSettingsAudit
+func NewListAdminSearchSettingsAuditRequest(server string, params *ListAdminSearchSettingsAuditParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/search/audit")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -22697,6 +23165,20 @@ type ClientWithResponsesInterface interface {
 
 	ReplaceAdminSavedFiltersWithResponse(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplaceAdminSavedFiltersHTTPResponse, error)
 
+	// ResetAdminAISummarySettingsWithResponse request
+	ResetAdminAISummarySettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminAISummarySettingsHTTPResponse, error)
+
+	// GetAdminAISummarySettingsWithResponse request
+	GetAdminAISummarySettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAISummarySettingsHTTPResponse, error)
+
+	// UpdateAdminAISummarySettingsWithBodyWithResponse request with any body
+	UpdateAdminAISummarySettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminAISummarySettingsHTTPResponse, error)
+
+	UpdateAdminAISummarySettingsWithResponse(ctx context.Context, body UpdateAdminAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminAISummarySettingsHTTPResponse, error)
+
+	// ListAdminAISummarySettingsAuditWithResponse request
+	ListAdminAISummarySettingsAuditWithResponse(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAISummarySettingsAuditHTTPResponse, error)
+
 	// DeleteAdminInstanceEmailSettingsWithResponse request
 	DeleteAdminInstanceEmailSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DeleteAdminInstanceEmailSettingsHTTPResponse, error)
 
@@ -22715,6 +23197,20 @@ type ClientWithResponsesInterface interface {
 	TestAdminInstanceEmailSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestAdminInstanceEmailSettingsHTTPResponse, error)
 
 	TestAdminInstanceEmailSettingsWithResponse(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*TestAdminInstanceEmailSettingsHTTPResponse, error)
+
+	// ResetAdminSearchSettingsWithResponse request
+	ResetAdminSearchSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminSearchSettingsHTTPResponse, error)
+
+	// GetAdminSearchSettingsWithResponse request
+	GetAdminSearchSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminSearchSettingsHTTPResponse, error)
+
+	// UpdateAdminSearchSettingsWithBodyWithResponse request with any body
+	UpdateAdminSearchSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminSearchSettingsHTTPResponse, error)
+
+	UpdateAdminSearchSettingsWithResponse(ctx context.Context, body UpdateAdminSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminSearchSettingsHTTPResponse, error)
+
+	// ListAdminSearchSettingsAuditWithResponse request
+	ListAdminSearchSettingsAuditWithResponse(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminSearchSettingsAuditHTTPResponse, error)
 
 	// GetAdminStatsWithResponse request
 	GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error)
@@ -24227,6 +24723,136 @@ func (r ReplaceAdminSavedFiltersHTTPResponse) ContentType() string {
 	return ""
 }
 
+type ResetAdminAISummarySettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetAdminAISummarySettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetAdminAISummarySettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetAdminAISummarySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminAISummarySettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceAISummarySettings
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminAISummarySettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminAISummarySettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminAISummarySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAdminAISummarySettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceAISummarySettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAdminAISummarySettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAdminAISummarySettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAdminAISummarySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAdminAISummarySettingsAuditHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSettingsAuditPage
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAdminAISummarySettingsAuditHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAdminAISummarySettingsAuditHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAdminAISummarySettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DeleteAdminInstanceEmailSettingsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -24384,6 +25010,136 @@ func (r TestAdminInstanceEmailSettingsHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r TestAdminInstanceEmailSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ResetAdminSearchSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetAdminSearchSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetAdminSearchSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetAdminSearchSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminSearchSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSearchSettings
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminSearchSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminSearchSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminSearchSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAdminSearchSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSearchSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAdminSearchSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAdminSearchSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAdminSearchSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAdminSearchSettingsAuditHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSettingsAuditPage
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAdminSearchSettingsAuditHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAdminSearchSettingsAuditHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAdminSearchSettingsAuditHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -33526,6 +34282,50 @@ func (c *ClientWithResponses) ReplaceAdminSavedFiltersWithResponse(ctx context.C
 	return ParseReplaceAdminSavedFiltersHTTPResponse(rsp)
 }
 
+// ResetAdminAISummarySettingsWithResponse request returning *ResetAdminAISummarySettingsHTTPResponse
+func (c *ClientWithResponses) ResetAdminAISummarySettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.ResetAdminAISummarySettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetAdminAISummarySettingsHTTPResponse(rsp)
+}
+
+// GetAdminAISummarySettingsWithResponse request returning *GetAdminAISummarySettingsHTTPResponse
+func (c *ClientWithResponses) GetAdminAISummarySettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.GetAdminAISummarySettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminAISummarySettingsHTTPResponse(rsp)
+}
+
+// UpdateAdminAISummarySettingsWithBodyWithResponse request with arbitrary body returning *UpdateAdminAISummarySettingsHTTPResponse
+func (c *ClientWithResponses) UpdateAdminAISummarySettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.UpdateAdminAISummarySettingsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminAISummarySettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAdminAISummarySettingsWithResponse(ctx context.Context, body UpdateAdminAISummarySettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminAISummarySettingsHTTPResponse, error) {
+	rsp, err := c.UpdateAdminAISummarySettings(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminAISummarySettingsHTTPResponse(rsp)
+}
+
+// ListAdminAISummarySettingsAuditWithResponse request returning *ListAdminAISummarySettingsAuditHTTPResponse
+func (c *ClientWithResponses) ListAdminAISummarySettingsAuditWithResponse(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAISummarySettingsAuditHTTPResponse, error) {
+	rsp, err := c.ListAdminAISummarySettingsAudit(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAdminAISummarySettingsAuditHTTPResponse(rsp)
+}
+
 // DeleteAdminInstanceEmailSettingsWithResponse request returning *DeleteAdminInstanceEmailSettingsHTTPResponse
 func (c *ClientWithResponses) DeleteAdminInstanceEmailSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DeleteAdminInstanceEmailSettingsHTTPResponse, error) {
 	rsp, err := c.DeleteAdminInstanceEmailSettings(ctx, reqEditors...)
@@ -33585,6 +34385,50 @@ func (c *ClientWithResponses) TestAdminInstanceEmailSettingsWithResponse(ctx con
 		return nil, err
 	}
 	return ParseTestAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
+// ResetAdminSearchSettingsWithResponse request returning *ResetAdminSearchSettingsHTTPResponse
+func (c *ClientWithResponses) ResetAdminSearchSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminSearchSettingsHTTPResponse, error) {
+	rsp, err := c.ResetAdminSearchSettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetAdminSearchSettingsHTTPResponse(rsp)
+}
+
+// GetAdminSearchSettingsWithResponse request returning *GetAdminSearchSettingsHTTPResponse
+func (c *ClientWithResponses) GetAdminSearchSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminSearchSettingsHTTPResponse, error) {
+	rsp, err := c.GetAdminSearchSettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminSearchSettingsHTTPResponse(rsp)
+}
+
+// UpdateAdminSearchSettingsWithBodyWithResponse request with arbitrary body returning *UpdateAdminSearchSettingsHTTPResponse
+func (c *ClientWithResponses) UpdateAdminSearchSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminSearchSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateAdminSearchSettingsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminSearchSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAdminSearchSettingsWithResponse(ctx context.Context, body UpdateAdminSearchSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminSearchSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateAdminSearchSettings(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminSearchSettingsHTTPResponse(rsp)
+}
+
+// ListAdminSearchSettingsAuditWithResponse request returning *ListAdminSearchSettingsAuditHTTPResponse
+func (c *ClientWithResponses) ListAdminSearchSettingsAuditWithResponse(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminSearchSettingsAuditHTTPResponse, error) {
+	rsp, err := c.ListAdminSearchSettingsAudit(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAdminSearchSettingsAuditHTTPResponse(rsp)
 }
 
 // GetAdminStatsWithResponse request returning *GetAdminStatsHTTPResponse
@@ -37357,6 +38201,180 @@ func ParseReplaceAdminSavedFiltersHTTPResponse(rsp *http.Response) (*ReplaceAdmi
 	return response, nil
 }
 
+// ParseResetAdminAISummarySettingsHTTPResponse parses an HTTP response from a ResetAdminAISummarySettingsWithResponse call
+func ParseResetAdminAISummarySettingsHTTPResponse(rsp *http.Response) (*ResetAdminAISummarySettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetAdminAISummarySettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminAISummarySettingsHTTPResponse parses an HTTP response from a GetAdminAISummarySettingsWithResponse call
+func ParseGetAdminAISummarySettingsHTTPResponse(rsp *http.Response) (*GetAdminAISummarySettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminAISummarySettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceAISummarySettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAdminAISummarySettingsHTTPResponse parses an HTTP response from a UpdateAdminAISummarySettingsWithResponse call
+func ParseUpdateAdminAISummarySettingsHTTPResponse(rsp *http.Response) (*UpdateAdminAISummarySettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAdminAISummarySettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceAISummarySettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAdminAISummarySettingsAuditHTTPResponse parses an HTTP response from a ListAdminAISummarySettingsAuditWithResponse call
+func ParseListAdminAISummarySettingsAuditHTTPResponse(rsp *http.Response) (*ListAdminAISummarySettingsAuditHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAdminAISummarySettingsAuditHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSettingsAuditPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDeleteAdminInstanceEmailSettingsHTTPResponse parses an HTTP response from a DeleteAdminInstanceEmailSettingsWithResponse call
 func ParseDeleteAdminInstanceEmailSettingsHTTPResponse(rsp *http.Response) (*DeleteAdminInstanceEmailSettingsHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -37547,6 +38565,180 @@ func ParseTestAdminInstanceEmailSettingsHTTPResponse(rsp *http.Response) (*TestA
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest TeamEmailProviderTestResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseResetAdminSearchSettingsHTTPResponse parses an HTTP response from a ResetAdminSearchSettingsWithResponse call
+func ParseResetAdminSearchSettingsHTTPResponse(rsp *http.Response) (*ResetAdminSearchSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetAdminSearchSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminSearchSettingsHTTPResponse parses an HTTP response from a GetAdminSearchSettingsWithResponse call
+func ParseGetAdminSearchSettingsHTTPResponse(rsp *http.Response) (*GetAdminSearchSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminSearchSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSearchSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAdminSearchSettingsHTTPResponse parses an HTTP response from a UpdateAdminSearchSettingsWithResponse call
+func ParseUpdateAdminSearchSettingsHTTPResponse(rsp *http.Response) (*UpdateAdminSearchSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAdminSearchSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSearchSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAdminSearchSettingsAuditHTTPResponse parses an HTTP response from a ListAdminSearchSettingsAuditWithResponse call
+func ParseListAdminSearchSettingsAuditHTTPResponse(rsp *http.Response) (*ListAdminSearchSettingsAuditHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAdminSearchSettingsAuditHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSettingsAuditPage
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
