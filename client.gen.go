@@ -145,6 +145,25 @@ type ClientInterface interface {
 
 	ReplaceAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteAdminInstanceEmailSettings request
+	DeleteAdminInstanceEmailSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminInstanceEmailSettings request
+	GetAdminInstanceEmailSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpsertAdminInstanceEmailSettingsWithBody request with any body
+	UpsertAdminInstanceEmailSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpsertAdminInstanceEmailSettings(ctx context.Context, body UpsertAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAdminInstanceEmailSettingsAudit request
+	ListAdminInstanceEmailSettingsAudit(ctx context.Context, params *ListAdminInstanceEmailSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TestAdminInstanceEmailSettingsWithBody request with any body
+	TestAdminInstanceEmailSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TestAdminInstanceEmailSettings(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminStats request
 	GetAdminStats(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1320,6 +1339,90 @@ func (c *Client) ReplaceAdminSavedFiltersWithBody(ctx context.Context, list Admi
 
 func (c *Client) ReplaceAdminSavedFilters(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReplaceAdminSavedFiltersRequest(c.Server, list, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteAdminInstanceEmailSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAdminInstanceEmailSettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminInstanceEmailSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminInstanceEmailSettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpsertAdminInstanceEmailSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpsertAdminInstanceEmailSettingsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpsertAdminInstanceEmailSettings(ctx context.Context, body UpsertAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpsertAdminInstanceEmailSettingsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAdminInstanceEmailSettingsAudit(ctx context.Context, params *ListAdminInstanceEmailSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAdminInstanceEmailSettingsAuditRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestAdminInstanceEmailSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestAdminInstanceEmailSettingsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestAdminInstanceEmailSettings(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestAdminInstanceEmailSettingsRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6887,6 +6990,206 @@ func NewReplaceAdminSavedFiltersRequestWithBody(server string, list AdminSavedFi
 	}
 
 	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteAdminInstanceEmailSettingsRequest generates requests for DeleteAdminInstanceEmailSettings
+func NewDeleteAdminInstanceEmailSettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/email")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminInstanceEmailSettingsRequest generates requests for GetAdminInstanceEmailSettings
+func NewGetAdminInstanceEmailSettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/email")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpsertAdminInstanceEmailSettingsRequest calls the generic UpsertAdminInstanceEmailSettings builder with application/json body
+func NewUpsertAdminInstanceEmailSettingsRequest(server string, body UpsertAdminInstanceEmailSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpsertAdminInstanceEmailSettingsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpsertAdminInstanceEmailSettingsRequestWithBody generates requests for UpsertAdminInstanceEmailSettings with any type of body
+func NewUpsertAdminInstanceEmailSettingsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/email")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAdminInstanceEmailSettingsAuditRequest generates requests for ListAdminInstanceEmailSettingsAudit
+func NewListAdminInstanceEmailSettingsAuditRequest(server string, params *ListAdminInstanceEmailSettingsAuditParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/email/audit")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTestAdminInstanceEmailSettingsRequest calls the generic TestAdminInstanceEmailSettings builder with application/json body
+func NewTestAdminInstanceEmailSettingsRequest(server string, body TestAdminInstanceEmailSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTestAdminInstanceEmailSettingsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewTestAdminInstanceEmailSettingsRequestWithBody generates requests for TestAdminInstanceEmailSettings with any type of body
+func NewTestAdminInstanceEmailSettingsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/email/test")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -22394,6 +22697,25 @@ type ClientWithResponsesInterface interface {
 
 	ReplaceAdminSavedFiltersWithResponse(ctx context.Context, list AdminSavedFilterListName, body ReplaceAdminSavedFiltersJSONRequestBody, reqEditors ...RequestEditorFn) (*ReplaceAdminSavedFiltersHTTPResponse, error)
 
+	// DeleteAdminInstanceEmailSettingsWithResponse request
+	DeleteAdminInstanceEmailSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DeleteAdminInstanceEmailSettingsHTTPResponse, error)
+
+	// GetAdminInstanceEmailSettingsWithResponse request
+	GetAdminInstanceEmailSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminInstanceEmailSettingsHTTPResponse, error)
+
+	// UpsertAdminInstanceEmailSettingsWithBodyWithResponse request with any body
+	UpsertAdminInstanceEmailSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpsertAdminInstanceEmailSettingsHTTPResponse, error)
+
+	UpsertAdminInstanceEmailSettingsWithResponse(ctx context.Context, body UpsertAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpsertAdminInstanceEmailSettingsHTTPResponse, error)
+
+	// ListAdminInstanceEmailSettingsAuditWithResponse request
+	ListAdminInstanceEmailSettingsAuditWithResponse(ctx context.Context, params *ListAdminInstanceEmailSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminInstanceEmailSettingsAuditHTTPResponse, error)
+
+	// TestAdminInstanceEmailSettingsWithBodyWithResponse request with any body
+	TestAdminInstanceEmailSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestAdminInstanceEmailSettingsHTTPResponse, error)
+
+	TestAdminInstanceEmailSettingsWithResponse(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*TestAdminInstanceEmailSettingsHTTPResponse, error)
+
 	// GetAdminStatsWithResponse request
 	GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error)
 
@@ -23899,6 +24221,169 @@ func (r ReplaceAdminSavedFiltersHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ReplaceAdminSavedFiltersHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteAdminInstanceEmailSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAdminInstanceEmailSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAdminInstanceEmailSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteAdminInstanceEmailSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminInstanceEmailSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceEmailSettings
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminInstanceEmailSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminInstanceEmailSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminInstanceEmailSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpsertAdminInstanceEmailSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceEmailSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpsertAdminInstanceEmailSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpsertAdminInstanceEmailSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpsertAdminInstanceEmailSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAdminInstanceEmailSettingsAuditHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSettingsAuditPage
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAdminInstanceEmailSettingsAuditHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAdminInstanceEmailSettingsAuditHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAdminInstanceEmailSettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type TestAdminInstanceEmailSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TeamEmailProviderTestResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TestAdminInstanceEmailSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TestAdminInstanceEmailSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r TestAdminInstanceEmailSettingsHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -33041,6 +33526,67 @@ func (c *ClientWithResponses) ReplaceAdminSavedFiltersWithResponse(ctx context.C
 	return ParseReplaceAdminSavedFiltersHTTPResponse(rsp)
 }
 
+// DeleteAdminInstanceEmailSettingsWithResponse request returning *DeleteAdminInstanceEmailSettingsHTTPResponse
+func (c *ClientWithResponses) DeleteAdminInstanceEmailSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DeleteAdminInstanceEmailSettingsHTTPResponse, error) {
+	rsp, err := c.DeleteAdminInstanceEmailSettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
+// GetAdminInstanceEmailSettingsWithResponse request returning *GetAdminInstanceEmailSettingsHTTPResponse
+func (c *ClientWithResponses) GetAdminInstanceEmailSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminInstanceEmailSettingsHTTPResponse, error) {
+	rsp, err := c.GetAdminInstanceEmailSettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
+// UpsertAdminInstanceEmailSettingsWithBodyWithResponse request with arbitrary body returning *UpsertAdminInstanceEmailSettingsHTTPResponse
+func (c *ClientWithResponses) UpsertAdminInstanceEmailSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpsertAdminInstanceEmailSettingsHTTPResponse, error) {
+	rsp, err := c.UpsertAdminInstanceEmailSettingsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpsertAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpsertAdminInstanceEmailSettingsWithResponse(ctx context.Context, body UpsertAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpsertAdminInstanceEmailSettingsHTTPResponse, error) {
+	rsp, err := c.UpsertAdminInstanceEmailSettings(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpsertAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
+// ListAdminInstanceEmailSettingsAuditWithResponse request returning *ListAdminInstanceEmailSettingsAuditHTTPResponse
+func (c *ClientWithResponses) ListAdminInstanceEmailSettingsAuditWithResponse(ctx context.Context, params *ListAdminInstanceEmailSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminInstanceEmailSettingsAuditHTTPResponse, error) {
+	rsp, err := c.ListAdminInstanceEmailSettingsAudit(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAdminInstanceEmailSettingsAuditHTTPResponse(rsp)
+}
+
+// TestAdminInstanceEmailSettingsWithBodyWithResponse request with arbitrary body returning *TestAdminInstanceEmailSettingsHTTPResponse
+func (c *ClientWithResponses) TestAdminInstanceEmailSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TestAdminInstanceEmailSettingsHTTPResponse, error) {
+	rsp, err := c.TestAdminInstanceEmailSettingsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) TestAdminInstanceEmailSettingsWithResponse(ctx context.Context, body TestAdminInstanceEmailSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*TestAdminInstanceEmailSettingsHTTPResponse, error) {
+	rsp, err := c.TestAdminInstanceEmailSettings(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestAdminInstanceEmailSettingsHTTPResponse(rsp)
+}
+
 // GetAdminStatsWithResponse request returning *GetAdminStatsHTTPResponse
 func (c *ClientWithResponses) GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error) {
 	rsp, err := c.GetAdminStats(ctx, reqEditors...)
@@ -36798,6 +37344,227 @@ func ParseReplaceAdminSavedFiltersHTTPResponse(rsp *http.Response) (*ReplaceAdmi
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteAdminInstanceEmailSettingsHTTPResponse parses an HTTP response from a DeleteAdminInstanceEmailSettingsWithResponse call
+func ParseDeleteAdminInstanceEmailSettingsHTTPResponse(rsp *http.Response) (*DeleteAdminInstanceEmailSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteAdminInstanceEmailSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminInstanceEmailSettingsHTTPResponse parses an HTTP response from a GetAdminInstanceEmailSettingsWithResponse call
+func ParseGetAdminInstanceEmailSettingsHTTPResponse(rsp *http.Response) (*GetAdminInstanceEmailSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminInstanceEmailSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceEmailSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpsertAdminInstanceEmailSettingsHTTPResponse parses an HTTP response from a UpsertAdminInstanceEmailSettingsWithResponse call
+func ParseUpsertAdminInstanceEmailSettingsHTTPResponse(rsp *http.Response) (*UpsertAdminInstanceEmailSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpsertAdminInstanceEmailSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceEmailSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAdminInstanceEmailSettingsAuditHTTPResponse parses an HTTP response from a ListAdminInstanceEmailSettingsAuditWithResponse call
+func ParseListAdminInstanceEmailSettingsAuditHTTPResponse(rsp *http.Response) (*ListAdminInstanceEmailSettingsAuditHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAdminInstanceEmailSettingsAuditHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSettingsAuditPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTestAdminInstanceEmailSettingsHTTPResponse parses an HTTP response from a TestAdminInstanceEmailSettingsWithResponse call
+func ParseTestAdminInstanceEmailSettingsHTTPResponse(rsp *http.Response) (*TestAdminInstanceEmailSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TestAdminInstanceEmailSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TeamEmailProviderTestResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
