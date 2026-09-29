@@ -6980,10 +6980,16 @@ type CurrentUser struct {
 	// IdpSubject Subject identifier from the identity provider
 	IdpSubject *string `json:"idp_subject,omitempty"`
 
-	// IsInstanceAdmin Whether the authenticated user's email is in the configured
-	// auth.instance_admins list (matched case-insensitively). False when the
-	// list is empty (feature dormant).
-	IsInstanceAdmin       bool       `json:"is_instance_admin"`
+	// IsInstanceAdmin Whether the authenticated user is an instance admin: either a root
+	// admin (see `is_root_instance_admin`) or a non-suspended user granted
+	// instance admin in the database by a root admin.
+	IsInstanceAdmin bool `json:"is_instance_admin"`
+
+	// IsRootInstanceAdmin Whether the authenticated user's email is in the configured
+	// auth.instance_admins list (matched case-insensitively). Only root
+	// admins may grant or revoke other instance admins. UI convenience
+	// only; grant/revoke is authorized server-side.
+	IsRootInstanceAdmin   bool       `json:"is_root_instance_admin"`
 	Name                  string     `json:"name"`
 	OnboardingCompleted   bool       `json:"onboarding_completed"`
 	OnboardingCompletedAt *time.Time `json:"onboarding_completed_at,omitempty"`
