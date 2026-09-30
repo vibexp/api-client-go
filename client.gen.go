@@ -26135,6 +26135,7 @@ type AuthCallbackHTTPResponse struct {
 	ApplicationproblemJSON400 *ErrorResponse
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON500 *ErrorResponse
+	ApplicationproblemJSON503 *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -26296,6 +26297,7 @@ type ListAuthProvidersHTTPResponse struct {
 	HTTPResponse              *http.Response
 	JSON200                   *ProvidersResponse
 	ApplicationproblemJSON500 *ErrorResponse
+	ApplicationproblemJSON503 *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -40166,6 +40168,13 @@ func ParseAuthCallbackHTTPResponse(rsp *http.Response) (*AuthCallbackHTTPRespons
 		}
 		response.ApplicationproblemJSON500 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
+
 	}
 
 	return response, nil
@@ -40372,6 +40381,13 @@ func ParseListAuthProvidersHTTPResponse(rsp *http.Response) (*ListAuthProvidersH
 			return nil, err
 		}
 		response.ApplicationproblemJSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
 
 	}
 

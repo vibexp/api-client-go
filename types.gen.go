@@ -660,6 +660,27 @@ func (e ArtifactStatus) Valid() bool {
 	}
 }
 
+// Defines values for AuthProviderType.
+const (
+	AuthProviderTypeGitHub AuthProviderType = "github"
+	AuthProviderTypeGoogle AuthProviderType = "google"
+	AuthProviderTypeOIDC   AuthProviderType = "oidc"
+)
+
+// Valid indicates whether the value is a known member of the AuthProviderType enum.
+func (e AuthProviderType) Valid() bool {
+	switch e {
+	case AuthProviderTypeGitHub:
+		return true
+	case AuthProviderTypeGoogle:
+		return true
+	case AuthProviderTypeOIDC:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for BlueprintSubtype.
 const (
 	BlueprintSubtypeAgents        BlueprintSubtype = "agents"
@@ -5973,11 +5994,19 @@ type AuthProvider struct {
 	// DisplayName Human-readable label for the provider button in the login UI
 	DisplayName string `json:"display_name"`
 
-	// Name Canonical provider name, also the value to pass as the `provider`
-	// query parameter to GET /api/v1/auth/login (e.g. `google`, `github`,
-	// `oidc`).
+	// Name Provider slug, also the value to pass as the `provider` query
+	// parameter to GET /api/v1/auth/login (e.g. `google`, `github`, `oidc`,
+	// or an admin-chosen slug such as `corp-sso`).
 	Name string `json:"name"`
+
+	// Type The provider kind. Several `oidc` providers may be enabled side by
+	// side, each with its own slug.
+	Type AuthProviderType `json:"type"`
 }
+
+// AuthProviderType The provider kind. Several `oidc` providers may be enabled side by
+// side, each with its own slug.
+type AuthProviderType string
 
 // Blueprint defines model for Blueprint.
 type Blueprint struct {
@@ -8396,9 +8425,9 @@ type ProviderModelList struct {
 type ProviderModelListMessage string
 
 // ProvidersResponse Response body returned by GET /api/v1/auth/providers listing the login
-// providers enabled in this deployment's configuration.
+// providers enabled on this instance.
 type ProvidersResponse struct {
-	// Providers Enabled login providers, stable-sorted by canonical name
+	// Providers Enabled login providers, ordered by the admin-defined sort order
 	Providers []AuthProvider `json:"providers"`
 }
 
@@ -10869,9 +10898,9 @@ type AuthCallbackParams struct {
 
 // LoginParams defines parameters for Login.
 type LoginParams struct {
-	// Provider Canonical name of the identity provider to use (e.g. `google`,
-	// `github`, `oidc`). Optional when a single provider is enabled;
-	// required when more than one is enabled.
+	// Provider Slug of the identity provider to use (the `name` returned by
+	// GET /api/v1/auth/providers). Optional when a single provider is
+	// enabled; required when more than one is enabled.
 	Provider *string `form:"provider,omitempty" json:"provider,omitempty"`
 }
 
