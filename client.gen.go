@@ -363,6 +363,14 @@ type ClientInterface interface {
 	// DeleteAPIKeySettings request
 	DeleteAPIKeySettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CreateSetupSessionWithBody request with any body
+	CreateSetupSessionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateSetupSession(ctx context.Context, body CreateSetupSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSetupStatus request
+	GetSetupStatus(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetSharedPrompt request
 	GetSharedPrompt(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2279,6 +2287,42 @@ func (c *Client) CreateAPIKeySettings(ctx context.Context, body CreateAPIKeySett
 
 func (c *Client) DeleteAPIKeySettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteAPIKeySettingsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSetupSessionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSetupSessionRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateSetupSession(ctx context.Context, body CreateSetupSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateSetupSessionRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSetupStatus(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSetupStatusRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -11765,6 +11809,73 @@ func NewDeleteAPIKeySettingsRequest(server string, id string) (*http.Request, er
 	}
 
 	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateSetupSessionRequest calls the generic CreateSetupSession builder with application/json body
+func NewCreateSetupSessionRequest(server string, body CreateSetupSessionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateSetupSessionRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateSetupSessionRequestWithBody generates requests for CreateSetupSession with any type of body
+func NewCreateSetupSessionRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/setup/session")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetSetupStatusRequest generates requests for GetSetupStatus
+func NewGetSetupStatusRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/setup/status")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -23383,6 +23494,14 @@ type ClientWithResponsesInterface interface {
 	// DeleteAPIKeySettingsWithResponse request
 	DeleteAPIKeySettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*DeleteAPIKeySettingsHTTPResponse, error)
 
+	// CreateSetupSessionWithBodyWithResponse request with any body
+	CreateSetupSessionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSetupSessionHTTPResponse, error)
+
+	CreateSetupSessionWithResponse(ctx context.Context, body CreateSetupSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSetupSessionHTTPResponse, error)
+
+	// GetSetupStatusWithResponse request
+	GetSetupStatusWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSetupStatusHTTPResponse, error)
+
 	// GetSharedPromptWithResponse request
 	GetSharedPromptWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*GetSharedPromptHTTPResponse, error)
 
@@ -26870,6 +26989,71 @@ func (r DeleteAPIKeySettingsHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r DeleteAPIKeySettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateSetupSessionHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *SetupSessionResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateSetupSessionHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateSetupSessionHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateSetupSessionHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetSetupStatusHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *SetupStatusResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSetupStatusHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSetupStatusHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSetupStatusHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -34958,6 +35142,32 @@ func (c *ClientWithResponses) DeleteAPIKeySettingsWithResponse(ctx context.Conte
 	return ParseDeleteAPIKeySettingsHTTPResponse(rsp)
 }
 
+// CreateSetupSessionWithBodyWithResponse request with arbitrary body returning *CreateSetupSessionHTTPResponse
+func (c *ClientWithResponses) CreateSetupSessionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSetupSessionHTTPResponse, error) {
+	rsp, err := c.CreateSetupSessionWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSetupSessionHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateSetupSessionWithResponse(ctx context.Context, body CreateSetupSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateSetupSessionHTTPResponse, error) {
+	rsp, err := c.CreateSetupSession(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateSetupSessionHTTPResponse(rsp)
+}
+
+// GetSetupStatusWithResponse request returning *GetSetupStatusHTTPResponse
+func (c *ClientWithResponses) GetSetupStatusWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSetupStatusHTTPResponse, error) {
+	rsp, err := c.GetSetupStatus(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSetupStatusHTTPResponse(rsp)
+}
+
 // GetSharedPromptWithResponse request returning *GetSharedPromptHTTPResponse
 func (c *ClientWithResponses) GetSharedPromptWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*GetSharedPromptHTTPResponse, error) {
 	rsp, err := c.GetSharedPrompt(ctx, token, reqEditors...)
@@ -41124,6 +41334,93 @@ func ParseDeleteAPIKeySettingsHTTPResponse(rsp *http.Response) (*DeleteAPIKeySet
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateSetupSessionHTTPResponse parses an HTTP response from a CreateSetupSessionWithResponse call
+func ParseCreateSetupSessionHTTPResponse(rsp *http.Response) (*CreateSetupSessionHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateSetupSessionHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SetupSessionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSetupStatusHTTPResponse parses an HTTP response from a GetSetupStatusWithResponse call
+func ParseGetSetupStatusHTTPResponse(rsp *http.Response) (*GetSetupStatusHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSetupStatusHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SetupStatusResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
 
 	}
 

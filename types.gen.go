@@ -6947,6 +6947,12 @@ type CreateRelationRequestRelationType string
 // CreateRelationRequestToType Object resource type (artifact, memory, prompt, or blueprint)
 type CreateRelationRequestToType string
 
+// CreateSetupSessionRequest The one-time setup token from the setup URL the server logged at boot.
+type CreateSetupSessionRequest struct {
+	// Token The `token` query parameter of the setup URL.
+	Token string `json:"token"`
+}
+
 // CreateShareRequest defines model for CreateShareRequest.
 type CreateShareRequest struct {
 	// Emails List of email addresses allowed to access the shared prompt (required for 'restricted' shares)
@@ -8903,6 +8909,18 @@ type SendInvitationsRequest struct {
 
 // SendInvitationsRequestRole Role granted to invitees when they accept
 type SendInvitationsRequestRole string
+
+// SetupSessionResponse The setup session that was started. The session itself is the `vibexp_setup` cookie; this body only says when it ends.
+type SetupSessionResponse struct {
+	// ExpiresAt When the setup session stops being valid.
+	ExpiresAt time.Time `json:"expires_at"`
+}
+
+// SetupStatusResponse Whether this instance is in authentication setup mode. Deliberately a single boolean: the endpoint is public, so it says nothing about which providers exist, why setup is required or whether a setup token is outstanding.
+type SetupStatusResponse struct {
+	// SetupRequired True while the instance has no enabled sign-in provider (or setup was deliberately re-armed) and so must be configured through the setup page.
+	SetupRequired bool `json:"setup_required"`
+}
 
 // ShareResponse defines model for ShareResponse.
 type ShareResponse struct {
@@ -11692,6 +11710,9 @@ type UpdatePreferencesJSONRequestBody = UpdatePreferencesRequest
 
 // CreateAPIKeySettingsJSONRequestBody defines body for CreateAPIKeySettings for application/json ContentType.
 type CreateAPIKeySettingsJSONRequestBody = CreateAPIKeyRequest
+
+// CreateSetupSessionJSONRequestBody defines body for CreateSetupSession for application/json ContentType.
+type CreateSetupSessionJSONRequestBody = CreateSetupSessionRequest
 
 // SubmitSupportRequestJSONRequestBody defines body for SubmitSupportRequest for application/json ContentType.
 type SubmitSupportRequestJSONRequestBody = SupportRequest
