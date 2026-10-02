@@ -78,6 +78,75 @@ func (e AdminAISummaryValuesStyle) Valid() bool {
 	}
 }
 
+// Defines values for AdminAuthProviderHealthStatus.
+const (
+	AdminAuthProviderHealthStatusDisabled  AdminAuthProviderHealthStatus = "disabled"
+	AdminAuthProviderHealthStatusHealthy   AdminAuthProviderHealthStatus = "healthy"
+	AdminAuthProviderHealthStatusUnhealthy AdminAuthProviderHealthStatus = "unhealthy"
+	AdminAuthProviderHealthStatusUnknown   AdminAuthProviderHealthStatus = "unknown"
+)
+
+// Valid indicates whether the value is a known member of the AdminAuthProviderHealthStatus enum.
+func (e AdminAuthProviderHealthStatus) Valid() bool {
+	switch e {
+	case AdminAuthProviderHealthStatusDisabled:
+		return true
+	case AdminAuthProviderHealthStatusHealthy:
+		return true
+	case AdminAuthProviderHealthStatusUnhealthy:
+		return true
+	case AdminAuthProviderHealthStatusUnknown:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminAuthProviderType.
+const (
+	AdminAuthProviderTypeGithub AdminAuthProviderType = "github"
+	AdminAuthProviderTypeGoogle AdminAuthProviderType = "google"
+	AdminAuthProviderTypeOidc   AdminAuthProviderType = "oidc"
+)
+
+// Valid indicates whether the value is a known member of the AdminAuthProviderType enum.
+func (e AdminAuthProviderType) Valid() bool {
+	switch e {
+	case AdminAuthProviderTypeGithub:
+		return true
+	case AdminAuthProviderTypeGoogle:
+		return true
+	case AdminAuthProviderTypeOidc:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminAuthSettingsAuditSetting.
+const (
+	AdminAuthSettingsAuditSettingAuthAllowlist  AdminAuthSettingsAuditSetting = "auth_allowlist"
+	AdminAuthSettingsAuditSettingAuthProviders  AdminAuthSettingsAuditSetting = "auth_providers"
+	AdminAuthSettingsAuditSettingAuthSetup      AdminAuthSettingsAuditSetting = "auth_setup"
+	AdminAuthSettingsAuditSettingInstanceAdmins AdminAuthSettingsAuditSetting = "instance_admins"
+)
+
+// Valid indicates whether the value is a known member of the AdminAuthSettingsAuditSetting enum.
+func (e AdminAuthSettingsAuditSetting) Valid() bool {
+	switch e {
+	case AdminAuthSettingsAuditSettingAuthAllowlist:
+		return true
+	case AdminAuthSettingsAuditSettingAuthProviders:
+		return true
+	case AdminAuthSettingsAuditSettingAuthSetup:
+		return true
+	case AdminAuthSettingsAuditSettingInstanceAdmins:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminInstanceAISummaryStyle.
 const (
 	AdminInstanceAISummaryStyleBalanced AdminInstanceAISummaryStyle = "balanced"
@@ -173,9 +242,13 @@ func (e AdminInstanceSettingsAuditEntryAction) Valid() bool {
 
 // Defines values for AdminInstanceSettingsAuditEntrySetting.
 const (
-	AdminInstanceSettingsAuditEntrySettingAiSummary     AdminInstanceSettingsAuditEntrySetting = "ai_summary"
-	AdminInstanceSettingsAuditEntrySettingEmailProvider AdminInstanceSettingsAuditEntrySetting = "email_provider"
-	AdminInstanceSettingsAuditEntrySettingSearch        AdminInstanceSettingsAuditEntrySetting = "search"
+	AdminInstanceSettingsAuditEntrySettingAiSummary      AdminInstanceSettingsAuditEntrySetting = "ai_summary"
+	AdminInstanceSettingsAuditEntrySettingAuthAllowlist  AdminInstanceSettingsAuditEntrySetting = "auth_allowlist"
+	AdminInstanceSettingsAuditEntrySettingAuthProviders  AdminInstanceSettingsAuditEntrySetting = "auth_providers"
+	AdminInstanceSettingsAuditEntrySettingAuthSetup      AdminInstanceSettingsAuditEntrySetting = "auth_setup"
+	AdminInstanceSettingsAuditEntrySettingEmailProvider  AdminInstanceSettingsAuditEntrySetting = "email_provider"
+	AdminInstanceSettingsAuditEntrySettingInstanceAdmins AdminInstanceSettingsAuditEntrySetting = "instance_admins"
+	AdminInstanceSettingsAuditEntrySettingSearch         AdminInstanceSettingsAuditEntrySetting = "search"
 )
 
 // Valid indicates whether the value is a known member of the AdminInstanceSettingsAuditEntrySetting enum.
@@ -183,7 +256,15 @@ func (e AdminInstanceSettingsAuditEntrySetting) Valid() bool {
 	switch e {
 	case AdminInstanceSettingsAuditEntrySettingAiSummary:
 		return true
+	case AdminInstanceSettingsAuditEntrySettingAuthAllowlist:
+		return true
+	case AdminInstanceSettingsAuditEntrySettingAuthProviders:
+		return true
+	case AdminInstanceSettingsAuditEntrySettingAuthSetup:
+		return true
 	case AdminInstanceSettingsAuditEntrySettingEmailProvider:
+		return true
+	case AdminInstanceSettingsAuditEntrySettingInstanceAdmins:
 		return true
 	case AdminInstanceSettingsAuditEntrySettingSearch:
 		return true
@@ -3982,6 +4063,263 @@ type AdminArtifactType struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// AdminAuthAllowlist The instance's sign-in access allowlist. A user may sign in when their
+// email's domain is in `domains` or the address is in `emails`. With both
+// lists empty, or nothing stored, access is open: every user may sign in
+// (`active` is false). Root instance admins are always exempt.
+type AdminAuthAllowlist struct {
+	// Active Whether the allowlist restricts sign-in (at least one domain or email).
+	Active  bool     `json:"active"`
+	Domains []string `json:"domains"`
+	Emails  []string `json:"emails"`
+
+	// UpdatedAt When the allowlist was last saved; null when nothing is stored.
+	UpdatedAt *time.Time `json:"updated_at"`
+
+	// UpdatedByUserId Who last saved the allowlist. Null when nothing is stored, for the
+	// boot-time config import, a save made on a setup session, or once that
+	// user has been deleted.
+	UpdatedByUserId *openapi_types.UUID `json:"updated_by_user_id"`
+
+	// Version The stored allowlist's own version; null when nothing is stored.
+	Version *int64 `json:"version"`
+}
+
+// AdminAuthAllowlistImpact What replacing the allowlist with a candidate would do: the active
+// (non-suspended) users who would stop matching it. Root instance admins are
+// exempt and never counted. An open-access candidate affects nobody.
+type AdminAuthAllowlistImpact struct {
+	// Count How many active users match neither list of the candidate.
+	Count int `json:"count"`
+
+	// Sample Up to 20 of their emails, in alphabetical order.
+	Sample []string `json:"sample"`
+
+	// SampleTruncated Whether `count` exceeds the number of emails in `sample`.
+	SampleTruncated bool `json:"sample_truncated"`
+}
+
+// AdminAuthAllowlistPreviewRequest A candidate allowlist to preview. Both lists are required (send `[]` for none).
+type AdminAuthAllowlistPreviewRequest struct {
+	Domains []string `json:"domains"`
+	Emails  []string `json:"emails"`
+}
+
+// AdminAuthAllowlistUpdate A whole replacement of the access allowlist. Both lists are required (send
+// `[]` for none). Entries are trimmed, lower-cased and de-duplicated; a domain
+// is a DNS name of at least two labels with no leading `@`. Storing two empty
+// lists means open access.
+//
+// `expected_version` is optional: when present, the save is rejected with
+// 409 unless it equals the stored allowlist's `version` (and when nothing is
+// stored, any `expected_version` other than null is a conflict). Omit it for
+// last-write-wins.
+type AdminAuthAllowlistUpdate struct {
+	Domains []string `json:"domains"`
+	Emails  []string `json:"emails"`
+
+	// ExpectedVersion The `version` the caller last read; omit or null for last-write-wins.
+	ExpectedVersion *int64 `json:"expected_version,omitempty"`
+}
+
+// AdminAuthProvider One sign-in identity provider. The client secret is write-only: it is never
+// returned, and `has_client_secret` reports only whether one is stored.
+type AdminAuthProvider struct {
+	// ClientId The OAuth client id.
+	ClientId  string    `json:"client_id"`
+	CreatedAt time.Time `json:"created_at"`
+
+	// DisplayName The name shown on the sign-in button.
+	DisplayName string `json:"display_name"`
+
+	// Enabled Whether the provider is offered for sign-in.
+	Enabled bool `json:"enabled"`
+
+	// HasClientSecret Whether a client secret is stored.
+	HasClientSecret bool `json:"has_client_secret"`
+
+	// Health The provider's health as seen by the replica that served the request.
+	// Health is held in memory per replica and is not persisted.
+	Health AdminAuthProviderHealth `json:"health"`
+
+	// Id Provider id.
+	Id openapi_types.UUID `json:"id"`
+
+	// IssuerUrl The OIDC issuer URL; null for `google` and `github`.
+	IssuerUrl *string `json:"issuer_url"`
+
+	// RedirectUri The redirect URI to register in the identity provider's console. It is
+	// derived from the instance's own URL, is the same for every provider and
+	// cannot be changed here.
+	RedirectUri string `json:"redirect_uri"`
+
+	// Slug The provider's url-safe name, used in the sign-in URL. Immutable.
+	Slug string `json:"slug"`
+
+	// SortOrder Position on the sign-in page, ascending.
+	SortOrder int `json:"sort_order"`
+
+	// Type The kind of sign-in identity provider. At most one `google` and one
+	// `github` provider can be stored; any number of `oidc` providers.
+	Type      AdminAuthProviderType `json:"type"`
+	UpdatedAt time.Time             `json:"updated_at"`
+
+	// UpdatedByUserId Who last saved the provider. Null for the boot-time config import, a
+	// save made on a setup session, or once that user has been deleted.
+	UpdatedByUserId *openapi_types.UUID `json:"updated_by_user_id"`
+}
+
+// AdminAuthProviderCreate A new sign-in identity provider. `type` and `slug` cannot be changed later.
+// `expected_version` is optional: when present, the create is rejected with
+// 409 unless it equals the current authentication settings `version`.
+type AdminAuthProviderCreate struct {
+	ClientId string `json:"client_id"`
+
+	// ClientSecret The OAuth client secret. Stored encrypted and never returned.
+	ClientSecret string `json:"client_secret"`
+	DisplayName  string `json:"display_name"`
+
+	// Enabled Whether the provider is offered for sign-in. Defaults to true.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// ExpectedVersion The `version` the caller last read; omit or null to apply to the current version.
+	ExpectedVersion *int64 `json:"expected_version,omitempty"`
+
+	// IssuerUrl Required for `oidc` and rejected for `google` and `github`. An absolute
+	// `https://` URL (`http://` only for localhost) with no query or fragment.
+	IssuerUrl *string `json:"issuer_url,omitempty"`
+
+	// Slug 1-63 lower-case letters, digits or hyphens, not starting with a hyphen.
+	Slug string `json:"slug"`
+
+	// SortOrder Position on the sign-in page, ascending. Defaults to 0.
+	SortOrder *int `json:"sort_order,omitempty"`
+
+	// Type The kind of sign-in identity provider. At most one `google` and one
+	// `github` provider can be stored; any number of `oidc` providers.
+	Type AdminAuthProviderType `json:"type"`
+}
+
+// AdminAuthProviderHealth The provider's health as seen by the replica that served the request.
+// Health is held in memory per replica and is not persisted.
+type AdminAuthProviderHealth struct {
+	// CheckedAt When the provider was last built (or tried); null for `disabled` and `unknown`.
+	CheckedAt *time.Time `json:"checked_at"`
+
+	// LastError Why an `unhealthy` provider failed to build; null otherwise.
+	LastError *string `json:"last_error"`
+
+	// Status The provider's build outcome on the replica that served the request:
+	// `healthy` (built and offered for sign-in), `unhealthy` (enabled but it
+	// failed to build, so it is excluded from sign-in), `disabled` (not enabled,
+	// so never built) or `unknown` (enabled, but this replica could not resolve
+	// it for this request).
+	Status AdminAuthProviderHealthStatus `json:"status"`
+}
+
+// AdminAuthProviderHealthStatus The provider's build outcome on the replica that served the request:
+// `healthy` (built and offered for sign-in), `unhealthy` (enabled but it
+// failed to build, so it is excluded from sign-in), `disabled` (not enabled,
+// so never built) or `unknown` (enabled, but this replica could not resolve
+// it for this request).
+type AdminAuthProviderHealthStatus string
+
+// AdminAuthProviderList Every stored sign-in identity provider, in sign-in page order, with the
+// `version` of the instance authentication settings. Send that `version` back
+// as `expected_version` when changing a provider.
+type AdminAuthProviderList struct {
+	Providers []AdminAuthProvider `json:"providers"`
+
+	// Version The shared version of the authentication settings. Every provider and
+	// allowlist change increments it.
+	Version int64 `json:"version"`
+}
+
+// AdminAuthProviderSaved A provider as stored by a create or an update, with the settings `version`
+// after the change. `provider.health` is resolved after the change, so the
+// response waits for the provider to be built (for `oidc` and `google`, one
+// bounded discovery request) and reports whether sign-in can use it.
+type AdminAuthProviderSaved struct {
+	// Provider One sign-in identity provider. The client secret is write-only: it is never
+	// returned, and `has_client_secret` reports only whether one is stored.
+	Provider AdminAuthProvider `json:"provider"`
+
+	// Version The shared authentication settings version after the change.
+	Version int64 `json:"version"`
+}
+
+// AdminAuthProviderTestRequest What to test. Nothing is stored and nothing is audited.
+//
+//   - `id` alone tests the STORED provider with its stored secret.
+//   - Without `id`, the body is an unsaved candidate: `type`, `client_id` and
+//     `client_secret` are required (and `issuer_url` for `oidc`).
+//   - `id` with other fields tests the stored provider with those fields
+//     replaced, as an edit form does before saving. `type` cannot differ from
+//     the stored one. When `client_secret` is omitted the stored secret is
+//     used: it is never sent to a candidate-chosen endpoint (OIDC discovery
+//     sends no secret, and the GitHub credential check goes only to GitHub).
+type AdminAuthProviderTestRequest struct {
+	ClientId *string `json:"client_id,omitempty"`
+
+	// ClientSecret The candidate client secret. Never returned.
+	ClientSecret *string `json:"client_secret,omitempty"`
+
+	// Id A stored provider's id.
+	Id        *openapi_types.UUID `json:"id,omitempty"`
+	IssuerUrl *string             `json:"issuer_url,omitempty"`
+
+	// Type The kind of sign-in identity provider. At most one `google` and one
+	// `github` provider can be stored; any number of `oidc` providers.
+	Type *AdminAuthProviderType `json:"type,omitempty"`
+}
+
+// AdminAuthProviderTestResult The outcome of a provider test: OIDC discovery for `oidc` and `google`, a
+// credential check against GitHub for `github`.
+type AdminAuthProviderTestResult struct {
+	// IsValid Whether the provider could be built with the tested configuration.
+	IsValid bool `json:"is_valid"`
+
+	// Message Why the test failed; null when it passed.
+	Message *string `json:"message"`
+}
+
+// AdminAuthProviderType The kind of sign-in identity provider. At most one `google` and one
+// `github` provider can be stored; any number of `oidc` providers.
+type AdminAuthProviderType string
+
+// AdminAuthProviderUpdate A whole replacement of a provider's editable fields; `type` and `slug` are
+// immutable and are rejected as unknown fields. `display_name`, `enabled`,
+// `sort_order`, `client_id` and `expected_version` are required.
+//
+// `client_secret` is write-only. Omit it to keep the stored secret; an empty
+// string is rejected. It cannot be omitted when `issuer_url` changes: the
+// stored secret is only ever kept for the issuer it was saved with.
+//
+// A change that disables the last enabled provider, or the provider the
+// calling admin signed in with, is rejected with 409 `lockout_risk` unless
+// `confirm_lockout_risk` is true.
+type AdminAuthProviderUpdate struct {
+	ClientId string `json:"client_id"`
+
+	// ClientSecret A new client secret. Omit to keep the stored one. Never returned.
+	ClientSecret *string `json:"client_secret,omitempty"`
+
+	// ConfirmLockoutRisk Set to true to apply a change that was rejected with `lockout_risk`.
+	ConfirmLockoutRisk *bool  `json:"confirm_lockout_risk,omitempty"`
+	DisplayName        string `json:"display_name"`
+	Enabled            bool   `json:"enabled"`
+
+	// ExpectedVersion The authentication settings `version` the caller last read.
+	ExpectedVersion int64 `json:"expected_version"`
+
+	// IssuerUrl Required for `oidc`, rejected for `google` and `github`.
+	IssuerUrl *string `json:"issuer_url,omitempty"`
+	SortOrder int     `json:"sort_order"`
+}
+
+// AdminAuthSettingsAuditSetting Which authentication setting's audit log to read.
+type AdminAuthSettingsAuditSetting string
+
 // AdminBreakdownBucket One value of a grouped column plus how many rows carry it.
 type AdminBreakdownBucket struct {
 	Count int64 `json:"count"`
@@ -4292,6 +4630,36 @@ type AdminInstanceAISummaryValues struct {
 	TotalContextChars int `json:"total_context_chars"`
 }
 
+// AdminInstanceAdmin One instance admin granted in the database.
+type AdminInstanceAdmin struct {
+	Email     string    `json:"email"`
+	GrantedAt time.Time `json:"granted_at"`
+
+	// GrantedByUserId The root admin who granted it; null once that user has been deleted.
+	GrantedByUserId *openapi_types.UUID `json:"granted_by_user_id"`
+
+	// Name The admin's display name, when set.
+	Name   *string            `json:"name"`
+	UserId openapi_types.UUID `json:"user_id"`
+}
+
+// AdminInstanceAdminGrant The existing user to make an instance admin, named by exactly one of
+// `user_id` or `email`.
+type AdminInstanceAdminGrant struct {
+	Email  *openapi_types.Email `json:"email,omitempty"`
+	UserId *openapi_types.UUID  `json:"user_id,omitempty"`
+}
+
+// AdminInstanceAdminList The instance's admins. `root_admins` are the emails named in config.yaml's
+// `auth.instance_admins`: read-only here, they cannot be granted or revoked.
+// `admins` are the users granted in the database, oldest first.
+type AdminInstanceAdminList struct {
+	Admins []AdminInstanceAdmin `json:"admins"`
+
+	// RootAdmins The root admins' normalized emails, sorted.
+	RootAdmins []string `json:"root_admins"`
+}
+
 // AdminInstanceCounts Instance-wide totals for the top-level entities (unscoped counts).
 type AdminInstanceCounts struct {
 	// Artifacts Total number of artifacts.
@@ -4550,7 +4918,13 @@ type AdminInstanceSearchValues struct {
 // only `has_credential` and, on an upsert's `after`, a `secret` marker
 // saying whether the credential was `changed` or `unchanged`; the `search`
 // and `ai_summary` snapshots are the settings' values, which hold no
-// credential.
+// credential. For `auth_providers` each entry is one provider, reporting
+// only `has_client_secret` and, on an upsert's `after`, a `client_secret`
+// marker (`changed` or `unchanged`); `auth_allowlist`, `instance_admins`
+// and `auth_setup` snapshots hold no credential (the setup token and its
+// hash are never recorded). A snapshot of any of these four settings
+// carries `source: cli` when the change was made by the `vibexp admin auth`
+// commands rather than through this API.
 type AdminInstanceSettingsAuditEntry struct {
 	// Action `upsert` (created or replaced by an admin), `delete` (removed by an
 	// admin) or `import` (the boot-time import from config.yaml, which has no
@@ -10306,6 +10680,27 @@ type ListAdminAISummarySettingsAuditParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListAdminAuthSettingsAuditParams defines parameters for ListAdminAuthSettingsAudit.
+type ListAdminAuthSettingsAuditParams struct {
+	// Setting Which authentication setting's audit log to read.
+	Setting AdminAuthSettingsAuditSetting `form:"setting" json:"setting"`
+
+	// Cursor Opaque cursor from a previous page's `next_cursor`.
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// DeleteAdminAuthProviderParams defines parameters for DeleteAdminAuthProvider.
+type DeleteAdminAuthProviderParams struct {
+	// ExpectedVersion The authentication settings `version` the caller last read; omit to apply to the current version.
+	ExpectedVersion *int64 `form:"expected_version,omitempty" json:"expected_version,omitempty"`
+
+	// ConfirmLockoutRisk Set to true to apply a delete that was rejected with `lockout_risk`.
+	ConfirmLockoutRisk *bool `form:"confirm_lockout_risk,omitempty" json:"confirm_lockout_risk,omitempty"`
+}
+
 // ListAdminInstanceEmailSettingsAuditParams defines parameters for ListAdminInstanceEmailSettingsAudit.
 type ListAdminInstanceEmailSettingsAuditParams struct {
 	// Cursor Opaque cursor from a previous page's `next_cursor`.
@@ -11683,6 +12078,24 @@ type ReplaceAdminSavedFiltersJSONRequestBody = AdminSavedFiltersReplaceRequest
 
 // UpdateAdminAISummarySettingsJSONRequestBody defines body for UpdateAdminAISummarySettings for application/json ContentType.
 type UpdateAdminAISummarySettingsJSONRequestBody = AdminInstanceAISummarySettingsUpdate
+
+// GrantAdminInstanceAdminJSONRequestBody defines body for GrantAdminInstanceAdmin for application/json ContentType.
+type GrantAdminInstanceAdminJSONRequestBody = AdminInstanceAdminGrant
+
+// UpdateAdminAuthAllowlistJSONRequestBody defines body for UpdateAdminAuthAllowlist for application/json ContentType.
+type UpdateAdminAuthAllowlistJSONRequestBody = AdminAuthAllowlistUpdate
+
+// PreviewAdminAuthAllowlistJSONRequestBody defines body for PreviewAdminAuthAllowlist for application/json ContentType.
+type PreviewAdminAuthAllowlistJSONRequestBody = AdminAuthAllowlistPreviewRequest
+
+// CreateAdminAuthProviderJSONRequestBody defines body for CreateAdminAuthProvider for application/json ContentType.
+type CreateAdminAuthProviderJSONRequestBody = AdminAuthProviderCreate
+
+// TestAdminAuthProviderJSONRequestBody defines body for TestAdminAuthProvider for application/json ContentType.
+type TestAdminAuthProviderJSONRequestBody = AdminAuthProviderTestRequest
+
+// UpdateAdminAuthProviderJSONRequestBody defines body for UpdateAdminAuthProvider for application/json ContentType.
+type UpdateAdminAuthProviderJSONRequestBody = AdminAuthProviderUpdate
 
 // UpsertAdminInstanceEmailSettingsJSONRequestBody defines body for UpsertAdminInstanceEmailSettings for application/json ContentType.
 type UpsertAdminInstanceEmailSettingsJSONRequestBody = AdminInstanceEmailSettingsRequest
