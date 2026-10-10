@@ -395,6 +395,7 @@ func (e AdminTeamEmailProviderConfigStatus) Valid() bool {
 
 // Defines values for AdminTeamSettingsAuditEntrySurface.
 const (
+	AdminTeamSettingsAuditEntrySurfaceCustomStatuses    AdminTeamSettingsAuditEntrySurface = "custom_statuses"
 	AdminTeamSettingsAuditEntrySurfaceCustomTypes       AdminTeamSettingsAuditEntrySurface = "custom_types"
 	AdminTeamSettingsAuditEntrySurfaceEmbeddingProvider AdminTeamSettingsAuditEntrySurface = "embedding_provider"
 	AdminTeamSettingsAuditEntrySurfaceModelProvider     AdminTeamSettingsAuditEntrySurface = "model_provider"
@@ -403,6 +404,8 @@ const (
 // Valid indicates whether the value is a known member of the AdminTeamSettingsAuditEntrySurface enum.
 func (e AdminTeamSettingsAuditEntrySurface) Valid() bool {
 	switch e {
+	case AdminTeamSettingsAuditEntrySurfaceCustomStatuses:
+		return true
 	case AdminTeamSettingsAuditEntrySurfaceCustomTypes:
 		return true
 	case AdminTeamSettingsAuditEntrySurfaceEmbeddingProvider:
@@ -1821,6 +1824,30 @@ func (e SharedPromptResponseShareType) Valid() bool {
 	}
 }
 
+// Defines values for StatusResourceType.
+const (
+	StatusResourceTypeArtifact  StatusResourceType = "artifact"
+	StatusResourceTypeBlueprint StatusResourceType = "blueprint"
+	StatusResourceTypeMemory    StatusResourceType = "memory"
+	StatusResourceTypePrompt    StatusResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the StatusResourceType enum.
+func (e StatusResourceType) Valid() bool {
+	switch e {
+	case StatusResourceTypeArtifact:
+		return true
+	case StatusResourceTypeBlueprint:
+		return true
+	case StatusResourceTypeMemory:
+		return true
+	case StatusResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TeamPermissions.
 const (
 	FeedDeleteAny      TeamPermissions = "feed.delete.any"
@@ -2147,6 +2174,7 @@ func (e TeamSearchSettingsSource) Valid() bool {
 
 // Defines values for TeamSettingsAuditSurface.
 const (
+	TeamSettingsAuditSurfaceCustomStatuses    TeamSettingsAuditSurface = "custom_statuses"
 	TeamSettingsAuditSurfaceCustomTypes       TeamSettingsAuditSurface = "custom_types"
 	TeamSettingsAuditSurfaceEmbeddingProvider TeamSettingsAuditSurface = "embedding_provider"
 	TeamSettingsAuditSurfaceModelProvider     TeamSettingsAuditSurface = "model_provider"
@@ -2155,6 +2183,8 @@ const (
 // Valid indicates whether the value is a known member of the TeamSettingsAuditSurface enum.
 func (e TeamSettingsAuditSurface) Valid() bool {
 	switch e {
+	case TeamSettingsAuditSurfaceCustomStatuses:
+		return true
 	case TeamSettingsAuditSurfaceCustomTypes:
 		return true
 	case TeamSettingsAuditSurfaceEmbeddingProvider:
@@ -5545,7 +5575,7 @@ type AdminTeamSearchConfig struct {
 	Values AdminSearchValues `json:"values"`
 }
 
-// AdminTeamSettingsAuditEntry One recorded settings copy into the team.
+// AdminTeamSettingsAuditEntry One recorded change to the team's settings: a configuration copied in from another team, or (`custom_statuses`) a custom status created, renamed or deleted.
 type AdminTeamSettingsAuditEntry struct {
 	ActorName         *string             `json:"actor_name"`
 	ActorUserId       *openapi_types.UUID `json:"actor_user_id"`
@@ -5556,8 +5586,9 @@ type AdminTeamSettingsAuditEntry struct {
 	// (model_provider: source_name, created_name, provider_type, model,
 	// has_api_key; embedding_provider: the same plus becomes_active,
 	// displaced_model, displaced_embedded_resources; custom_types: added_ids,
-	// added_slugs, skipped_slugs). Any other stored key is dropped. Always an
-	// object, never null.
+	// added_slugs, skipped_slugs; custom_statuses: action, resource_type,
+	// slug, name, previous_name, reassigned_count, reassigned_to). Any other
+	// stored key is dropped. Always an object, never null.
 	Detail           map[string]interface{}             `json:"detail"`
 	Id               openapi_types.UUID                 `json:"id"`
 	SourceResourceId *openapi_types.UUID                `json:"source_resource_id"`
@@ -7280,6 +7311,18 @@ type CreateShareRequest struct {
 // CreateShareRequestShareType Type of share: 'public' allows anyone with the link, 'restricted' requires specific email addresses
 type CreateShareRequestShareType string
 
+// CreateStatusRequest Request body for creating a custom status
+type CreateStatusRequest struct {
+	// Name Display name. Surrounding whitespace is trimmed, and what remains must be 1 to 50 characters.
+	Name string `json:"name"`
+
+	// ResourceType A resource type that carries a status. Singular, as in the comment and relation APIs.
+	ResourceType StatusResourceType `json:"resource_type"`
+
+	// Slug Lowercase letters and numbers in hyphen-separated groups, at most 50 characters. It cannot be one of the built-in statuses (`active`, `draft`, `archived`, `published`, `expired`), whichever resource type the status is for, and it cannot be changed later.
+	Slug string `json:"slug"`
+}
+
 // CreateTeamRequest Request body for creating a team
 type CreateTeamRequest struct {
 	// Description Optional team description (at most 500 characters)
@@ -7345,6 +7388,15 @@ type CurrentUser struct {
 	OnboardingCompletedAt *time.Time `json:"onboarding_completed_at,omitempty"`
 	UpdatedAt             time.Time  `json:"updated_at"`
 	Version               int64      `json:"version"`
+}
+
+// DeleteStatusResponse The outcome of deleting a custom status
+type DeleteStatusResponse struct {
+	// ReassignedCount How many resources carried the status and were moved to `reassigned_to`
+	ReassignedCount int `json:"reassigned_count"`
+
+	// ReassignedTo The system status those resources now carry: `draft` for prompts, `active` for every other resource type.
+	ReassignedTo string `json:"reassigned_to"`
 }
 
 // DevLoginRequest Request body for POST /api/v1/auth/dev/login (development environment only)
@@ -9291,6 +9343,45 @@ type SkippedType struct {
 	Slug string `json:"slug"`
 }
 
+// StatusDefinition One status a team may give a resource of `resource_type`. A system status (`is_system: true`) is built in, identical for every team and cannot be renamed or deleted; it has no `id` and no timestamps. A custom status belongs to the team.
+type StatusDefinition struct {
+	// CreatedAt When the custom status was created. Absent for a system status.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// Id Identifier of a custom status. Absent for a system status.
+	Id *openapi_types.UUID `json:"id,omitempty"`
+
+	// IsLive Whether a resource carrying this status counts as live, usable content. False only for the built-in work-in-progress and retired statuses (`draft`, `archived`, `expired`); always true for a custom status.
+	IsLive bool `json:"is_live"`
+
+	// IsSystem True for a built-in status, which cannot be renamed or deleted
+	IsSystem bool `json:"is_system"`
+
+	// Name Human-readable display name
+	Name string `json:"name"`
+
+	// ResourceType A resource type that carries a status. Singular, as in the comment and relation APIs.
+	ResourceType StatusResourceType `json:"resource_type"`
+
+	// Slug The value stored on the resource. Unique per team and resource type, and immutable once created.
+	Slug string `json:"slug"`
+
+	// UpdatedAt When the custom status was last renamed. Absent for a system status.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// UsageCount How many of the team's resources of this type currently carry the status. For a custom status this is the number of resources a delete would move to the default status.
+	UsageCount int `json:"usage_count"`
+}
+
+// StatusListResponse The system statuses of a resource type followed by the team's custom ones
+type StatusListResponse struct {
+	// Statuses System statuses first, in their built-in order, then custom statuses by name
+	Statuses []StatusDefinition `json:"statuses"`
+}
+
+// StatusResourceType A resource type that carries a status. Singular, as in the comment and relation APIs.
+type StatusResourceType string
+
 // SuccessResponse defines model for SuccessResponse.
 type SuccessResponse struct {
 	Data    *map[string]interface{} `json:"data,omitempty"`
@@ -9667,36 +9758,36 @@ type TeamSearchSettingsValues struct {
 	RecencyRankingEnabled bool `json:"recency_ranking_enabled"`
 }
 
-// TeamSettingsAuditEntry One recorded settings copy into this team: which surface arrived, who brought it, and where it came from.
+// TeamSettingsAuditEntry One recorded change to this team's settings: a configuration copied in from another team (which surface arrived, who brought it, and where it came from), or a custom status created, renamed or deleted here.
 type TeamSettingsAuditEntry struct {
 	// ActorName The actor's display name (their email when the name is blank), resolved server-side so a client need not fan out per row. `null` when `actor_user_id` is null or no longer resolves to a user.
 	ActorName *string `json:"actor_name"`
 
-	// ActorUserId Who performed the copy. `null` once that account is deleted — the entry outlives the actor on purpose, so that deletion cannot erase the record of what the account did.
+	// ActorUserId Who made the change. `null` once that account is deleted — the entry outlives the actor on purpose, so that deletion cannot erase the record of what the account did.
 	ActorUserId *openapi_types.UUID `json:"actor_user_id"`
 
-	// CreatedAt When the copy was recorded.
+	// CreatedAt When the change was recorded.
 	CreatedAt time.Time `json:"created_at"`
 
-	// CreatedResourceId The resource created in this team. `null` for a `custom_types` copy, for the same reason as `source_resource_id`.
+	// CreatedResourceId The resource created in this team. `null` for a `custom_types` copy, for the same reason as `source_resource_id`. For a `custom_statuses` entry it is the id of a newly created status, and `null` for a rename or a delete.
 	CreatedResourceId *openapi_types.UUID `json:"created_resource_id"`
 
-	// Detail Surface-specific facts snapshotted at write time — resource names, and for a provider copy whether it carried a credential and whether it became the team's active provider. Always an object, never null.
+	// Detail Surface-specific facts snapshotted at write time — resource names, and for a provider copy whether it carried a credential and whether it became the team's active provider. A `custom_statuses` entry carries `action` (`created`, `renamed` or `deleted`), `resource_type`, `slug` and `name`, plus `previous_name` for a rename and `reassigned_count` and `reassigned_to` for a delete. Always an object, never null.
 	Detail map[string]interface{} `json:"detail"`
 
 	// Id Identifier of the audit entry.
 	Id openapi_types.UUID `json:"id"`
 
-	// SourceResourceId The resource that was copied. `null` for a `custom_types` copy, where one action copies a whole set and the individual ids live in `detail`.
+	// SourceResourceId The resource that was copied. `null` for a `custom_types` copy, where one action copies a whole set and the individual ids live in `detail`, and for a `custom_statuses` entry, which copies nothing.
 	SourceResourceId *openapi_types.UUID `json:"source_resource_id"`
 
-	// SourceTeamId The team the configuration was copied FROM.
+	// SourceTeamId The team the configuration was copied FROM. `null` for a `custom_statuses` entry, which has no source team.
 	SourceTeamId *openapi_types.UUID `json:"source_team_id"`
 
-	// SourceTeamName The source team's name, resolved server-side. `null` when that team has since been deleted — the id above is then the only remaining handle on it, and is deliberately still present rather than blanked.
+	// SourceTeamName The source team's name, resolved server-side. `null` when that team has since been deleted — the id above is then the only remaining handle on it, and is deliberately still present rather than blanked. Also `null` for a `custom_statuses` entry.
 	SourceTeamName *string `json:"source_team_name"`
 
-	// Surface Which settings surface was copied between teams.
+	// Surface Which settings surface the entry is about. `embedding_provider`, `model_provider` and `custom_types` record a copy from another team; `custom_statuses` records a custom status being created, renamed or deleted in this team.
 	Surface TeamSettingsAuditSurface `json:"surface"`
 }
 
@@ -9718,7 +9809,7 @@ type TeamSettingsAuditListResponse struct {
 	TotalPages int `json:"total_pages"`
 }
 
-// TeamSettingsAuditSurface Which settings surface was copied between teams.
+// TeamSettingsAuditSurface Which settings surface the entry is about. `embedding_provider`, `model_provider` and `custom_types` record a copy from another team; `custom_statuses` records a custom status being created, renamed or deleted in this team.
 type TeamSettingsAuditSurface string
 
 // TeamStatsResponse defines model for TeamStatsResponse.
@@ -10064,6 +10155,12 @@ type UpdatePromptRequest struct {
 
 	// Status Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
 	Status *PromptStatus `json:"status,omitempty"`
+}
+
+// UpdateStatusRequest Request body for renaming a custom status. Only the display name can change; any other field, including `slug`, is rejected.
+type UpdateStatusRequest struct {
+	// Name New display name. Surrounding whitespace is trimmed, and what remains must be 1 to 50 characters.
+	Name string `json:"name"`
 }
 
 // UpdateTeamAISummarySettingsRequest A complete replacement AI summary profile for the team. There is no partial update: every field is required, and the whole profile is stored or replaced atomically. `top_n` is at most 10 and `max_output_tokens` at most 32768 (the hard limits; a larger value is rejected with 400). `max_top_n`, `max_output_tokens_ceiling` and `available` are deliberately absent — all are computed, not settable.
@@ -11996,6 +12093,12 @@ type ListTeamSettingsAuditParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListStatusesParams defines parameters for ListStatuses.
+type ListStatusesParams struct {
+	// ResourceType Resource type whose statuses to list
+	ResourceType StatusResourceType `form:"resource_type" json:"resource_type"`
+}
+
 // ListTypesParams defines parameters for ListTypes.
 type ListTypesParams struct {
 	// ResourceType Resource whose types to list (currently only "artifacts")
@@ -12280,6 +12383,12 @@ type UpdateTeamSearchSettingsJSONRequestBody = UpdateTeamSearchSettingsRequest
 
 // CopyTypesFromTeamJSONRequestBody defines body for CopyTypesFromTeam for application/json ContentType.
 type CopyTypesFromTeamJSONRequestBody = CopyTypesRequest
+
+// CreateStatusJSONRequestBody defines body for CreateStatus for application/json ContentType.
+type CreateStatusJSONRequestBody = CreateStatusRequest
+
+// UpdateStatusJSONRequestBody defines body for UpdateStatus for application/json ContentType.
+type UpdateStatusJSONRequestBody = UpdateStatusRequest
 
 // CreateTypeJSONRequestBody defines body for CreateType for application/json ContentType.
 type CreateTypeJSONRequestBody = CreateTypeRequest
