@@ -720,27 +720,6 @@ func (e AgentStatsResponseRecentActivitiesStatus) Valid() bool {
 	}
 }
 
-// Defines values for ArtifactStatus.
-const (
-	ArtifactStatusActive   ArtifactStatus = "active"
-	ArtifactStatusArchived ArtifactStatus = "archived"
-	ArtifactStatusDraft    ArtifactStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the ArtifactStatus enum.
-func (e ArtifactStatus) Valid() bool {
-	switch e {
-	case ArtifactStatusActive:
-		return true
-	case ArtifactStatusArchived:
-		return true
-	case ArtifactStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for AuthProviderType.
 const (
 	AuthProviderTypeGitHub AuthProviderType = "github"
@@ -918,24 +897,6 @@ func (e BlueprintImportCompanionOutcome) Valid() bool {
 	case BlueprintImportCompanionOutcomeSkipped:
 		return true
 	case BlueprintImportCompanionOutcomeUpdated:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for BlueprintStatus.
-const (
-	BlueprintStatusActive  BlueprintStatus = "active"
-	BlueprintStatusExpired BlueprintStatus = "expired"
-)
-
-// Valid indicates whether the value is a known member of the BlueprintStatus enum.
-func (e BlueprintStatus) Valid() bool {
-	switch e {
-	case BlueprintStatusActive:
-		return true
-	case BlueprintStatusExpired:
 		return true
 	default:
 		return false
@@ -1392,27 +1353,6 @@ func (e InvitationResponseStatus) Valid() bool {
 	}
 }
 
-// Defines values for MemoryStatus.
-const (
-	MemoryStatusActive   MemoryStatus = "active"
-	MemoryStatusArchived MemoryStatus = "archived"
-	MemoryStatusDraft    MemoryStatus = "draft"
-)
-
-// Valid indicates whether the value is a known member of the MemoryStatus enum.
-func (e MemoryStatus) Valid() bool {
-	switch e {
-	case MemoryStatusActive:
-		return true
-	case MemoryStatusArchived:
-		return true
-	case MemoryStatusDraft:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for MigrationRequestConflictPolicy.
 const (
 	Overwrite MigrationRequestConflictPolicy = "overwrite"
@@ -1497,24 +1437,6 @@ func (e ProjectResourceCreationMetricsDataRange) Valid() bool {
 	case ProjectResourceCreationMetricsDataRangeN7d:
 		return true
 	case ProjectResourceCreationMetricsDataRangeN90d:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for PromptStatus.
-const (
-	Draft     PromptStatus = "draft"
-	Published PromptStatus = "published"
-)
-
-// Valid indicates whether the value is a known member of the PromptStatus enum.
-func (e PromptStatus) Valid() bool {
-	switch e {
-	case Draft:
-		return true
-	case Published:
 		return true
 	default:
 		return false
@@ -3191,19 +3113,19 @@ func (e GetTeamTopAccessedResourcesParamsSource) Valid() bool {
 
 // Defines values for ListAgentsParamsStatus.
 const (
-	Active ListAgentsParamsStatus = "active"
-	Error  ListAgentsParamsStatus = "error"
-	Paused ListAgentsParamsStatus = "paused"
+	ListAgentsParamsStatusActive ListAgentsParamsStatus = "active"
+	ListAgentsParamsStatusError  ListAgentsParamsStatus = "error"
+	ListAgentsParamsStatusPaused ListAgentsParamsStatus = "paused"
 )
 
 // Valid indicates whether the value is a known member of the ListAgentsParamsStatus enum.
 func (e ListAgentsParamsStatus) Valid() bool {
 	switch e {
-	case Active:
+	case ListAgentsParamsStatusActive:
 		return true
-	case Error:
+	case ListAgentsParamsStatusError:
 		return true
-	case Paused:
+	case ListAgentsParamsStatusPaused:
 		return true
 	default:
 		return false
@@ -6276,7 +6198,7 @@ type Artifact struct {
 	// Slug Unique slug for the artifact within the project
 	Slug string `json:"slug"`
 
-	// Status Lifecycle status of an artifact.
+	// Status Status of an artifact. The system values are `active`, `draft` and `archived`. A team may define further statuses of its own for artifacts, so this is an open string: any other value must be one of the team's custom artifact statuses, or the request is rejected with 400.
 	Status ArtifactStatus `json:"status"`
 
 	// Title Human-readable title for the artifact
@@ -6328,8 +6250,8 @@ type ArtifactStatsResponse struct {
 	TotalProjects int `json:"total_projects"`
 }
 
-// ArtifactStatus Lifecycle status of an artifact.
-type ArtifactStatus string
+// ArtifactStatus Status of an artifact. The system values are `active`, `draft` and `archived`. A team may define further statuses of its own for artifacts, so this is an open string: any other value must be one of the team's custom artifact statuses, or the request is rejected with 400.
+type ArtifactStatus = string
 
 // ArtifactVersionListResponse defines model for ArtifactVersionListResponse.
 type ArtifactVersionListResponse struct {
@@ -6448,7 +6370,7 @@ type Blueprint struct {
 	// Source Read-only import provenance; present only for imported blueprints.
 	Source *BlueprintSource `json:"source,omitempty"`
 
-	// Status Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
+	// Status Status of a blueprint. The system values are `active` and `expired`; `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference. A team may define further statuses of its own for blueprints, so this is an open string: any other value must be one of the team's custom blueprint statuses, or the request is rejected with 400.
 	Status BlueprintStatus `json:"status"`
 
 	// Subtype Subtype category for specific type spec libraries
@@ -6523,7 +6445,7 @@ type BlueprintDetail struct {
 	// Source Read-only import provenance; present only for imported blueprints.
 	Source *BlueprintSource `json:"source,omitempty"`
 
-	// Status Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
+	// Status Status of a blueprint. The system values are `active` and `expired`; `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference. A team may define further statuses of its own for blueprints, so this is an open string: any other value must be one of the team's custom blueprint statuses, or the request is rejected with 400.
 	Status BlueprintStatus `json:"status"`
 
 	// Subtype Subtype category for specific type spec libraries
@@ -6729,8 +6651,8 @@ type BlueprintStatsResponse struct {
 	TotalProjects int `json:"total_projects"`
 }
 
-// BlueprintStatus Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
-type BlueprintStatus string
+// BlueprintStatus Status of a blueprint. The system values are `active` and `expired`; `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference. A team may define further statuses of its own for blueprints, so this is an open string: any other value must be one of the team's custom blueprint statuses, or the request is rejected with 400.
+type BlueprintStatus = string
 
 // BlueprintVersionListResponse defines model for BlueprintVersionListResponse.
 type BlueprintVersionListResponse struct {
@@ -8246,7 +8168,7 @@ type Memory struct {
 	// Similar Computed embedding-similarity neighborhood of this resource (up to 5), derived live at read time from vector similarity — NOT stored edges and distinct from `related`. Populated on the detail GET; empty otherwise.
 	Similar *[]SimilarResource `json:"similar,omitempty"`
 
-	// Status Lifecycle status of a memory.
+	// Status Status of a memory. The system values are `active`, `draft` and `archived`. A team may define further statuses of its own for memories, so this is an open string: any other value must be one of the team's custom memory statuses, or the request is rejected with 400.
 	Status MemoryStatus `json:"status"`
 
 	// TeamId ID of the team this memory belongs to
@@ -8286,8 +8208,8 @@ type MemoryListResponse struct {
 	TotalPages int `json:"total_pages"`
 }
 
-// MemoryStatus Lifecycle status of a memory.
-type MemoryStatus string
+// MemoryStatus Status of a memory. The system values are `active`, `draft` and `archived`. A team may define further statuses of its own for memories, so this is an open string: any other value must be one of the team's custom memory statuses, or the request is rejected with 400.
+type MemoryStatus = string
 
 // MemoryVersionListResponse defines model for MemoryVersionListResponse.
 type MemoryVersionListResponse struct {
@@ -8696,7 +8618,7 @@ type Prompt struct {
 	Similar *[]SimilarResource `json:"similar,omitempty"`
 	Slug    string             `json:"slug"`
 
-	// Status Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
+	// Status Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
 	Status PromptStatus `json:"status"`
 
 	// TeamId Team identifier that owns this prompt
@@ -8790,8 +8712,8 @@ type PromptPlaceholdersResponse struct {
 	Placeholders []string `json:"placeholders"`
 }
 
-// PromptStatus Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
-type PromptStatus string
+// PromptStatus Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
+type PromptStatus = string
 
 // PromptVersionListResponse defines model for PromptVersionListResponse.
 type PromptVersionListResponse struct {
@@ -9952,7 +9874,7 @@ type UpdateArtifactRequest struct {
 	// Slug New slug for the artifact
 	Slug *string `json:"slug,omitempty"`
 
-	// Status Lifecycle status of an artifact.
+	// Status Status of an artifact. The system values are `active`, `draft` and `archived`. A team may define further statuses of its own for artifacts, so this is an open string: any other value must be one of the team's custom artifact statuses, or the request is rejected with 400.
 	Status *ArtifactStatus `json:"status,omitempty"`
 
 	// Title Updated title for the artifact
@@ -9985,7 +9907,7 @@ type UpdateBlueprintRequest struct {
 	// Slug New slug for the spec library
 	Slug *string `json:"slug,omitempty"`
 
-	// Status Lifecycle status of a blueprint. `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference.
+	// Status Status of a blueprint. The system values are `active` and `expired`; `expired` marks a blueprint whose rules no longer apply but whose content is kept for reference. A team may define further statuses of its own for blueprints, so this is an open string: any other value must be one of the team's custom blueprint statuses, or the request is rejected with 400.
 	Status *BlueprintStatus `json:"status,omitempty"`
 
 	// Subtype Updated subtype category for specific type spec libraries
@@ -10076,7 +9998,7 @@ type UpdateMemoryRequest struct {
 	// ProjectId New project UUID for the memory (moves it between projects)
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
 
-	// Status Lifecycle status of a memory.
+	// Status Status of a memory. The system values are `active`, `draft` and `archived`. A team may define further statuses of its own for memories, so this is an open string: any other value must be one of the team's custom memory statuses, or the request is rejected with 400.
 	Status *MemoryStatus `json:"status,omitempty"`
 
 	// Text Updated text content of the memory
@@ -10140,7 +10062,7 @@ type UpdatePromptRequest struct {
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
 	Slug      *string             `json:"slug,omitempty"`
 
-	// Status Publication status of a prompt. A prompt is only exposed over MCP once it is `published`.
+	// Status Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
 	Status *PromptStatus `json:"status,omitempty"`
 }
 
@@ -11527,7 +11449,7 @@ type ListArtifactsParams struct {
 	// ProjectId Filter by project ID
 	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
 
-	// Status Filter by status
+	// Status Filter by status: one of the system statuses or one of the team's custom statuses for this resource type. Returns 400 for unknown values.
 	Status *ArtifactStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type. An open string matched against the team's registered types (the system defaults work_reports, static_contexts and general, plus any custom types the team has added), not a fixed enum.
@@ -11569,7 +11491,7 @@ type ListArtifactsByProjectParams struct {
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListArtifactsByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
-	// Status Filter by status
+	// Status Filter by status: one of the system statuses or one of the team's custom statuses for this resource type. Returns 400 for unknown values.
 	Status *ArtifactStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type. An open string matched against the team's registered types (the system defaults work_reports, static_contexts and general, plus any custom types the team has added), not a fixed enum.
@@ -11650,7 +11572,7 @@ type ListSpecLibrariesParams struct {
 	// ProjectId Filter by project ID. On this team-scoped variant the backend reads it only when a project is not already selected via a path parameter (i.e. not on listSpecLibrariesByProject).
 	ProjectId *openapi_types.UUID `form:"project_id,omitempty" json:"project_id,omitempty"`
 
-	// Status Filter by status
+	// Status Filter by status: one of the system statuses or one of the team's custom statuses for this resource type. Returns 400 for unknown values.
 	Status *BlueprintStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type
@@ -11701,7 +11623,7 @@ type ListSpecLibrariesByProjectParams struct {
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListSpecLibrariesByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
-	// Status Filter by status
+	// Status Filter by status: one of the system statuses or one of the team's custom statuses for this resource type. Returns 400 for unknown values.
 	Status *BlueprintStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Type Filter by type
@@ -12001,7 +11923,7 @@ type ListPromptsParams struct {
 	// Search Search term to filter prompts by name or description
 	Search *string `form:"search,omitempty" json:"search,omitempty"`
 
-	// Status Filter by prompt status
+	// Status Filter by status: one of the system statuses or one of the team's custom statuses for this resource type. Returns 400 for unknown values.
 	Status *PromptStatus `form:"status,omitempty" json:"status,omitempty"`
 
 	// Labels Comma-separated list of labels to filter by. A resource matches when it carries at least one of the listed labels. At most 25 labels, each at most 50 characters; beyond that the request is rejected with 400.
