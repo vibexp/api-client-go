@@ -34320,6 +34320,7 @@ type MigrateProjectHTTPResponse struct {
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON423 *HasLockedResourcesError
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -34389,6 +34390,7 @@ type DeleteProjectHTTPResponse struct {
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON423 *HasLockedResourcesError
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -36827,6 +36829,7 @@ type DeleteStatusHTTPResponse struct {
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON423 *HasLockedResourcesError
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -36965,6 +36968,7 @@ type DeleteTypeHTTPResponse struct {
 	ApplicationproblemJSON401 *ErrorResponse
 	ApplicationproblemJSON403 *ErrorResponse
 	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON423 *HasLockedResourcesError
 	ApplicationproblemJSON500 *ErrorResponse
 }
 
@@ -52868,6 +52872,13 @@ func ParseMigrateProjectHTTPResponse(rsp *http.Response) (*MigrateProjectHTTPRes
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 423:
+		var dest HasLockedResourcesError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON423 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -52982,6 +52993,13 @@ func ParseDeleteProjectHTTPResponse(rsp *http.Response) (*DeleteProjectHTTPRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 423:
+		var dest HasLockedResourcesError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON423 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
@@ -56801,6 +56819,13 @@ func ParseDeleteStatusHTTPResponse(rsp *http.Response) (*DeleteStatusHTTPRespons
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 423:
+		var dest HasLockedResourcesError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON423 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -57030,6 +57055,13 @@ func ParseDeleteTypeHTTPResponse(rsp *http.Response) (*DeleteTypeHTTPResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 423:
+		var dest HasLockedResourcesError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON423 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

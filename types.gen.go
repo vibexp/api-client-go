@@ -1356,6 +1356,27 @@ func (e InvitationResponseStatus) Valid() bool {
 	}
 }
 
+// Defines values for LockedResourceRefResourceType.
+const (
+	LockedResourceRefResourceTypeArtifact  LockedResourceRefResourceType = "artifact"
+	LockedResourceRefResourceTypeBlueprint LockedResourceRefResourceType = "blueprint"
+	LockedResourceRefResourceTypePrompt    LockedResourceRefResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the LockedResourceRefResourceType enum.
+func (e LockedResourceRefResourceType) Valid() bool {
+	switch e {
+	case LockedResourceRefResourceTypeArtifact:
+		return true
+	case LockedResourceRefResourceTypeBlueprint:
+		return true
+	case LockedResourceRefResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for MigrationRequestConflictPolicy.
 const (
 	Overwrite MigrationRequestConflictPolicy = "overwrite"
@@ -8151,6 +8172,42 @@ type GitHubRepository struct {
 // GitHubRepositoryOwnerType Owner type (User or Organization)
 type GitHubRepositoryOwnerType string
 
+// HasLockedResourcesError defines model for HasLockedResourcesError.
+type HasLockedResourcesError struct {
+	// Code Application-specific error code
+	Code string `json:"code"`
+
+	// Detail Human-readable explanation specific to this occurrence
+	Detail string `json:"detail"`
+
+	// Instance URI reference that identifies the specific occurrence
+	Instance *string `json:"instance,omitempty"`
+
+	// Metadata What has to be unlocked first.
+	Metadata struct {
+		// LockedResources The locked resources, ordered by type then title. At most 100 are listed; when more are locked the request is refused again until none remain.
+		LockedResources []LockedResourceRef `json:"locked_resources"`
+	} `json:"metadata"`
+
+	// RequestId Unique request identifier for tracking and debugging
+	RequestId string `json:"request_id"`
+
+	// Status HTTP status code
+	Status int `json:"status"`
+
+	// Timestamp Timestamp when the error occurred (RFC3339)
+	Timestamp time.Time `json:"timestamp"`
+
+	// Title Short, human-readable summary of the problem type
+	Title string `json:"title"`
+
+	// Type URI reference that identifies the problem type
+	Type string `json:"type"`
+
+	// ValidationErrors Field-level validation errors (present for validation failures)
+	ValidationErrors *[]ValidationError `json:"validation_errors,omitempty"`
+}
+
 // HealthResponse defines model for HealthResponse.
 type HealthResponse struct {
 	// Sha Short release commit SHA (empty outside deployed environments)
@@ -8226,6 +8283,24 @@ type LockResourceRequest struct {
 	// Comment Why the resource is being locked. Required: surrounding whitespace is trimmed, and a comment that is then empty or longer than 500 characters is rejected with 400.
 	Comment string `json:"comment"`
 }
+
+// LockedResourceRef One locked prompt, blueprint or artifact that stands in the way of an indirect delete or move.
+type LockedResourceRef struct {
+	// Id ID of the locked resource.
+	Id openapi_types.UUID `json:"id"`
+
+	// ResourceType The kind of resource that is locked.
+	ResourceType LockedResourceRefResourceType `json:"resource_type"`
+
+	// Slug Slug of the locked resource.
+	Slug string `json:"slug"`
+
+	// Title The artifact or blueprint title, or the prompt name.
+	Title string `json:"title"`
+}
+
+// LockedResourceRefResourceType The kind of resource that is locked.
+type LockedResourceRefResourceType string
 
 // LoginResponse Response body returned by GET /api/v1/auth/login containing the authorization URL
 type LoginResponse struct {
