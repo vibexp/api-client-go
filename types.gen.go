@@ -4750,9 +4750,6 @@ type AdminInstanceEmailSettings struct {
 	// LastSuccessAt When a send through the instance provider last succeeded.
 	LastSuccessAt *time.Time `json:"last_success_at,omitempty"`
 
-	// PrivacyPolicyUrl The privacy policy URL linked from outbound mail; null links none.
-	PrivacyPolicyUrl *string `json:"privacy_policy_url,omitempty"`
-
 	// ProviderType The stored provider type, or null when nothing is configured.
 	ProviderType *AdminInstanceEmailSettingsProviderType `json:"provider_type"`
 
@@ -4787,10 +4784,6 @@ type AdminInstanceEmailSettingsRequest struct {
 
 	// FromName Optional display name shown beside the from address.
 	FromName *string `json:"from_name,omitempty"`
-
-	// PrivacyPolicyUrl Absolute http(s) URL of the privacy policy linked from outbound mail.
-	// Omitted or null links none.
-	PrivacyPolicyUrl *string `json:"privacy_policy_url,omitempty"`
 
 	// ProviderType Which provider the instance sends through. Matched case-insensitively.
 	ProviderType AdminInstanceEmailProviderType `json:"provider_type"`
@@ -4832,9 +4825,6 @@ type AdminInstanceEmailTestRequest struct {
 
 	// FromName Optional display name to test with.
 	FromName *string `json:"from_name,omitempty"`
-
-	// PrivacyPolicyUrl Accepted for parity with the upsert body; a test send does not use it.
-	PrivacyPolicyUrl *string `json:"privacy_policy_url,omitempty"`
 
 	// ProviderType Which provider the instance sends through. Matched case-insensitively.
 	ProviderType *AdminInstanceEmailProviderType `json:"provider_type,omitempty"`
