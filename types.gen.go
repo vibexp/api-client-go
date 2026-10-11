@@ -249,6 +249,7 @@ const (
 	AdminInstanceSettingsAuditEntrySettingEmailProvider  AdminInstanceSettingsAuditEntrySetting = "email_provider"
 	AdminInstanceSettingsAuditEntrySettingInstanceAdmins AdminInstanceSettingsAuditEntrySetting = "instance_admins"
 	AdminInstanceSettingsAuditEntrySettingSearch         AdminInstanceSettingsAuditEntrySetting = "search"
+	AdminInstanceSettingsAuditEntrySettingSiteInfo       AdminInstanceSettingsAuditEntrySetting = "site_info"
 )
 
 // Valid indicates whether the value is a known member of the AdminInstanceSettingsAuditEntrySetting enum.
@@ -267,6 +268,8 @@ func (e AdminInstanceSettingsAuditEntrySetting) Valid() bool {
 	case AdminInstanceSettingsAuditEntrySettingInstanceAdmins:
 		return true
 	case AdminInstanceSettingsAuditEntrySettingSearch:
+		return true
+	case AdminInstanceSettingsAuditEntrySettingSiteInfo:
 		return true
 	default:
 		return false
@@ -4958,7 +4961,8 @@ type AdminInstanceSearchValues struct {
 // and `auth_setup` snapshots hold no credential (the setup token and its
 // hash are never recorded). A snapshot of any of these four settings
 // carries `source: cli` when the change was made by the `vibexp admin auth`
-// commands rather than through this API.
+// commands rather than through this API. The `site_info` snapshot is the
+// company branding values, which hold no credential.
 type AdminInstanceSettingsAuditEntry struct {
 	// Action `upsert` (created or replaced by an admin), `delete` (removed by an
 	// admin) or `import` (the boot-time import from config.yaml, which has no
@@ -5333,6 +5337,113 @@ type AdminSearchValues struct {
 	RankWeightRelevance   float64 `json:"rank_weight_relevance"`
 	RankWeightUpdated     float64 `json:"rank_weight_updated"`
 	RecencyRankingEnabled bool    `json:"recency_ranking_enabled"`
+}
+
+// AdminSiteInfo The instance's company branding as stored, the limits its values must
+// respect and the stored row's metadata. With nothing stored every value is
+// an empty string and the metadata fields are null.
+type AdminSiteInfo struct {
+	// Limits The longest value each kind of field accepts, in characters, for form validation.
+	Limits AdminSiteInfoLimits `json:"limits"`
+
+	// UpdatedAt When the values were last stored; null when nothing is stored.
+	UpdatedAt *time.Time `json:"updated_at"`
+
+	// UpdatedByName That admin's display name (or email), when it could be resolved.
+	UpdatedByName *string `json:"updated_by_name"`
+
+	// UpdatedByUserId The admin who last stored the values. Null when nothing is stored, or
+	// once that user has been deleted.
+	UpdatedByUserId *openapi_types.UUID `json:"updated_by_user_id"`
+
+	// Values The instance's company branding. Every value is a string and every value is
+	// optional: an empty string means "not configured", and the surface that
+	// would show it is hidden. Each URL is an absolute `http` or `https` URL.
+	Values AdminSiteInfoValues `json:"values"`
+
+	// Version The stored row's optimistic-lock version; null when nothing is stored.
+	// Send it back as `expected_version` (`0` when it is null) to reject a
+	// save that would overwrite someone else's change.
+	Version *int64 `json:"version"`
+}
+
+// AdminSiteInfoLimits The longest value each kind of field accepts, in characters, for form validation.
+type AdminSiteInfoLimits struct {
+	CompanyEmailMaxLength int `json:"company_email_max_length"`
+	CompanyNameMaxLength  int `json:"company_name_max_length"`
+
+	// UrlMaxLength Applies to every URL value.
+	UrlMaxLength int `json:"url_max_length"`
+}
+
+// AdminSiteInfoUpdate A whole replacement of the instance's company branding. Every value is
+// required; send an empty string for one that is not configured. Values are
+// trimmed before they are validated and stored. `expected_version` is
+// optional and makes the save a compare-and-set:
+//
+//   - omitted or null: last-write-wins, never a conflict.
+//   - `0`: nothing may be stored yet; the save is rejected with 409 when a row
+//     is stored. Send it when the `version` last read was null.
+//   - a positive value: the save is rejected with 409 unless it equals the
+//     stored `version`, and also when nothing is stored.
+type AdminSiteInfoUpdate struct {
+	// CompanyEmail The company contact address; one bare email address. Used as the support link when `support_url` is empty.
+	CompanyEmail string `json:"company_email"`
+
+	// CompanyName The company name shown in the copyright line, the logo alt text and "Sign in to ...".
+	CompanyName string `json:"company_name"`
+
+	// ExpectedVersion The `version` the caller last read. Send `0` when that `version` was
+	// null, to save only while nothing is stored. Omit it or send null for
+	// last-write-wins. A negative value matches nothing and is a 409.
+	ExpectedVersion *int64 `json:"expected_version,omitempty"`
+
+	// LogoDarkUrl The dark-mode logo image; `logo_url` is used when it is empty.
+	LogoDarkUrl string `json:"logo_dark_url"`
+
+	// LogoUrl The company logo image.
+	LogoUrl string `json:"logo_url"`
+
+	// PrivacyUrl The privacy policy page.
+	PrivacyUrl string `json:"privacy_url"`
+
+	// SupportUrl Where the Support link points.
+	SupportUrl string `json:"support_url"`
+
+	// TermsUrl The terms of service page.
+	TermsUrl string `json:"terms_url"`
+
+	// Website The company website; the logo and name link to it.
+	Website string `json:"website"`
+}
+
+// AdminSiteInfoValues The instance's company branding. Every value is a string and every value is
+// optional: an empty string means "not configured", and the surface that
+// would show it is hidden. Each URL is an absolute `http` or `https` URL.
+type AdminSiteInfoValues struct {
+	// CompanyEmail The company contact address; one bare email address. Used as the support link when `support_url` is empty.
+	CompanyEmail string `json:"company_email"`
+
+	// CompanyName The company name shown in the copyright line, the logo alt text and "Sign in to ...".
+	CompanyName string `json:"company_name"`
+
+	// LogoDarkUrl The dark-mode logo image; `logo_url` is used when it is empty.
+	LogoDarkUrl string `json:"logo_dark_url"`
+
+	// LogoUrl The company logo image.
+	LogoUrl string `json:"logo_url"`
+
+	// PrivacyUrl The privacy policy page.
+	PrivacyUrl string `json:"privacy_url"`
+
+	// SupportUrl Where the Support link points.
+	SupportUrl string `json:"support_url"`
+
+	// TermsUrl The terms of service page.
+	TermsUrl string `json:"terms_url"`
+
+	// Website The company website; the logo and name link to it.
+	Website string `json:"website"`
 }
 
 // AdminSourcePoint A count for one access source within one time bucket.
@@ -10988,6 +11099,15 @@ type ListAdminSearchSettingsAuditParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListAdminSiteInfoAuditParams defines parameters for ListAdminSiteInfoAudit.
+type ListAdminSiteInfoAuditParams struct {
+	// Cursor Opaque cursor from a previous page's `next_cursor`.
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // ListAdminTeamsParams defines parameters for ListAdminTeams.
 type ListAdminTeamsParams struct {
 	// Page 1-based page number
@@ -12395,6 +12515,9 @@ type TestAdminInstanceEmailSettingsJSONRequestBody = AdminInstanceEmailTestReque
 
 // UpdateAdminSearchSettingsJSONRequestBody defines body for UpdateAdminSearchSettings for application/json ContentType.
 type UpdateAdminSearchSettingsJSONRequestBody = AdminInstanceSearchSettingsUpdate
+
+// UpdateAdminSiteInfoJSONRequestBody defines body for UpdateAdminSiteInfo for application/json ContentType.
+type UpdateAdminSiteInfoJSONRequestBody = AdminSiteInfoUpdate
 
 // CreateAdminUserJSONRequestBody defines body for CreateAdminUser for application/json ContentType.
 type CreateAdminUserJSONRequestBody = AdminUserCreateRequest

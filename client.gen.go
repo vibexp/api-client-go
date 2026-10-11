@@ -243,6 +243,20 @@ type ClientInterface interface {
 	// ListAdminSearchSettingsAudit request
 	ListAdminSearchSettingsAudit(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ResetAdminSiteInfo request
+	ResetAdminSiteInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminSiteInfo request
+	GetAdminSiteInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAdminSiteInfoWithBody request with any body
+	UpdateAdminSiteInfoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAdminSiteInfo(ctx context.Context, body UpdateAdminSiteInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAdminSiteInfoAudit request
+	ListAdminSiteInfoAudit(ctx context.Context, params *ListAdminSiteInfoAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminStats request
 	GetAdminStats(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1907,6 +1921,66 @@ func (c *Client) UpdateAdminSearchSettings(ctx context.Context, body UpdateAdmin
 
 func (c *Client) ListAdminSearchSettingsAudit(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAdminSearchSettingsAuditRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResetAdminSiteInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetAdminSiteInfoRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminSiteInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminSiteInfoRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminSiteInfoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminSiteInfoRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminSiteInfo(ctx context.Context, body UpdateAdminSiteInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminSiteInfoRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAdminSiteInfoAudit(ctx context.Context, params *ListAdminSiteInfoAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAdminSiteInfoAuditRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -8735,6 +8809,166 @@ func NewListAdminSearchSettingsAuditRequest(server string, params *ListAdminSear
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/admin/settings/search/audit")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewResetAdminSiteInfoRequest generates requests for ResetAdminSiteInfo
+func NewResetAdminSiteInfoRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/site-info")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminSiteInfoRequest generates requests for GetAdminSiteInfo
+func NewGetAdminSiteInfoRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/site-info")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAdminSiteInfoRequest calls the generic UpdateAdminSiteInfo builder with application/json body
+func NewUpdateAdminSiteInfoRequest(server string, body UpdateAdminSiteInfoJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAdminSiteInfoRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpdateAdminSiteInfoRequestWithBody generates requests for UpdateAdminSiteInfo with any type of body
+func NewUpdateAdminSiteInfoRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/site-info")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAdminSiteInfoAuditRequest generates requests for ListAdminSiteInfoAudit
+func NewListAdminSiteInfoAuditRequest(server string, params *ListAdminSiteInfoAuditParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/site-info/audit")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -25163,6 +25397,20 @@ type ClientWithResponsesInterface interface {
 	// ListAdminSearchSettingsAuditWithResponse request
 	ListAdminSearchSettingsAuditWithResponse(ctx context.Context, params *ListAdminSearchSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminSearchSettingsAuditHTTPResponse, error)
 
+	// ResetAdminSiteInfoWithResponse request
+	ResetAdminSiteInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminSiteInfoHTTPResponse, error)
+
+	// GetAdminSiteInfoWithResponse request
+	GetAdminSiteInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminSiteInfoHTTPResponse, error)
+
+	// UpdateAdminSiteInfoWithBodyWithResponse request with any body
+	UpdateAdminSiteInfoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminSiteInfoHTTPResponse, error)
+
+	UpdateAdminSiteInfoWithResponse(ctx context.Context, body UpdateAdminSiteInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminSiteInfoHTTPResponse, error)
+
+	// ListAdminSiteInfoAuditWithResponse request
+	ListAdminSiteInfoAuditWithResponse(ctx context.Context, params *ListAdminSiteInfoAuditParams, reqEditors ...RequestEditorFn) (*ListAdminSiteInfoAuditHTTPResponse, error)
+
 	// GetAdminStatsWithResponse request
 	GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error)
 
@@ -27578,6 +27826,136 @@ func (r ListAdminSearchSettingsAuditHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListAdminSearchSettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ResetAdminSiteInfoHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetAdminSiteInfoHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetAdminSiteInfoHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetAdminSiteInfoHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminSiteInfoHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminSiteInfo
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminSiteInfoHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminSiteInfoHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminSiteInfoHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAdminSiteInfoHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminSiteInfo
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAdminSiteInfoHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAdminSiteInfoHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAdminSiteInfoHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAdminSiteInfoAuditHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSettingsAuditPage
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAdminSiteInfoAuditHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAdminSiteInfoAuditHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAdminSiteInfoAuditHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -37571,6 +37949,50 @@ func (c *ClientWithResponses) ListAdminSearchSettingsAuditWithResponse(ctx conte
 	return ParseListAdminSearchSettingsAuditHTTPResponse(rsp)
 }
 
+// ResetAdminSiteInfoWithResponse request returning *ResetAdminSiteInfoHTTPResponse
+func (c *ClientWithResponses) ResetAdminSiteInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminSiteInfoHTTPResponse, error) {
+	rsp, err := c.ResetAdminSiteInfo(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetAdminSiteInfoHTTPResponse(rsp)
+}
+
+// GetAdminSiteInfoWithResponse request returning *GetAdminSiteInfoHTTPResponse
+func (c *ClientWithResponses) GetAdminSiteInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminSiteInfoHTTPResponse, error) {
+	rsp, err := c.GetAdminSiteInfo(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminSiteInfoHTTPResponse(rsp)
+}
+
+// UpdateAdminSiteInfoWithBodyWithResponse request with arbitrary body returning *UpdateAdminSiteInfoHTTPResponse
+func (c *ClientWithResponses) UpdateAdminSiteInfoWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminSiteInfoHTTPResponse, error) {
+	rsp, err := c.UpdateAdminSiteInfoWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminSiteInfoHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAdminSiteInfoWithResponse(ctx context.Context, body UpdateAdminSiteInfoJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminSiteInfoHTTPResponse, error) {
+	rsp, err := c.UpdateAdminSiteInfo(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminSiteInfoHTTPResponse(rsp)
+}
+
+// ListAdminSiteInfoAuditWithResponse request returning *ListAdminSiteInfoAuditHTTPResponse
+func (c *ClientWithResponses) ListAdminSiteInfoAuditWithResponse(ctx context.Context, params *ListAdminSiteInfoAuditParams, reqEditors ...RequestEditorFn) (*ListAdminSiteInfoAuditHTTPResponse, error) {
+	rsp, err := c.ListAdminSiteInfoAudit(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAdminSiteInfoAuditHTTPResponse(rsp)
+}
+
 // GetAdminStatsWithResponse request returning *GetAdminStatsHTTPResponse
 func (c *ClientWithResponses) GetAdminStatsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminStatsHTTPResponse, error) {
 	rsp, err := c.GetAdminStats(ctx, reqEditors...)
@@ -42673,6 +43095,180 @@ func ParseListAdminSearchSettingsAuditHTTPResponse(rsp *http.Response) (*ListAdm
 	}
 
 	response := &ListAdminSearchSettingsAuditHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSettingsAuditPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseResetAdminSiteInfoHTTPResponse parses an HTTP response from a ResetAdminSiteInfoWithResponse call
+func ParseResetAdminSiteInfoHTTPResponse(rsp *http.Response) (*ResetAdminSiteInfoHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetAdminSiteInfoHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminSiteInfoHTTPResponse parses an HTTP response from a GetAdminSiteInfoWithResponse call
+func ParseGetAdminSiteInfoHTTPResponse(rsp *http.Response) (*GetAdminSiteInfoHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminSiteInfoHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminSiteInfo
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAdminSiteInfoHTTPResponse parses an HTTP response from a UpdateAdminSiteInfoWithResponse call
+func ParseUpdateAdminSiteInfoHTTPResponse(rsp *http.Response) (*UpdateAdminSiteInfoHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAdminSiteInfoHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminSiteInfo
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAdminSiteInfoAuditHTTPResponse parses an HTTP response from a ListAdminSiteInfoAuditWithResponse call
+func ParseListAdminSiteInfoAuditHTTPResponse(rsp *http.Response) (*ListAdminSiteInfoAuditHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAdminSiteInfoAuditHTTPResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
