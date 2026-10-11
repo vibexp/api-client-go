@@ -439,6 +439,9 @@ type ClientInterface interface {
 	// GetSharedPrompt request
 	GetSharedPrompt(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetSiteInfo request
+	GetSiteInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// SubmitSupportRequestWithBody request with any body
 	SubmitSupportRequestWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2737,6 +2740,18 @@ func (c *Client) GetSetupStatus(ctx context.Context, reqEditors ...RequestEditor
 
 func (c *Client) GetSharedPrompt(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetSharedPromptRequest(c.Server, token)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSiteInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSiteInfoRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -13214,6 +13229,33 @@ func NewGetSharedPromptRequest(server string, token string) (*http.Request, erro
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/shared/prompts/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSiteInfoRequest generates requests for GetSiteInfo
+func NewGetSiteInfoRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/site-info")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -25593,6 +25635,9 @@ type ClientWithResponsesInterface interface {
 	// GetSharedPromptWithResponse request
 	GetSharedPromptWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*GetSharedPromptHTTPResponse, error)
 
+	// GetSiteInfoWithResponse request
+	GetSiteInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSiteInfoHTTPResponse, error)
+
 	// SubmitSupportRequestWithBodyWithResponse request with any body
 	SubmitSupportRequestWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SubmitSupportRequestHTTPResponse, error)
 
@@ -29784,6 +29829,37 @@ func (r GetSharedPromptHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetSharedPromptHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetSiteInfoHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *SiteInfoResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSiteInfoHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSiteInfoHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSiteInfoHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -38553,6 +38629,15 @@ func (c *ClientWithResponses) GetSharedPromptWithResponse(ctx context.Context, t
 	return ParseGetSharedPromptHTTPResponse(rsp)
 }
 
+// GetSiteInfoWithResponse request returning *GetSiteInfoHTTPResponse
+func (c *ClientWithResponses) GetSiteInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSiteInfoHTTPResponse, error) {
+	rsp, err := c.GetSiteInfo(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSiteInfoHTTPResponse(rsp)
+}
+
 // SubmitSupportRequestWithBodyWithResponse request with arbitrary body returning *SubmitSupportRequestHTTPResponse
 func (c *ClientWithResponses) SubmitSupportRequestWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SubmitSupportRequestHTTPResponse, error) {
 	rsp, err := c.SubmitSupportRequestWithBody(ctx, contentType, body, reqEditors...)
@@ -45793,6 +45878,39 @@ func ParseGetSharedPromptHTTPResponse(rsp *http.Response) (*GetSharedPromptHTTPR
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSiteInfoHTTPResponse parses an HTTP response from a GetSiteInfoWithResponse call
+func ParseGetSiteInfoHTTPResponse(rsp *http.Response) (*GetSiteInfoHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSiteInfoHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SiteInfoResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
 
 	}
 

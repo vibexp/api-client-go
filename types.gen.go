@@ -9676,6 +9676,33 @@ type SimilarResource struct {
 	Type string `json:"type"`
 }
 
+// SiteInfoResponse The instance's company branding, as shown on the sign-in page, in the app shell and in emails. The endpoint is public, so this carries only these eight non-secret values: no version, editor or timestamps. Every value is null when it is not configured, and the surface that would show it is hidden. Each URL is an absolute `http` or `https` URL.
+type SiteInfoResponse struct {
+	// CompanyEmail The company contact address. The support link falls back to it when `support_url` is null.
+	CompanyEmail *string `json:"company_email"`
+
+	// CompanyName The company name.
+	CompanyName *string `json:"company_name"`
+
+	// LogoDarkUrl The dark-mode logo image; use `logo_url` when it is null.
+	LogoDarkUrl *string `json:"logo_dark_url"`
+
+	// LogoUrl The company logo image.
+	LogoUrl *string `json:"logo_url"`
+
+	// PrivacyUrl The privacy policy page.
+	PrivacyUrl *string `json:"privacy_url"`
+
+	// SupportUrl Where the Support link points.
+	SupportUrl *string `json:"support_url"`
+
+	// TermsUrl The terms of service page.
+	TermsUrl *string `json:"terms_url"`
+
+	// Website The company website; the logo and name link to it.
+	Website *string `json:"website"`
+}
+
 // SkippedType A source type that was not copied because the destination already has a type with the same slug for that resource. A skip is a normal outcome, never an error.
 type SkippedType struct {
 	// ResourceType Resource the skipped type applies to
