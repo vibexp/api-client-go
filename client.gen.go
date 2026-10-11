@@ -609,6 +609,17 @@ type ClientInterface interface {
 	// DownloadArtifactAttachment request
 	DownloadArtifactAttachment(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// UnlockArtifact request
+	UnlockArtifact(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// LockArtifactWithBody request with any body
+	LockArtifactWithBody(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	LockArtifact(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, body LockArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetArtifactLockHistory request
+	GetArtifactLockHistory(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListArtifactVersions request
 	ListArtifactVersions(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -654,6 +665,17 @@ type ClientInterface interface {
 	UpdateBlueprintWithBody(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateBlueprint(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body UpdateBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UnlockBlueprint request
+	UnlockBlueprint(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// LockBlueprintWithBody request with any body
+	LockBlueprintWithBody(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	LockBlueprint(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body LockBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetBlueprintLockHistory request
+	GetBlueprintLockHistory(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListBlueprintVersions request
 	ListBlueprintVersions(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -977,6 +999,17 @@ type ClientInterface interface {
 
 	// GetPromptDependencies request
 	GetPromptDependencies(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UnlockPrompt request
+	UnlockPrompt(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// LockPromptWithBody request with any body
+	LockPromptWithBody(ctx context.Context, teamId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	LockPrompt(ctx context.Context, teamId openapi_types.UUID, slug string, body LockPromptJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetPromptLockHistory request
+	GetPromptLockHistory(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetPromptPlaceholders request
 	GetPromptPlaceholders(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3444,6 +3477,54 @@ func (c *Client) DownloadArtifactAttachment(ctx context.Context, teamId openapi_
 	return c.Client.Do(req)
 }
 
+func (c *Client) UnlockArtifact(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUnlockArtifactRequest(c.Server, teamId, projectId, slug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) LockArtifactWithBody(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLockArtifactRequestWithBody(c.Server, teamId, projectId, slug, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) LockArtifact(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, body LockArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLockArtifactRequest(c.Server, teamId, projectId, slug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetArtifactLockHistory(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetArtifactLockHistoryRequest(c.Server, teamId, projectId, slug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListArtifactVersions(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListArtifactVersionsRequest(c.Server, teamId, projectId, slug)
 	if err != nil {
@@ -3626,6 +3707,54 @@ func (c *Client) UpdateBlueprintWithBody(ctx context.Context, teamId openapi_typ
 
 func (c *Client) UpdateBlueprint(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body UpdateBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateBlueprintRequest(c.Server, teamId, projectId, slug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UnlockBlueprint(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUnlockBlueprintRequest(c.Server, teamId, projectId, slug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) LockBlueprintWithBody(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLockBlueprintRequestWithBody(c.Server, teamId, projectId, slug, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) LockBlueprint(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body LockBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLockBlueprintRequest(c.Server, teamId, projectId, slug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetBlueprintLockHistory(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetBlueprintLockHistoryRequest(c.Server, teamId, projectId, slug)
 	if err != nil {
 		return nil, err
 	}
@@ -5030,6 +5159,54 @@ func (c *Client) UpdatePrompt(ctx context.Context, teamId openapi_types.UUID, sl
 
 func (c *Client) GetPromptDependencies(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetPromptDependenciesRequest(c.Server, teamId, slug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UnlockPrompt(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUnlockPromptRequest(c.Server, teamId, slug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) LockPromptWithBody(ctx context.Context, teamId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLockPromptRequestWithBody(c.Server, teamId, slug, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) LockPrompt(ctx context.Context, teamId openapi_types.UUID, slug string, body LockPromptJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLockPromptRequest(c.Server, teamId, slug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetPromptLockHistory(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetPromptLockHistoryRequest(c.Server, teamId, slug)
 	if err != nil {
 		return nil, err
 	}
@@ -14961,6 +15138,18 @@ func NewListArtifactsRequest(server string, teamId openapi_types.UUID, params *L
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
+		if params.Locked != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "locked", *params.Locked, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Freshness != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -15229,6 +15418,18 @@ func NewListArtifactsByProjectRequest(server string, teamId openapi_types.UUID, 
 		// styled parameters, preserving literal commas as delimiters
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
+
+		if params.Locked != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "locked", *params.Locked, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
 
 		if params.Freshness != nil {
 
@@ -15729,6 +15930,163 @@ func NewDownloadArtifactAttachmentRequest(server string, teamId openapi_types.UU
 	return req, nil
 }
 
+// NewUnlockArtifactRequest generates requests for UnlockArtifact
+func NewUnlockArtifactRequest(server string, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/artifacts/%s/%s/lock", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewLockArtifactRequest calls the generic LockArtifact builder with application/json body
+func NewLockArtifactRequest(server string, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, body LockArtifactJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewLockArtifactRequestWithBody(server, teamId, projectId, slug, "application/json", bodyReader)
+}
+
+// NewLockArtifactRequestWithBody generates requests for LockArtifact with any type of body
+func NewLockArtifactRequestWithBody(server string, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/artifacts/%s/%s/lock", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetArtifactLockHistoryRequest generates requests for GetArtifactLockHistory
+func NewGetArtifactLockHistoryRequest(server string, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/artifacts/%s/%s/lock/history", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListArtifactVersionsRequest generates requests for ListArtifactVersions
 func NewListArtifactVersionsRequest(server string, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string) (*http.Request, error) {
 	var err error
@@ -16105,6 +16463,18 @@ func NewListSpecLibrariesRequest(server string, teamId openapi_types.UUID, param
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
+		if params.Locked != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "locked", *params.Locked, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Freshness != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -16397,6 +16767,18 @@ func NewListSpecLibrariesByProjectRequest(server string, teamId openapi_types.UU
 		// styled parameters, preserving literal commas as delimiters
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
+
+		if params.Locked != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "locked", *params.Locked, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
 
 		if params.Freshness != nil {
 
@@ -16697,6 +17079,163 @@ func NewUpdateBlueprintRequestWithBody(server string, teamId openapi_types.UUID,
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewUnlockBlueprintRequest generates requests for UnlockBlueprint
+func NewUnlockBlueprintRequest(server string, teamId openapi_types.UUID, projectId string, slug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/blueprints/%s/%s/lock", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewLockBlueprintRequest calls the generic LockBlueprint builder with application/json body
+func NewLockBlueprintRequest(server string, teamId openapi_types.UUID, projectId string, slug string, body LockBlueprintJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewLockBlueprintRequestWithBody(server, teamId, projectId, slug, "application/json", bodyReader)
+}
+
+// NewLockBlueprintRequestWithBody generates requests for LockBlueprint with any type of body
+func NewLockBlueprintRequestWithBody(server string, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/blueprints/%s/%s/lock", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetBlueprintLockHistoryRequest generates requests for GetBlueprintLockHistory
+func NewGetBlueprintLockHistoryRequest(server string, teamId openapi_types.UUID, projectId string, slug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/blueprints/%s/%s/lock/history", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -20986,6 +21525,18 @@ func NewListPromptsRequest(server string, teamId openapi_types.UUID, params *Lis
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
+		if params.Locked != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "locked", *params.Locked, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Freshness != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "freshness", *params.Freshness, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -21373,6 +21924,142 @@ func NewGetPromptDependenciesRequest(server string, teamId openapi_types.UUID, s
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/%s/prompts/%s/dependencies", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUnlockPromptRequest generates requests for UnlockPrompt
+func NewUnlockPromptRequest(server string, teamId openapi_types.UUID, slug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/prompts/%s/lock", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewLockPromptRequest calls the generic LockPrompt builder with application/json body
+func NewLockPromptRequest(server string, teamId openapi_types.UUID, slug string, body LockPromptJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewLockPromptRequestWithBody(server, teamId, slug, "application/json", bodyReader)
+}
+
+// NewLockPromptRequestWithBody generates requests for LockPrompt with any type of body
+func NewLockPromptRequestWithBody(server string, teamId openapi_types.UUID, slug string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/prompts/%s/lock", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetPromptLockHistoryRequest generates requests for GetPromptLockHistory
+func NewGetPromptLockHistoryRequest(server string, teamId openapi_types.UUID, slug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "slug", slug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/prompts/%s/lock/history", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -24842,6 +25529,17 @@ type ClientWithResponsesInterface interface {
 	// DownloadArtifactAttachmentWithResponse request
 	DownloadArtifactAttachmentWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DownloadArtifactAttachmentHTTPResponse, error)
 
+	// UnlockArtifactWithResponse request
+	UnlockArtifactWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*UnlockArtifactHTTPResponse, error)
+
+	// LockArtifactWithBodyWithResponse request with any body
+	LockArtifactWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LockArtifactHTTPResponse, error)
+
+	LockArtifactWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, body LockArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*LockArtifactHTTPResponse, error)
+
+	// GetArtifactLockHistoryWithResponse request
+	GetArtifactLockHistoryWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*GetArtifactLockHistoryHTTPResponse, error)
+
 	// ListArtifactVersionsWithResponse request
 	ListArtifactVersionsWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*ListArtifactVersionsHTTPResponse, error)
 
@@ -24887,6 +25585,17 @@ type ClientWithResponsesInterface interface {
 	UpdateBlueprintWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateBlueprintHTTPResponse, error)
 
 	UpdateBlueprintWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body UpdateBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateBlueprintHTTPResponse, error)
+
+	// UnlockBlueprintWithResponse request
+	UnlockBlueprintWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*UnlockBlueprintHTTPResponse, error)
+
+	// LockBlueprintWithBodyWithResponse request with any body
+	LockBlueprintWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LockBlueprintHTTPResponse, error)
+
+	LockBlueprintWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body LockBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*LockBlueprintHTTPResponse, error)
+
+	// GetBlueprintLockHistoryWithResponse request
+	GetBlueprintLockHistoryWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*GetBlueprintLockHistoryHTTPResponse, error)
 
 	// ListBlueprintVersionsWithResponse request
 	ListBlueprintVersionsWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*ListBlueprintVersionsHTTPResponse, error)
@@ -25210,6 +25919,17 @@ type ClientWithResponsesInterface interface {
 
 	// GetPromptDependenciesWithResponse request
 	GetPromptDependenciesWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*GetPromptDependenciesHTTPResponse, error)
+
+	// UnlockPromptWithResponse request
+	UnlockPromptWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*UnlockPromptHTTPResponse, error)
+
+	// LockPromptWithBodyWithResponse request with any body
+	LockPromptWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LockPromptHTTPResponse, error)
+
+	LockPromptWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, body LockPromptJSONRequestBody, reqEditors ...RequestEditorFn) (*LockPromptHTTPResponse, error)
+
+	// GetPromptLockHistoryWithResponse request
+	GetPromptLockHistoryWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*GetPromptLockHistoryHTTPResponse, error)
 
 	// GetPromptPlaceholdersWithResponse request
 	GetPromptPlaceholdersWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*GetPromptPlaceholdersHTTPResponse, error)
@@ -30382,6 +31102,113 @@ func (r DownloadArtifactAttachmentHTTPResponse) ContentType() string {
 	return ""
 }
 
+type UnlockArtifactHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Artifact
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UnlockArtifactHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UnlockArtifactHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UnlockArtifactHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type LockArtifactHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Artifact
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r LockArtifactHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r LockArtifactHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r LockArtifactHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetArtifactLockHistoryHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ResourceLockHistoryResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetArtifactLockHistoryHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetArtifactLockHistoryHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetArtifactLockHistoryHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListArtifactVersionsHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -30844,6 +31671,113 @@ func (r UpdateBlueprintHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateBlueprintHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UnlockBlueprintHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *BlueprintDetail
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UnlockBlueprintHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UnlockBlueprintHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UnlockBlueprintHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type LockBlueprintHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *BlueprintDetail
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r LockBlueprintHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r LockBlueprintHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r LockBlueprintHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetBlueprintLockHistoryHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ResourceLockHistoryResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetBlueprintLockHistoryHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetBlueprintLockHistoryHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetBlueprintLockHistoryHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -33842,6 +34776,113 @@ func (r GetPromptDependenciesHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetPromptDependenciesHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UnlockPromptHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Prompt
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UnlockPromptHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UnlockPromptHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UnlockPromptHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type LockPromptHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Prompt
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r LockPromptHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r LockPromptHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r LockPromptHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetPromptLockHistoryHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ResourceLockHistoryResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPromptLockHistoryHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPromptLockHistoryHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetPromptLockHistoryHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -37666,6 +38707,41 @@ func (c *ClientWithResponses) DownloadArtifactAttachmentWithResponse(ctx context
 	return ParseDownloadArtifactAttachmentHTTPResponse(rsp)
 }
 
+// UnlockArtifactWithResponse request returning *UnlockArtifactHTTPResponse
+func (c *ClientWithResponses) UnlockArtifactWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*UnlockArtifactHTTPResponse, error) {
+	rsp, err := c.UnlockArtifact(ctx, teamId, projectId, slug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUnlockArtifactHTTPResponse(rsp)
+}
+
+// LockArtifactWithBodyWithResponse request with arbitrary body returning *LockArtifactHTTPResponse
+func (c *ClientWithResponses) LockArtifactWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LockArtifactHTTPResponse, error) {
+	rsp, err := c.LockArtifactWithBody(ctx, teamId, projectId, slug, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLockArtifactHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) LockArtifactWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, body LockArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*LockArtifactHTTPResponse, error) {
+	rsp, err := c.LockArtifact(ctx, teamId, projectId, slug, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLockArtifactHTTPResponse(rsp)
+}
+
+// GetArtifactLockHistoryWithResponse request returning *GetArtifactLockHistoryHTTPResponse
+func (c *ClientWithResponses) GetArtifactLockHistoryWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*GetArtifactLockHistoryHTTPResponse, error) {
+	rsp, err := c.GetArtifactLockHistory(ctx, teamId, projectId, slug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetArtifactLockHistoryHTTPResponse(rsp)
+}
+
 // ListArtifactVersionsWithResponse request returning *ListArtifactVersionsHTTPResponse
 func (c *ClientWithResponses) ListArtifactVersionsWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*ListArtifactVersionsHTTPResponse, error) {
 	rsp, err := c.ListArtifactVersions(ctx, teamId, projectId, slug, reqEditors...)
@@ -37806,6 +38882,41 @@ func (c *ClientWithResponses) UpdateBlueprintWithResponse(ctx context.Context, t
 		return nil, err
 	}
 	return ParseUpdateBlueprintHTTPResponse(rsp)
+}
+
+// UnlockBlueprintWithResponse request returning *UnlockBlueprintHTTPResponse
+func (c *ClientWithResponses) UnlockBlueprintWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*UnlockBlueprintHTTPResponse, error) {
+	rsp, err := c.UnlockBlueprint(ctx, teamId, projectId, slug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUnlockBlueprintHTTPResponse(rsp)
+}
+
+// LockBlueprintWithBodyWithResponse request with arbitrary body returning *LockBlueprintHTTPResponse
+func (c *ClientWithResponses) LockBlueprintWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LockBlueprintHTTPResponse, error) {
+	rsp, err := c.LockBlueprintWithBody(ctx, teamId, projectId, slug, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLockBlueprintHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) LockBlueprintWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, body LockBlueprintJSONRequestBody, reqEditors ...RequestEditorFn) (*LockBlueprintHTTPResponse, error) {
+	rsp, err := c.LockBlueprint(ctx, teamId, projectId, slug, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLockBlueprintHTTPResponse(rsp)
+}
+
+// GetBlueprintLockHistoryWithResponse request returning *GetBlueprintLockHistoryHTTPResponse
+func (c *ClientWithResponses) GetBlueprintLockHistoryWithResponse(ctx context.Context, teamId openapi_types.UUID, projectId string, slug string, reqEditors ...RequestEditorFn) (*GetBlueprintLockHistoryHTTPResponse, error) {
+	rsp, err := c.GetBlueprintLockHistory(ctx, teamId, projectId, slug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetBlueprintLockHistoryHTTPResponse(rsp)
 }
 
 // ListBlueprintVersionsWithResponse request returning *ListBlueprintVersionsHTTPResponse
@@ -38831,6 +39942,41 @@ func (c *ClientWithResponses) GetPromptDependenciesWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParseGetPromptDependenciesHTTPResponse(rsp)
+}
+
+// UnlockPromptWithResponse request returning *UnlockPromptHTTPResponse
+func (c *ClientWithResponses) UnlockPromptWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*UnlockPromptHTTPResponse, error) {
+	rsp, err := c.UnlockPrompt(ctx, teamId, slug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUnlockPromptHTTPResponse(rsp)
+}
+
+// LockPromptWithBodyWithResponse request with arbitrary body returning *LockPromptHTTPResponse
+func (c *ClientWithResponses) LockPromptWithBodyWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LockPromptHTTPResponse, error) {
+	rsp, err := c.LockPromptWithBody(ctx, teamId, slug, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLockPromptHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) LockPromptWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, body LockPromptJSONRequestBody, reqEditors ...RequestEditorFn) (*LockPromptHTTPResponse, error) {
+	rsp, err := c.LockPrompt(ctx, teamId, slug, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLockPromptHTTPResponse(rsp)
+}
+
+// GetPromptLockHistoryWithResponse request returning *GetPromptLockHistoryHTTPResponse
+func (c *ClientWithResponses) GetPromptLockHistoryWithResponse(ctx context.Context, teamId openapi_types.UUID, slug string, reqEditors ...RequestEditorFn) (*GetPromptLockHistoryHTTPResponse, error) {
+	rsp, err := c.GetPromptLockHistory(ctx, teamId, slug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetPromptLockHistoryHTTPResponse(rsp)
 }
 
 // GetPromptPlaceholdersWithResponse request returning *GetPromptPlaceholdersHTTPResponse
@@ -46677,6 +47823,203 @@ func ParseDownloadArtifactAttachmentHTTPResponse(rsp *http.Response) (*DownloadA
 	return response, nil
 }
 
+// ParseUnlockArtifactHTTPResponse parses an HTTP response from a UnlockArtifactWithResponse call
+func ParseUnlockArtifactHTTPResponse(rsp *http.Response) (*UnlockArtifactHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UnlockArtifactHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Artifact
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseLockArtifactHTTPResponse parses an HTTP response from a LockArtifactWithResponse call
+func ParseLockArtifactHTTPResponse(rsp *http.Response) (*LockArtifactHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &LockArtifactHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Artifact
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetArtifactLockHistoryHTTPResponse parses an HTTP response from a GetArtifactLockHistoryWithResponse call
+func ParseGetArtifactLockHistoryHTTPResponse(rsp *http.Response) (*GetArtifactLockHistoryHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetArtifactLockHistoryHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceLockHistoryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListArtifactVersionsHTTPResponse parses an HTTP response from a ListArtifactVersionsWithResponse call
 func ParseListArtifactVersionsHTTPResponse(rsp *http.Response) (*ListArtifactVersionsHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -47364,6 +48707,203 @@ func ParseUpdateBlueprintHTTPResponse(rsp *http.Response) (*UpdateBlueprintHTTPR
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUnlockBlueprintHTTPResponse parses an HTTP response from a UnlockBlueprintWithResponse call
+func ParseUnlockBlueprintHTTPResponse(rsp *http.Response) (*UnlockBlueprintHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UnlockBlueprintHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BlueprintDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseLockBlueprintHTTPResponse parses an HTTP response from a LockBlueprintWithResponse call
+func ParseLockBlueprintHTTPResponse(rsp *http.Response) (*LockBlueprintHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &LockBlueprintHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BlueprintDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetBlueprintLockHistoryHTTPResponse parses an HTTP response from a GetBlueprintLockHistoryWithResponse call
+func ParseGetBlueprintLockHistoryHTTPResponse(rsp *http.Response) (*GetBlueprintLockHistoryHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetBlueprintLockHistoryHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceLockHistoryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
@@ -51981,6 +53521,203 @@ func ParseGetPromptDependenciesHTTPResponse(rsp *http.Response) (*GetPromptDepen
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUnlockPromptHTTPResponse parses an HTTP response from a UnlockPromptWithResponse call
+func ParseUnlockPromptHTTPResponse(rsp *http.Response) (*UnlockPromptHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UnlockPromptHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Prompt
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseLockPromptHTTPResponse parses an HTTP response from a LockPromptWithResponse call
+func ParseLockPromptHTTPResponse(rsp *http.Response) (*LockPromptHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &LockPromptHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Prompt
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetPromptLockHistoryHTTPResponse parses an HTTP response from a GetPromptLockHistoryWithResponse call
+func ParseGetPromptLockHistoryHTTPResponse(rsp *http.Response) (*GetPromptLockHistoryHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPromptLockHistoryHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceLockHistoryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
 
 	}
 

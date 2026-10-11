@@ -1674,6 +1674,24 @@ func (e ResourceFreshnessStateStatus) Valid() bool {
 	}
 }
 
+// Defines values for ResourceLockEventAction.
+const (
+	ResourceLockEventActionLock   ResourceLockEventAction = "lock"
+	ResourceLockEventActionUnlock ResourceLockEventAction = "unlock"
+)
+
+// Valid indicates whether the value is a known member of the ResourceLockEventAction enum.
+func (e ResourceLockEventAction) Valid() bool {
+	switch e {
+	case ResourceLockEventActionLock:
+		return true
+	case ResourceLockEventActionUnlock:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for SearchRequestTypes.
 const (
 	SearchRequestTypesArtifacts  SearchRequestTypes = "artifacts"
@@ -6214,6 +6232,9 @@ type Artifact struct {
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
 
+	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response.
+	Lock *ResourceLock `json:"lock"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -6380,6 +6401,9 @@ type Blueprint struct {
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
 
+	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response.
+	Lock *ResourceLock `json:"lock"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -6451,6 +6475,9 @@ type BlueprintDetail struct {
 
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
+
+	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response.
+	Lock *ResourceLock `json:"lock"`
 
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
@@ -8173,6 +8200,12 @@ type ListProviderModelsRequest struct {
 	ProviderType string              `json:"provider_type"`
 }
 
+// LockResourceRequest defines model for LockResourceRequest.
+type LockResourceRequest struct {
+	// Comment Why the resource is being locked. Required: surrounding whitespace is trimmed, and a comment that is then empty or longer than 500 characters is rejected with 400.
+	Comment string `json:"comment"`
+}
+
 // LoginResponse Response body returned by GET /api/v1/auth/login containing the authorization URL
 type LoginResponse struct {
 	// Url Identity-provider authorization URL to redirect the user to for authentication
@@ -8656,6 +8689,9 @@ type Prompt struct {
 	// Labels Labels for categorizing and filtering prompts. null on the wire when the prompt has none (nil slice serialization).
 	Labels *[]string `json:"labels,omitempty"`
 
+	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response. Always null on a prompt read through a share link: lock state is internal to the team.
+	Lock *ResourceLock `json:"lock"`
+
 	// McpExpose Whether this prompt is discoverable via MCP (Model Context Protocol) tools
 	McpExpose bool   `json:"mcp_expose"`
 	Name      string `json:"name"`
@@ -9048,6 +9084,54 @@ type ResourceInventoryItem struct {
 
 	// Name Human-readable resource name
 	Name string `json:"name"`
+}
+
+// ResourceLock The lock held on a prompt, blueprint or artifact. A resource carries one while it is locked and `null` when it is not.
+type ResourceLock struct {
+	// Comment Why the resource was locked, as given by the locker.
+	Comment string `json:"comment"`
+
+	// LockedAt When the lock was taken.
+	LockedAt time.Time `json:"locked_at"`
+
+	// LockedBy The team member holding the lock.
+	LockedBy ResourceLockActor `json:"locked_by"`
+}
+
+// ResourceLockActor A user named on a resource lock or a lock history event.
+type ResourceLockActor struct {
+	// DisplayName The user's display name.
+	DisplayName string `json:"display_name"`
+
+	// UserId ID of the user.
+	UserId string `json:"user_id"`
+}
+
+// ResourceLockEvent One entry of a resource's append-only lock history.
+type ResourceLockEvent struct {
+	// Action Whether the resource was locked or unlocked.
+	Action ResourceLockEventAction `json:"action"`
+
+	// Actor Who locked or unlocked the resource. Null once that user's account has been deleted.
+	Actor *ResourceLockActor `json:"actor"`
+
+	// Comment The lock comment for a `lock` event; null for an `unlock`.
+	Comment *string `json:"comment"`
+
+	// CreatedAt When the event happened.
+	CreatedAt time.Time `json:"created_at"`
+
+	// Id ID of the history event.
+	Id openapi_types.UUID `json:"id"`
+}
+
+// ResourceLockEventAction Whether the resource was locked or unlocked.
+type ResourceLockEventAction string
+
+// ResourceLockHistoryResponse defines model for ResourceLockHistoryResponse.
+type ResourceLockHistoryResponse struct {
+	// Events Lock and unlock events, newest first. Not paginated: at most the 100 most recent events are returned.
+	Events []ResourceLockEvent `json:"events"`
 }
 
 // ResourceMigrationCounts defines model for ResourceMigrationCounts.
@@ -11543,6 +11627,9 @@ type ListAgentExecutionsParams struct {
 
 // ListArtifactsParams defines parameters for ListArtifacts.
 type ListArtifactsParams struct {
+	// Locked Filter by lock state (epic #1285): `true` returns only locked resources, `false` only unlocked ones. Omit for no lock filtering. Returns 400 for a value that is not a boolean.
+	Locked *bool `form:"locked,omitempty" json:"locked,omitempty"`
+
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListArtifactsParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
@@ -11588,6 +11675,9 @@ type ListArtifactsParamsSortOrder string
 
 // ListArtifactsByProjectParams defines parameters for ListArtifactsByProject.
 type ListArtifactsByProjectParams struct {
+	// Locked Filter by lock state (epic #1285): `true` returns only locked resources, `false` only unlocked ones. Omit for no lock filtering. Returns 400 for a value that is not a boolean.
+	Locked *bool `form:"locked,omitempty" json:"locked,omitempty"`
+
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListArtifactsByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
@@ -11663,6 +11753,9 @@ type UploadAttachmentMultipartBody struct {
 
 // ListSpecLibrariesParams defines parameters for ListSpecLibraries.
 type ListSpecLibrariesParams struct {
+	// Locked Filter by lock state (epic #1285): `true` returns only locked resources, `false` only unlocked ones. Omit for no lock filtering. Returns 400 for a value that is not a boolean.
+	Locked *bool `form:"locked,omitempty" json:"locked,omitempty"`
+
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListSpecLibrariesParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
@@ -11720,6 +11813,9 @@ type ListSpecLibrariesParamsSortOrder string
 
 // ListSpecLibrariesByProjectParams defines parameters for ListSpecLibrariesByProject.
 type ListSpecLibrariesByProjectParams struct {
+	// Locked Filter by lock state (epic #1285): `true` returns only locked resources, `false` only unlocked ones. Omit for no lock filtering. Returns 400 for a value that is not a boolean.
+	Locked *bool `form:"locked,omitempty" json:"locked,omitempty"`
+
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListSpecLibrariesByProjectParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
@@ -12011,6 +12107,9 @@ type GetProjectResourceCreationMetricsParamsRange string
 
 // ListPromptsParams defines parameters for ListPrompts.
 type ListPromptsParams struct {
+	// Locked Filter by lock state (epic #1285): `true` returns only locked resources, `false` only unlocked ones. Omit for no lock filtering. Returns 400 for a value that is not a boolean.
+	Locked *bool `form:"locked,omitempty" json:"locked,omitempty"`
+
 	// Freshness Filter to resources currently flagged stale by the team's freshness rules (epic #726). Omit for no freshness filtering. Returns 400 for any other value — a silently ignored filter would return the full list, which looks like a legitimate answer.
 	Freshness *ListPromptsParamsFreshness `form:"freshness,omitempty" json:"freshness,omitempty"`
 
@@ -12228,6 +12327,9 @@ type UpdateArtifactJSONRequestBody = UpdateArtifactRequest
 // UploadArtifactAttachmentMultipartRequestBody defines body for UploadArtifactAttachment for multipart/form-data ContentType.
 type UploadArtifactAttachmentMultipartRequestBody UploadArtifactAttachmentMultipartBody
 
+// LockArtifactJSONRequestBody defines body for LockArtifact for application/json ContentType.
+type LockArtifactJSONRequestBody = LockResourceRequest
+
 // UploadAttachmentMultipartRequestBody defines body for UploadAttachment for multipart/form-data ContentType.
 type UploadAttachmentMultipartRequestBody UploadAttachmentMultipartBody
 
@@ -12236,6 +12338,9 @@ type CreateBlueprintJSONRequestBody = CreateBlueprintRequest
 
 // UpdateBlueprintJSONRequestBody defines body for UpdateBlueprint for application/json ContentType.
 type UpdateBlueprintJSONRequestBody = UpdateBlueprintRequest
+
+// LockBlueprintJSONRequestBody defines body for LockBlueprint for application/json ContentType.
+type LockBlueprintJSONRequestBody = LockResourceRequest
 
 // CreateCommentJSONRequestBody defines body for CreateComment for application/json ContentType.
 type CreateCommentJSONRequestBody = CreateCommentRequest
@@ -12320,6 +12425,9 @@ type CreatePromptJSONRequestBody = CreatePromptRequest
 
 // UpdatePromptJSONRequestBody defines body for UpdatePrompt for application/json ContentType.
 type UpdatePromptJSONRequestBody = UpdatePromptRequest
+
+// LockPromptJSONRequestBody defines body for LockPrompt for application/json ContentType.
+type LockPromptJSONRequestBody = LockResourceRequest
 
 // RenderPromptJSONRequestBody defines body for RenderPrompt for application/json ContentType.
 type RenderPromptJSONRequestBody = RenderPromptRequest
