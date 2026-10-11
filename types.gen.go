@@ -8670,7 +8670,7 @@ type Prompt struct {
 	Similar *[]SimilarResource `json:"similar,omitempty"`
 	Slug    string             `json:"slug"`
 
-	// Status Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
+	// Status Status of a prompt. The system values are `draft` and `published`; a `draft` prompt is never exposed over MCP, while a prompt in any other status is once `mcp_expose` is on. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
 	Status PromptStatus `json:"status"`
 
 	// TeamId Team identifier that owns this prompt
@@ -8764,7 +8764,7 @@ type PromptPlaceholdersResponse struct {
 	Placeholders []string `json:"placeholders"`
 }
 
-// PromptStatus Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
+// PromptStatus Status of a prompt. The system values are `draft` and `published`; a `draft` prompt is never exposed over MCP, while a prompt in any other status is once `mcp_expose` is on. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
 type PromptStatus = string
 
 // PromptVersionListResponse defines model for PromptVersionListResponse.
@@ -10153,7 +10153,7 @@ type UpdatePromptRequest struct {
 	ProjectId *openapi_types.UUID `json:"project_id,omitempty"`
 	Slug      *string             `json:"slug,omitempty"`
 
-	// Status Status of a prompt. The system values are `draft` and `published`; a prompt is only exposed over MCP once it is `published`. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
+	// Status Status of a prompt. The system values are `draft` and `published`; a `draft` prompt is never exposed over MCP, while a prompt in any other status is once `mcp_expose` is on. A team may define further statuses of its own for prompts, so this is an open string: any other value must be one of the team's custom prompt statuses, or the request is rejected with 400.
 	Status *PromptStatus `json:"status,omitempty"`
 }
 
