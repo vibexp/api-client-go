@@ -1692,6 +1692,27 @@ func (e ResourceLockEventAction) Valid() bool {
 	}
 }
 
+// Defines values for ResourceWriteLockedErrorMetadataResourceType.
+const (
+	ResourceWriteLockedErrorMetadataResourceTypeArtifact  ResourceWriteLockedErrorMetadataResourceType = "artifact"
+	ResourceWriteLockedErrorMetadataResourceTypeBlueprint ResourceWriteLockedErrorMetadataResourceType = "blueprint"
+	ResourceWriteLockedErrorMetadataResourceTypePrompt    ResourceWriteLockedErrorMetadataResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the ResourceWriteLockedErrorMetadataResourceType enum.
+func (e ResourceWriteLockedErrorMetadataResourceType) Valid() bool {
+	switch e {
+	case ResourceWriteLockedErrorMetadataResourceTypeArtifact:
+		return true
+	case ResourceWriteLockedErrorMetadataResourceTypeBlueprint:
+		return true
+	case ResourceWriteLockedErrorMetadataResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for SearchRequestTypes.
 const (
 	SearchRequestTypesArtifacts  SearchRequestTypes = "artifacts"
@@ -9175,6 +9196,54 @@ type ResourceSelections struct {
 	FeedItems  *ResourceSelection `json:"feed_items,omitempty"`
 	Prompts    *ResourceSelection `json:"prompts,omitempty"`
 }
+
+// ResourceWriteLockedError defines model for ResourceWriteLockedError.
+type ResourceWriteLockedError struct {
+	// Code Application-specific error code
+	Code string `json:"code"`
+
+	// Detail Human-readable explanation specific to this occurrence
+	Detail string `json:"detail"`
+
+	// Instance URI reference that identifies the specific occurrence
+	Instance *string `json:"instance,omitempty"`
+
+	// Metadata The lock that refused the write.
+	Metadata struct {
+		// Comment Why the resource was locked, as given by the locker.
+		Comment string `json:"comment"`
+
+		// Field The frozen field the update tried to change, by its request name. Absent when a delete was refused.
+		Field *string `json:"field,omitempty"`
+
+		// LockedBy The team member holding the lock.
+		LockedBy ResourceLockActor `json:"locked_by"`
+
+		// ResourceType The kind of resource that is locked.
+		ResourceType ResourceWriteLockedErrorMetadataResourceType `json:"resource_type"`
+	} `json:"metadata"`
+
+	// RequestId Unique request identifier for tracking and debugging
+	RequestId string `json:"request_id"`
+
+	// Status HTTP status code
+	Status int `json:"status"`
+
+	// Timestamp Timestamp when the error occurred (RFC3339)
+	Timestamp time.Time `json:"timestamp"`
+
+	// Title Short, human-readable summary of the problem type
+	Title string `json:"title"`
+
+	// Type URI reference that identifies the problem type
+	Type string `json:"type"`
+
+	// ValidationErrors Field-level validation errors (present for validation failures)
+	ValidationErrors *[]ValidationError `json:"validation_errors,omitempty"`
+}
+
+// ResourceWriteLockedErrorMetadataResourceType The kind of resource that is locked.
+type ResourceWriteLockedErrorMetadataResourceType string
 
 // SMTPProviderSettings Non-secret SMTP settings. The password is the provider's secret.
 type SMTPProviderSettings struct {
