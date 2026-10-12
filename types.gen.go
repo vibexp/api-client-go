@@ -927,6 +927,33 @@ func (e ContentVersionActorType) Valid() bool {
 	}
 }
 
+// Defines values for ContentVersionSource.
+const (
+	ContentVersionSourceAPI  ContentVersionSource = "api"
+	ContentVersionSourceCLI  ContentVersionSource = "cli"
+	ContentVersionSourceMCP  ContentVersionSource = "mcp"
+	ContentVersionSourceNone ContentVersionSource = "<nil>"
+	ContentVersionSourceWeb  ContentVersionSource = "web"
+)
+
+// Valid indicates whether the value is a known member of the ContentVersionSource enum.
+func (e ContentVersionSource) Valid() bool {
+	switch e {
+	case ContentVersionSourceAPI:
+		return true
+	case ContentVersionSourceCLI:
+		return true
+	case ContentVersionSourceMCP:
+		return true
+	case ContentVersionSourceNone:
+		return true
+	case ContentVersionSourceWeb:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CreateAPIKeyRequestIntegrationCodes.
 const (
 	CreateAPIKeyRequestIntegrationCodesCli       CreateAPIKeyRequestIntegrationCodes = "cli"
@@ -6920,6 +6947,9 @@ type ContentVersion struct {
 	// ActorType Who authored this version: 'human' for a user edit, 'system' for a system-generated version such as a restore.
 	ActorType ContentVersionActorType `json:"actor_type"`
 
+	// AssistantName The name the MCP client reported for itself (its clientInfo.name), trimmed and capped at 30 characters. It is a label the client chose, not a verified identity. Null unless source is mcp and the client reported a name.
+	AssistantName *string `json:"assistant_name"`
+
 	// Author Resolved attribution for a version's author. Null when the version has no author (created_by is null) or the user can no longer be resolved.
 	Author *VersionAuthor `json:"author"`
 
@@ -6944,6 +6974,9 @@ type ContentVersion struct {
 	// ResourceType Type of the versioned resource
 	ResourceType string `json:"resource_type"`
 
+	// Source The channel the write that produced this version arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed; a client cannot set it. Null when it is not known: the version was written before write sources were recorded, or a system action such as a restore produced it.
+	Source *ContentVersionSource `json:"source"`
+
 	// TeamId Team that owns the versioned resource
 	TeamId openapi_types.UUID `json:"team_id"`
 
@@ -6953,6 +6986,9 @@ type ContentVersion struct {
 
 // ContentVersionActorType Who authored this version: 'human' for a user edit, 'system' for a system-generated version such as a restore.
 type ContentVersionActorType string
+
+// ContentVersionSource The channel the write that produced this version arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed; a client cannot set it. Null when it is not known: the version was written before write sources were recorded, or a system action such as a restore produced it.
+type ContentVersionSource string
 
 // ConversationExecutionsResponse defines model for ConversationExecutionsResponse.
 type ConversationExecutionsResponse struct {
@@ -8784,11 +8820,16 @@ type ProjectResourceCreationDailyCount struct {
 
 // ProjectResourceCreationMetricsData defines model for ProjectResourceCreationMetricsData.
 type ProjectResourceCreationMetricsData struct {
-	Counts []ProjectResourceCreationDailyCount     `json:"counts"`
-	Range  ProjectResourceCreationMetricsDataRange `json:"range"`
+	// BySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request (for example an import). Projects are not broken down by channel.
+	BySource ResourceCreationBySource                `json:"by_source"`
+	Counts   []ProjectResourceCreationDailyCount     `json:"counts"`
+	Range    ProjectResourceCreationMetricsDataRange `json:"range"`
 
-	// TotalCreated Sum of every creation count across the whole window.
+	// TotalCreated Sum of every creation count across the whole window. The by_source totals sum to this.
 	TotalCreated int `json:"total_created"`
+
+	// WritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) recorded per channel over the same window. All four keys are always present. There is no unknown key: a write with no recorded channel is not counted, so these totals start when write sources began to be recorded.
+	WritesBySource ResourceWritesBySource `json:"writes_by_source"`
 }
 
 // ProjectResourceCreationMetricsDataRange defines model for ProjectResourceCreationMetricsData.Range.
@@ -9244,6 +9285,35 @@ type ResourceAccessMetricsResponse struct {
 	Status  string                    `json:"status"`
 }
 
+// ResourceCreationBySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request (for example an import). Projects are not broken down by channel.
+type ResourceCreationBySource struct {
+	// Api Resources created through one channel over the whole window, per resource type. total is the sum of the four.
+	Api ResourceCreationSourceCounts `json:"api"`
+
+	// Cli Resources created through one channel over the whole window, per resource type. total is the sum of the four.
+	Cli ResourceCreationSourceCounts `json:"cli"`
+
+	// Mcp Resources created through one channel over the whole window, per resource type. total is the sum of the four.
+	Mcp ResourceCreationSourceCounts `json:"mcp"`
+
+	// Unknown Resources created through one channel over the whole window, per resource type. total is the sum of the four.
+	Unknown ResourceCreationSourceCounts `json:"unknown"`
+
+	// Web Resources created through one channel over the whole window, per resource type. total is the sum of the four.
+	Web ResourceCreationSourceCounts `json:"web"`
+}
+
+// ResourceCreationSourceCounts Resources created through one channel over the whole window, per resource type. total is the sum of the four.
+type ResourceCreationSourceCounts struct {
+	Artifacts  int `json:"artifacts"`
+	Blueprints int `json:"blueprints"`
+	Memories   int `json:"memories"`
+	Prompts    int `json:"prompts"`
+
+	// Total prompts + artifacts + blueprints + memories for this channel.
+	Total int `json:"total"`
+}
+
 // ResourceFreshnessState The resource's staleness state. Present only when the resource is stale; absent means fresh.
 type ResourceFreshnessState struct {
 	// MatchedRuleIds Every rule that currently marks this resource — staleness is a union across rules, so this answers "why is this stale". Serializes as `[]`, never `null`.
@@ -9420,6 +9490,14 @@ type ResourceWriteLockedError struct {
 
 // ResourceWriteLockedErrorMetadataResourceType The kind of resource that is locked.
 type ResourceWriteLockedErrorMetadataResourceType string
+
+// ResourceWritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) recorded per channel over the same window. All four keys are always present. There is no unknown key: a write with no recorded channel is not counted, so these totals start when write sources began to be recorded.
+type ResourceWritesBySource struct {
+	Api int `json:"api"`
+	Cli int `json:"cli"`
+	Mcp int `json:"mcp"`
+	Web int `json:"web"`
+}
 
 // SMTPProviderSettings Non-secret SMTP settings. The password is the provider's secret.
 type SMTPProviderSettings struct {
@@ -10051,11 +10129,16 @@ type TeamResourceCreationDailyCount struct {
 
 // TeamResourceCreationMetricsData defines model for TeamResourceCreationMetricsData.
 type TeamResourceCreationMetricsData struct {
-	Counts []TeamResourceCreationDailyCount     `json:"counts"`
-	Range  TeamResourceCreationMetricsDataRange `json:"range"`
+	// BySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request (for example an import). Projects are not broken down by channel.
+	BySource ResourceCreationBySource             `json:"by_source"`
+	Counts   []TeamResourceCreationDailyCount     `json:"counts"`
+	Range    TeamResourceCreationMetricsDataRange `json:"range"`
 
-	// TotalCreated Sum of every creation count across the whole window.
+	// TotalCreated Sum of every creation count across the whole window, projects included. The by_source totals sum to this minus the projects created in the window, because projects are not broken down by channel.
 	TotalCreated int `json:"total_created"`
+
+	// WritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) recorded per channel over the same window. All four keys are always present. There is no unknown key: a write with no recorded channel is not counted, so these totals start when write sources began to be recorded.
+	WritesBySource ResourceWritesBySource `json:"writes_by_source"`
 }
 
 // TeamResourceCreationMetricsDataRange defines model for TeamResourceCreationMetricsData.Range.
