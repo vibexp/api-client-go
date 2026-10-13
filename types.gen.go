@@ -8888,6 +8888,17 @@ type PasswordLogin struct {
 // for a reset link. Reported whether or not password sign-in is enabled.
 type PasswordLoginReset string
 
+// PasswordLoginRequest Request body for POST /api/v1/auth/password/login.
+type PasswordLoginRequest struct {
+	// Email The account's email address. Letter case and surrounding spaces are ignored.
+	Email openapi_types.Email `json:"email"`
+
+	// Password The account's password, exactly as typed: it is not trimmed. The limit
+	// here only bounds the request; the password policy applies when a
+	// password is set, not when one is checked.
+	Password string `json:"password"`
+}
+
 // PendingInvitationsListResponse List of the current user's pending team invitations (page/page_size are fixed at 1/20; all pending invitations are returned)
 type PendingInvitationsListResponse struct {
 	Invitations []InvitationResponse `json:"invitations"`
@@ -12818,6 +12829,9 @@ type CreateAPIKeyJSONRequestBody = CreateAPIKeyRequest
 
 // DevLoginJSONRequestBody defines body for DevLogin for application/json ContentType.
 type DevLoginJSONRequestBody = DevLoginRequest
+
+// PasswordLoginJSONRequestBody defines body for PasswordLogin for application/json ContentType.
+type PasswordLoginJSONRequestBody = PasswordLoginRequest
 
 // UpdatePreferencesJSONRequestBody defines body for UpdatePreferences for application/json ContentType.
 type UpdatePreferencesJSONRequestBody = UpdatePreferencesRequest
