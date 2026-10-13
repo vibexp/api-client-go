@@ -4057,6 +4057,88 @@ type AcceptInvitationResponse struct {
 	TeamName string             `json:"team_name"`
 }
 
+// Account The signed-in user's own account and its sign-in methods.
+type Account struct {
+	// Email The account's email address. It cannot be changed here.
+	Email openapi_types.Email `json:"email"`
+	Id    openapi_types.UUID  `json:"id"`
+
+	// Identities The identity providers this account can sign in with, oldest first.
+	// Empty when the account has none.
+	Identities []AccountIdentity `json:"identities"`
+
+	// Name Display name.
+	Name string `json:"name"`
+
+	// Password The account's password sign-in method.
+	Password AccountPassword `json:"password"`
+
+	// RecentSignIn Whether this request's browser session signed in within the last 10
+	// minutes. Setting a first password, removing the password and
+	// disconnecting an identity require it and answer 403
+	// `reauthentication_required` otherwise. Always false for a request
+	// authenticated by an API key or a bearer token. Refreshing or extending a
+	// session does not make it recent again; signing in does.
+	RecentSignIn bool `json:"recent_sign_in"`
+}
+
+// AccountIdentity One identity provider the account can sign in with.
+type AccountIdentity struct {
+	// Available Whether the provider is currently enabled on this instance, so the
+	// identity can be used to sign in. An unavailable identity does not count
+	// as a sign-in method when another one is removed.
+	Available   bool      `json:"available"`
+	ConnectedAt time.Time `json:"connected_at"`
+
+	// DisplayName The provider's name as shown on the sign-in page; its slug when the provider no longer exists.
+	DisplayName string `json:"display_name"`
+
+	// Id Identifier to pass to `DELETE /api/v1/account/identities/{id}`.
+	Id openapi_types.UUID `json:"id"`
+
+	// LastUsedAt When the identity last signed in. Null when it has not since it was recorded.
+	LastUsedAt *time.Time `json:"last_used_at"`
+
+	// Provider The provider's slug.
+	Provider string `json:"provider"`
+}
+
+// AccountPassword The account's password sign-in method.
+type AccountPassword struct {
+	// ChangedAt When the password was last set or changed. Null when there is none.
+	ChangedAt *time.Time `json:"changed_at"`
+
+	// LoginEnabled Whether password sign-in is switched on for this instance. While it is
+	// off a password cannot be set or changed (409 `password_login_disabled`)
+	// and an existing one cannot be used to sign in; it can still be removed.
+	LoginEnabled bool `json:"login_enabled"`
+
+	// Set Whether the account has a password.
+	Set bool `json:"set"`
+}
+
+// AccountPasswordRequest Request body for PUT /api/v1/account/password.
+type AccountPasswordRequest struct {
+	// CurrentPassword The account's current password, exactly as typed. Required when the
+	// account already has a password; ignored when it has none.
+	CurrentPassword *string `json:"current_password,omitempty"`
+
+	// NewPassword The new password, exactly as typed: it is not trimmed. It must satisfy
+	// the password policy (at least 12 characters, not a common password, not
+	// the account's email address).
+	NewPassword string `json:"new_password"`
+
+	// RevokeApiAccess Also delete the account's API keys and disconnect its MCP and CLI
+	// tools. Other browser sessions are always ended, whatever this is.
+	RevokeApiAccess *bool `json:"revoke_api_access,omitempty"`
+}
+
+// AccountUpdateRequest Request body for PATCH /api/v1/account.
+type AccountUpdateRequest struct {
+	// Name New display name. Surrounding spaces are removed; it must not be blank.
+	Name string `json:"name"`
+}
+
 // Activity defines model for Activity.
 type Activity struct {
 	ActivityType string `json:"activity_type"`
@@ -12775,6 +12857,12 @@ type GetUsageAndGrowthParams struct {
 	// To Filter data until this date (YYYY-MM-DD format). Both 'from' and 'to' must be provided together.
 	To *openapi_types.Date `form:"to,omitempty" json:"to,omitempty"`
 }
+
+// UpdateAccountJSONRequestBody defines body for UpdateAccount for application/json ContentType.
+type UpdateAccountJSONRequestBody = AccountUpdateRequest
+
+// SetAccountPasswordJSONRequestBody defines body for SetAccountPassword for application/json ContentType.
+type SetAccountPasswordJSONRequestBody = AccountPasswordRequest
 
 // CreateActivityJSONRequestBody defines body for CreateActivity for application/json ContentType.
 type CreateActivityJSONRequestBody = CreateActivityRequest
