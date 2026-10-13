@@ -1806,6 +1806,30 @@ func (e ResourceWriteLockedErrorMetadataResourceType) Valid() bool {
 	}
 }
 
+// Defines values for ResourceWriteSource.
+const (
+	ResourceWriteSourceAPI ResourceWriteSource = "api"
+	ResourceWriteSourceCLI ResourceWriteSource = "cli"
+	ResourceWriteSourceMCP ResourceWriteSource = "mcp"
+	ResourceWriteSourceWeb ResourceWriteSource = "web"
+)
+
+// Valid indicates whether the value is a known member of the ResourceWriteSource enum.
+func (e ResourceWriteSource) Valid() bool {
+	switch e {
+	case ResourceWriteSourceAPI:
+		return true
+	case ResourceWriteSourceCLI:
+		return true
+	case ResourceWriteSourceMCP:
+		return true
+	case ResourceWriteSourceWeb:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for SearchRequestTypes.
 const (
 	SearchRequestTypesArtifacts  SearchRequestTypes = "artifacts"
@@ -6502,6 +6526,12 @@ type Artifact struct {
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
 
+	// LastWriteAssistantName The name the MCP client that made the most recent recorded write reported for itself (its clientInfo.name), trimmed and capped at 30 characters. It is a label the client chose, not a verified identity. Null unless last_write_source is mcp and the client reported a name.
+	LastWriteAssistantName *string `json:"last_write_assistant_name"`
+
+	// LastWriteSource The channel the most recent recorded write (create or update) of this resource arrived through (#1418). Null when no write of it has a recorded channel: it was last written before write channels were recorded, and has not been written since. Null is "not known", never a guessed channel. Present on every read, list and write response.
+	LastWriteSource *ResourceWriteSource `json:"last_write_source"`
+
 	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response.
 	Lock *ResourceLock `json:"lock"`
 
@@ -6671,6 +6701,12 @@ type Blueprint struct {
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
 
+	// LastWriteAssistantName The name the MCP client that made the most recent recorded write reported for itself (its clientInfo.name), trimmed and capped at 30 characters. It is a label the client chose, not a verified identity. Null unless last_write_source is mcp and the client reported a name.
+	LastWriteAssistantName *string `json:"last_write_assistant_name"`
+
+	// LastWriteSource The channel the most recent recorded write (create or update) of this resource arrived through (#1418). Null when no write of it has a recorded channel: it was last written before write channels were recorded, and has not been written since. Null is "not known", never a guessed channel. Present on every read, list and write response.
+	LastWriteSource *ResourceWriteSource `json:"last_write_source"`
+
 	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response.
 	Lock *ResourceLock `json:"lock"`
 
@@ -6745,6 +6781,12 @@ type BlueprintDetail struct {
 
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
+
+	// LastWriteAssistantName The name the MCP client that made the most recent recorded write reported for itself (its clientInfo.name), trimmed and capped at 30 characters. It is a label the client chose, not a verified identity. Null unless last_write_source is mcp and the client reported a name.
+	LastWriteAssistantName *string `json:"last_write_assistant_name"`
+
+	// LastWriteSource The channel the most recent recorded write (create or update) of this resource arrived through (#1418). Null when no write of it has a recorded channel: it was last written before write channels were recorded, and has not been written since. Null is "not known", never a guessed channel. Present on every read, list and write response.
+	LastWriteSource *ResourceWriteSource `json:"last_write_source"`
 
 	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response.
 	Lock *ResourceLock `json:"lock"`
@@ -7074,7 +7116,7 @@ type ContentVersion struct {
 	// ResourceType Type of the versioned resource
 	ResourceType string `json:"resource_type"`
 
-	// Source The channel the write that produced this version arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed; a client cannot set it. Null when it is not known: the version was written before write sources were recorded, or a system action such as a restore produced it.
+	// Source The channel the write that produced this version arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed; a client cannot set it. Null when it is not known: the version was written before write sources were recorded, or a system action that is not a request produced it. A restore is a request and reports the channel it was requested through.
 	Source *ContentVersionSource `json:"source"`
 
 	// TeamId Team that owns the versioned resource
@@ -7087,7 +7129,7 @@ type ContentVersion struct {
 // ContentVersionActorType Who authored this version: 'human' for a user edit, 'system' for a system-generated version such as a restore.
 type ContentVersionActorType string
 
-// ContentVersionSource The channel the write that produced this version arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed; a client cannot set it. Null when it is not known: the version was written before write sources were recorded, or a system action such as a restore produced it.
+// ContentVersionSource The channel the write that produced this version arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed; a client cannot set it. Null when it is not known: the version was written before write sources were recorded, or a system action that is not a request produced it. A restore is a request and reports the channel it was requested through.
 type ContentVersionSource string
 
 // ConversationExecutionsResponse defines model for ConversationExecutionsResponse.
@@ -8574,6 +8616,12 @@ type Memory struct {
 	// Labels Labels for categorising and filtering. Always present: an empty array when the resource has none. At most 10 labels, 50 characters each.
 	Labels []string `json:"labels"`
 
+	// LastWriteAssistantName The name the MCP client that made the most recent recorded write reported for itself (its clientInfo.name), trimmed and capped at 30 characters. It is a label the client chose, not a verified identity. Null unless last_write_source is mcp and the client reported a name.
+	LastWriteAssistantName *string `json:"last_write_assistant_name"`
+
+	// LastWriteSource The channel the most recent recorded write (create or update) of this resource arrived through (#1418). Null when no write of it has a recorded channel: it was last written before write channels were recorded, and has not been written since. Null is "not known", never a guessed channel. Present on every read, list and write response.
+	LastWriteSource *ResourceWriteSource `json:"last_write_source"`
+
 	// Metadata Additional metadata as key-value pairs
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
@@ -8940,7 +8988,7 @@ type ProjectResourceCreationDailyCount struct {
 
 // ProjectResourceCreationMetricsData defines model for ProjectResourceCreationMetricsData.
 type ProjectResourceCreationMetricsData struct {
-	// BySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request (for example an import). Projects are not broken down by channel.
+	// BySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request. Projects are not broken down by channel.
 	BySource ResourceCreationBySource                `json:"by_source"`
 	Counts   []ProjectResourceCreationDailyCount     `json:"counts"`
 	Range    ProjectResourceCreationMetricsDataRange `json:"range"`
@@ -8948,7 +8996,7 @@ type ProjectResourceCreationMetricsData struct {
 	// TotalCreated Sum of every creation count across the whole window. The by_source totals sum to this.
 	TotalCreated int `json:"total_created"`
 
-	// WritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) recorded per channel over the same window. All four keys are always present. There is no unknown key: a write with no recorded channel is not counted, so these totals start when write sources began to be recorded.
+	// WritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) over the same window, per channel. All five keys are always present, and web + cli + mcp + api + unknown is the number of writes the server knows of in the window. unknown holds the writes with no recorded channel (#1418): resources created in the window that have no create event (the by_source unknown total), plus content changes in the window whose version snapshot carries no source. Both come from before write channels were recorded, or from a system action that is not a request. An update from before write channels were recorded that changed no content left no trace and cannot be counted, so unknown is a lower bound for that period and exact after it.
 	WritesBySource ResourceWritesBySource `json:"writes_by_source"`
 }
 
@@ -9046,6 +9094,12 @@ type Prompt struct {
 
 	// Labels Labels for categorizing and filtering prompts. null on the wire when the prompt has none (nil slice serialization).
 	Labels *[]string `json:"labels,omitempty"`
+
+	// LastWriteAssistantName The name the MCP client that made the most recent recorded write reported for itself (its clientInfo.name), trimmed and capped at 30 characters. It is a label the client chose, not a verified identity. Null unless last_write_source is mcp and the client reported a name.
+	LastWriteAssistantName *string `json:"last_write_assistant_name"`
+
+	// LastWriteSource The channel the most recent recorded write (create or update) of this resource arrived through (#1418). Null when no write of it has a recorded channel: it was last written before write channels were recorded, and has not been written since. Null is "not known", never a guessed channel. Present on every read, list and write response. Always null on a prompt read through a share link: how a team writes is internal to the team.
+	LastWriteSource *ResourceWriteSource `json:"last_write_source"`
 
 	// Lock The lock held on this resource (epic #1285), or null when it is not locked. Present on every read, list and write response. Always null on a prompt read through a share link: lock state is internal to the team.
 	Lock *ResourceLock `json:"lock"`
@@ -9410,7 +9464,7 @@ type ResourceAccessMetricsResponse struct {
 	Status  string                    `json:"status"`
 }
 
-// ResourceCreationBySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request (for example an import). Projects are not broken down by channel.
+// ResourceCreationBySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request. Projects are not broken down by channel.
 type ResourceCreationBySource struct {
 	// Api Resources created through one channel over the whole window, per resource type. total is the sum of the four.
 	Api ResourceCreationSourceCounts `json:"api"`
@@ -9616,12 +9670,18 @@ type ResourceWriteLockedError struct {
 // ResourceWriteLockedErrorMetadataResourceType The kind of resource that is locked.
 type ResourceWriteLockedErrorMetadataResourceType string
 
-// ResourceWritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) recorded per channel over the same window. All four keys are always present. There is no unknown key: a write with no recorded channel is not counted, so these totals start when write sources began to be recorded.
+// ResourceWriteSource The channel a write of a prompt, artifact, blueprint or memory arrived through: the web app, the CLI, the MCP server, or any other API client. The server derives it from how the request was authenticated and routed (a session cookie is web, an API key with the CLI's user agent is cli, the MCP endpoint is mcp, anything else is api); a client cannot set it.
+type ResourceWriteSource string
+
+// ResourceWritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) over the same window, per channel. All five keys are always present, and web + cli + mcp + api + unknown is the number of writes the server knows of in the window. unknown holds the writes with no recorded channel (#1418): resources created in the window that have no create event (the by_source unknown total), plus content changes in the window whose version snapshot carries no source. Both come from before write channels were recorded, or from a system action that is not a request. An update from before write channels were recorded that changed no content left no trace and cannot be counted, so unknown is a lower bound for that period and exact after it.
 type ResourceWritesBySource struct {
 	Api int `json:"api"`
 	Cli int `json:"cli"`
 	Mcp int `json:"mcp"`
-	Web int `json:"web"`
+
+	// Unknown Writes in the window with no recorded channel.
+	Unknown int `json:"unknown"`
+	Web     int `json:"web"`
 }
 
 // SMTPProviderSettings Non-secret SMTP settings. The password is the provider's secret.
@@ -10254,7 +10314,7 @@ type TeamResourceCreationDailyCount struct {
 
 // TeamResourceCreationMetricsData defines model for TeamResourceCreationMetricsData.
 type TeamResourceCreationMetricsData struct {
-	// BySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request (for example an import). Projects are not broken down by channel.
+	// BySource The window's creations broken down by the channel each resource was created through: the web app, the CLI, the MCP server, or any other API client. All five keys are always present. For each of prompts, artifacts, blueprints and memories, the five channels sum to that type's total across counts. unknown holds resources with no recorded channel: those created before write sources were recorded, and those created by the system rather than through a request. Projects are not broken down by channel.
 	BySource ResourceCreationBySource             `json:"by_source"`
 	Counts   []TeamResourceCreationDailyCount     `json:"counts"`
 	Range    TeamResourceCreationMetricsDataRange `json:"range"`
@@ -10262,7 +10322,7 @@ type TeamResourceCreationMetricsData struct {
 	// TotalCreated Sum of every creation count across the whole window, projects included. The by_source totals sum to this minus the projects created in the window, because projects are not broken down by channel.
 	TotalCreated int `json:"total_created"`
 
-	// WritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) recorded per channel over the same window. All four keys are always present. There is no unknown key: a write with no recorded channel is not counted, so these totals start when write sources began to be recorded.
+	// WritesBySource Writes (creates and updates of prompts, artifacts, blueprints and memories) over the same window, per channel. All five keys are always present, and web + cli + mcp + api + unknown is the number of writes the server knows of in the window. unknown holds the writes with no recorded channel (#1418): resources created in the window that have no create event (the by_source unknown total), plus content changes in the window whose version snapshot carries no source. Both come from before write channels were recorded, or from a system action that is not a request. An update from before write channels were recorded that changed no content left no trace and cannot be counted, so unknown is a lower bound for that period and exact after it.
 	WritesBySource ResourceWritesBySource `json:"writes_by_source"`
 }
 
