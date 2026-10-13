@@ -189,6 +189,14 @@ type ClientInterface interface {
 	// ListAdminAuthSettingsAudit request
 	ListAdminAuthSettingsAudit(ctx context.Context, params *ListAdminAuthSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAdminAuthPolicy request
+	GetAdminAuthPolicy(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAdminAuthPolicyWithBody request with any body
+	UpdateAdminAuthPolicyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAdminAuthPolicy(ctx context.Context, body UpdateAdminAuthPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListAdminAuthProviders request
 	ListAdminAuthProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1684,6 +1692,42 @@ func (c *Client) PreviewAdminAuthAllowlist(ctx context.Context, body PreviewAdmi
 
 func (c *Client) ListAdminAuthSettingsAudit(ctx context.Context, params *ListAdminAuthSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAdminAuthSettingsAuditRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminAuthPolicy(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminAuthPolicyRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminAuthPolicyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminAuthPolicyRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminAuthPolicy(ctx context.Context, body UpdateAdminAuthPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminAuthPolicyRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -8289,6 +8333,73 @@ func NewListAdminAuthSettingsAuditRequest(server string, params *ListAdminAuthSe
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewGetAdminAuthPolicyRequest generates requests for GetAdminAuthPolicy
+func NewGetAdminAuthPolicyRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/auth/policy")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAdminAuthPolicyRequest calls the generic UpdateAdminAuthPolicy builder with application/json body
+func NewUpdateAdminAuthPolicyRequest(server string, body UpdateAdminAuthPolicyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAdminAuthPolicyRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpdateAdminAuthPolicyRequestWithBody generates requests for UpdateAdminAuthPolicy with any type of body
+func NewUpdateAdminAuthPolicyRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/auth/policy")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -25385,6 +25496,14 @@ type ClientWithResponsesInterface interface {
 	// ListAdminAuthSettingsAuditWithResponse request
 	ListAdminAuthSettingsAuditWithResponse(ctx context.Context, params *ListAdminAuthSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAuthSettingsAuditHTTPResponse, error)
 
+	// GetAdminAuthPolicyWithResponse request
+	GetAdminAuthPolicyWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAuthPolicyHTTPResponse, error)
+
+	// UpdateAdminAuthPolicyWithBodyWithResponse request with any body
+	UpdateAdminAuthPolicyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminAuthPolicyHTTPResponse, error)
+
+	UpdateAdminAuthPolicyWithResponse(ctx context.Context, body UpdateAdminAuthPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminAuthPolicyHTTPResponse, error)
+
 	// ListAdminAuthProvidersWithResponse request
 	ListAdminAuthProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAdminAuthProvidersHTTPResponse, error)
 
@@ -27412,6 +27531,72 @@ func (r ListAdminAuthSettingsAuditHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListAdminAuthSettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminAuthPolicyHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminAuthPolicy
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminAuthPolicyHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminAuthPolicyHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminAuthPolicyHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAdminAuthPolicyHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminAuthPolicy
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAdminAuthPolicyHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAdminAuthPolicyHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAdminAuthPolicyHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -37851,6 +38036,32 @@ func (c *ClientWithResponses) ListAdminAuthSettingsAuditWithResponse(ctx context
 	return ParseListAdminAuthSettingsAuditHTTPResponse(rsp)
 }
 
+// GetAdminAuthPolicyWithResponse request returning *GetAdminAuthPolicyHTTPResponse
+func (c *ClientWithResponses) GetAdminAuthPolicyWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAuthPolicyHTTPResponse, error) {
+	rsp, err := c.GetAdminAuthPolicy(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminAuthPolicyHTTPResponse(rsp)
+}
+
+// UpdateAdminAuthPolicyWithBodyWithResponse request with arbitrary body returning *UpdateAdminAuthPolicyHTTPResponse
+func (c *ClientWithResponses) UpdateAdminAuthPolicyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminAuthPolicyHTTPResponse, error) {
+	rsp, err := c.UpdateAdminAuthPolicyWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminAuthPolicyHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAdminAuthPolicyWithResponse(ctx context.Context, body UpdateAdminAuthPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminAuthPolicyHTTPResponse, error) {
+	rsp, err := c.UpdateAdminAuthPolicy(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminAuthPolicyHTTPResponse(rsp)
+}
+
 // ListAdminAuthProvidersWithResponse request returning *ListAdminAuthProvidersHTTPResponse
 func (c *ClientWithResponses) ListAdminAuthProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAdminAuthProvidersHTTPResponse, error) {
 	rsp, err := c.ListAdminAuthProviders(ctx, reqEditors...)
@@ -42568,6 +42779,100 @@ func ParseListAdminAuthSettingsAuditHTTPResponse(rsp *http.Response) (*ListAdmin
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminAuthPolicyHTTPResponse parses an HTTP response from a GetAdminAuthPolicyWithResponse call
+func ParseGetAdminAuthPolicyHTTPResponse(rsp *http.Response) (*GetAdminAuthPolicyHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminAuthPolicyHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminAuthPolicy
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAdminAuthPolicyHTTPResponse parses an HTTP response from a UpdateAdminAuthPolicyWithResponse call
+func ParseUpdateAdminAuthPolicyHTTPResponse(rsp *http.Response) (*UpdateAdminAuthPolicyHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAdminAuthPolicyHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminAuthPolicy
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

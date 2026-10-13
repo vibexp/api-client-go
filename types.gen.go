@@ -123,9 +123,28 @@ func (e AdminAuthProviderType) Valid() bool {
 	}
 }
 
+// Defines values for AdminAuthRegistrationMode.
+const (
+	AdminAuthRegistrationModeInviteOnly AdminAuthRegistrationMode = "invite_only"
+	AdminAuthRegistrationModeOpen       AdminAuthRegistrationMode = "open"
+)
+
+// Valid indicates whether the value is a known member of the AdminAuthRegistrationMode enum.
+func (e AdminAuthRegistrationMode) Valid() bool {
+	switch e {
+	case AdminAuthRegistrationModeInviteOnly:
+		return true
+	case AdminAuthRegistrationModeOpen:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminAuthSettingsAuditSetting.
 const (
 	AdminAuthSettingsAuditSettingAuthAllowlist  AdminAuthSettingsAuditSetting = "auth_allowlist"
+	AdminAuthSettingsAuditSettingAuthPolicy     AdminAuthSettingsAuditSetting = "auth_policy"
 	AdminAuthSettingsAuditSettingAuthProviders  AdminAuthSettingsAuditSetting = "auth_providers"
 	AdminAuthSettingsAuditSettingAuthSetup      AdminAuthSettingsAuditSetting = "auth_setup"
 	AdminAuthSettingsAuditSettingInstanceAdmins AdminAuthSettingsAuditSetting = "instance_admins"
@@ -135,6 +154,8 @@ const (
 func (e AdminAuthSettingsAuditSetting) Valid() bool {
 	switch e {
 	case AdminAuthSettingsAuditSettingAuthAllowlist:
+		return true
+	case AdminAuthSettingsAuditSettingAuthPolicy:
 		return true
 	case AdminAuthSettingsAuditSettingAuthProviders:
 		return true
@@ -244,6 +265,7 @@ func (e AdminInstanceSettingsAuditEntryAction) Valid() bool {
 const (
 	AdminInstanceSettingsAuditEntrySettingAiSummary      AdminInstanceSettingsAuditEntrySetting = "ai_summary"
 	AdminInstanceSettingsAuditEntrySettingAuthAllowlist  AdminInstanceSettingsAuditEntrySetting = "auth_allowlist"
+	AdminInstanceSettingsAuditEntrySettingAuthPolicy     AdminInstanceSettingsAuditEntrySetting = "auth_policy"
 	AdminInstanceSettingsAuditEntrySettingAuthProviders  AdminInstanceSettingsAuditEntrySetting = "auth_providers"
 	AdminInstanceSettingsAuditEntrySettingAuthSetup      AdminInstanceSettingsAuditEntrySetting = "auth_setup"
 	AdminInstanceSettingsAuditEntrySettingEmailProvider  AdminInstanceSettingsAuditEntrySetting = "email_provider"
@@ -258,6 +280,8 @@ func (e AdminInstanceSettingsAuditEntrySetting) Valid() bool {
 	case AdminInstanceSettingsAuditEntrySettingAiSummary:
 		return true
 	case AdminInstanceSettingsAuditEntrySettingAuthAllowlist:
+		return true
+	case AdminInstanceSettingsAuditEntrySettingAuthPolicy:
 		return true
 	case AdminInstanceSettingsAuditEntrySettingAuthProviders:
 		return true
@@ -1461,6 +1485,24 @@ func (e NotificationTypePreferenceEmail) Valid() bool {
 	case Instant:
 		return true
 	case None:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PasswordLoginReset.
+const (
+	PasswordResetByAdmin PasswordLoginReset = "admin"
+	PasswordResetByEmail PasswordLoginReset = "email"
+)
+
+// Valid indicates whether the value is a known member of the PasswordLoginReset enum.
+func (e PasswordLoginReset) Valid() bool {
+	switch e {
+	case PasswordResetByAdmin:
+		return true
+	case PasswordResetByEmail:
 		return true
 	default:
 		return false
@@ -4174,6 +4216,58 @@ type AdminAuthAllowlistUpdate struct {
 	ExpectedVersion *int64 `json:"expected_version,omitempty"`
 }
 
+// AdminAuthPolicy The instance's authentication policy: whether email and password sign-in is
+// offered, and who may get an account. With nothing stored the defaults apply
+// (password sign-in off, registration `open`) and `version` is null.
+type AdminAuthPolicy struct {
+	// PasswordLoginEnabled Whether email and password sign-in is offered.
+	PasswordLoginEnabled bool `json:"password_login_enabled"`
+
+	// RegistrationMode Who may get an account on this instance. `open`: anyone the access
+	// allowlist admits gets an account by signing in through a provider (the
+	// behaviour before this setting existed). `invite_only`: only people invited
+	// to a team or created by an administrator, whatever sign-in method they use.
+	RegistrationMode AdminAuthRegistrationMode `json:"registration_mode"`
+
+	// UpdatedAt When the policy was last saved; null when nothing is stored.
+	UpdatedAt *time.Time `json:"updated_at"`
+
+	// UpdatedByUserId Who last saved the policy. Null when nothing is stored, or once that
+	// user has been deleted.
+	UpdatedByUserId *openapi_types.UUID `json:"updated_by_user_id"`
+
+	// Version The stored policy's own version; null when nothing is stored. Send it
+	// back as `expected_version` (`0` when it is null) to reject a save that
+	// would overwrite someone else's change.
+	Version *int64 `json:"version"`
+}
+
+// AdminAuthPolicyUpdate A whole replacement of the authentication policy. Both settings are
+// required.
+//
+// `expected_version` is optional and makes the save a compare-and-set:
+//
+//   - omitted or null: last-write-wins, never a conflict.
+//   - `0`: no policy may be stored yet; the save is rejected with 409 when one
+//     is. Send it when the `version` last read was null.
+//   - a positive value: the save is rejected with 409 unless it equals the
+//     stored policy's `version`, and also when nothing is stored.
+type AdminAuthPolicyUpdate struct {
+	// ExpectedVersion The `version` the caller last read. Send `0` when that `version` was
+	// null, to save only while nothing is stored. Omit it or send null for
+	// last-write-wins. A negative value matches nothing and is a 409.
+	ExpectedVersion *int64 `json:"expected_version,omitempty"`
+
+	// PasswordLoginEnabled Whether email and password sign-in is offered.
+	PasswordLoginEnabled bool `json:"password_login_enabled"`
+
+	// RegistrationMode Who may get an account on this instance. `open`: anyone the access
+	// allowlist admits gets an account by signing in through a provider (the
+	// behaviour before this setting existed). `invite_only`: only people invited
+	// to a team or created by an administrator, whatever sign-in method they use.
+	RegistrationMode AdminAuthRegistrationMode `json:"registration_mode"`
+}
+
 // AdminAuthProvider One sign-in identity provider. The client secret is write-only: it is never
 // returned, and `has_client_secret` reports only whether one is stored.
 type AdminAuthProvider struct {
@@ -4368,6 +4462,12 @@ type AdminAuthProviderUpdate struct {
 	IssuerUrl *string `json:"issuer_url,omitempty"`
 	SortOrder int     `json:"sort_order"`
 }
+
+// AdminAuthRegistrationMode Who may get an account on this instance. `open`: anyone the access
+// allowlist admits gets an account by signing in through a provider (the
+// behaviour before this setting existed). `invite_only`: only people invited
+// to a team or created by an administrator, whatever sign-in method they use.
+type AdminAuthRegistrationMode string
 
 // AdminAuthSettingsAuditSetting Which authentication setting's audit log to read.
 type AdminAuthSettingsAuditSetting string
@@ -4974,9 +5074,9 @@ type AdminInstanceSearchValues struct {
 // and `ai_summary` snapshots are the settings' values, which hold no
 // credential. For `auth_providers` each entry is one provider, reporting
 // only `has_client_secret` and, on an upsert's `after`, a `client_secret`
-// marker (`changed` or `unchanged`); `auth_allowlist`, `instance_admins`
-// and `auth_setup` snapshots hold no credential (the setup token and its
-// hash are never recorded). A snapshot of any of these four settings
+// marker (`changed` or `unchanged`); `auth_allowlist`, `instance_admins`,
+// `auth_setup` and `auth_policy` snapshots hold no credential (the setup
+// token and its hash are never recorded). A snapshot of any of these five settings
 // carries `source: cli` when the change was made by the `vibexp admin auth`
 // commands rather than through this API. The `site_info` snapshot is the
 // company branding values, which hold no credential.
@@ -8720,6 +8820,26 @@ type NotificationTypePreference struct {
 // NotificationTypePreferenceEmail Email delivery mode for this notification type
 type NotificationTypePreferenceEmail string
 
+// PasswordLogin Whether this instance offers email and password sign-in, and how a
+// forgotten password is reset. The login screen uses it to decide whether to
+// show the password form and what the "Forgot password?" link leads to.
+type PasswordLogin struct {
+	// Enabled Whether email and password sign-in is switched on for this instance.
+	Enabled bool `json:"enabled"`
+
+	// Reset How a user who forgot their password gets a new one. `email`: the
+	// instance has an email provider configured, so a reset link can be
+	// emailed. `admin`: it has none, so the user must ask an administrator
+	// for a reset link. Reported whether or not password sign-in is enabled.
+	Reset PasswordLoginReset `json:"reset"`
+}
+
+// PasswordLoginReset How a user who forgot their password gets a new one. `email`: the
+// instance has an email provider configured, so a reset link can be
+// emailed. `admin`: it has none, so the user must ask an administrator
+// for a reset link. Reported whether or not password sign-in is enabled.
+type PasswordLoginReset string
+
 // PendingInvitationsListResponse List of the current user's pending team invitations (page/page_size are fixed at 1/20; all pending invitations are returned)
 type PendingInvitationsListResponse struct {
 	Invitations []InvitationResponse `json:"invitations"`
@@ -9077,6 +9197,11 @@ type ProviderModelListMessage string
 // ProvidersResponse Response body returned by GET /api/v1/auth/providers listing the login
 // providers enabled on this instance.
 type ProvidersResponse struct {
+	// Password Whether this instance offers email and password sign-in, and how a
+	// forgotten password is reset. The login screen uses it to decide whether to
+	// show the password form and what the "Forgot password?" link leads to.
+	Password PasswordLogin `json:"password"`
+
 	// Providers Enabled login providers, ordered by the admin-defined sort order
 	Providers []AuthProvider `json:"providers"`
 }
@@ -12597,6 +12722,9 @@ type UpdateAdminAuthAllowlistJSONRequestBody = AdminAuthAllowlistUpdate
 
 // PreviewAdminAuthAllowlistJSONRequestBody defines body for PreviewAdminAuthAllowlist for application/json ContentType.
 type PreviewAdminAuthAllowlistJSONRequestBody = AdminAuthAllowlistPreviewRequest
+
+// UpdateAdminAuthPolicyJSONRequestBody defines body for UpdateAdminAuthPolicy for application/json ContentType.
+type UpdateAdminAuthPolicyJSONRequestBody = AdminAuthPolicyUpdate
 
 // CreateAdminAuthProviderJSONRequestBody defines body for CreateAdminAuthProvider for application/json ContentType.
 type CreateAdminAuthProviderJSONRequestBody = AdminAuthProviderCreate
