@@ -549,6 +549,24 @@ func (e AdminUserAccessMetricsGranularity) Valid() bool {
 	}
 }
 
+// Defines values for AdminUserCreatedStatus.
+const (
+	AdminUserCreatedStatusActive    AdminUserCreatedStatus = "active"
+	AdminUserCreatedStatusSuspended AdminUserCreatedStatus = "suspended"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserCreatedStatus enum.
+func (e AdminUserCreatedStatus) Valid() bool {
+	switch e {
+	case AdminUserCreatedStatusActive:
+		return true
+	case AdminUserCreatedStatusSuspended:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminUserDetailStatus.
 const (
 	AdminUserDetailStatusActive    AdminUserDetailStatus = "active"
@@ -600,6 +618,105 @@ func (e AdminUserResourceCreationMetricsGranularity) Valid() bool {
 	case AdminUserResourceCreationMetricsGranularityMonth:
 		return true
 	case AdminUserResourceCreationMetricsGranularityWeek:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserSetupDelivery.
+const (
+	AdminUserSetupDeliveryEmail AdminUserSetupDelivery = "email"
+	AdminUserSetupDeliveryLink  AdminUserSetupDelivery = "link"
+	AdminUserSetupDeliveryNone  AdminUserSetupDelivery = "none"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserSetupDelivery enum.
+func (e AdminUserSetupDelivery) Valid() bool {
+	switch e {
+	case AdminUserSetupDeliveryEmail:
+		return true
+	case AdminUserSetupDeliveryLink:
+		return true
+	case AdminUserSetupDeliveryNone:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserSetupReason.
+const (
+	AdminUserSetupReasonEmailFailed    AdminUserSetupReason = "email_failed"
+	AdminUserSetupReasonLocalSignInOff AdminUserSetupReason = "password_login_disabled"
+	AdminUserSetupReasonRootAdmin      AdminUserSetupReason = "root_admin_link_refused"
+	AdminUserSetupReasonSetupFailed    AdminUserSetupReason = "setup_failed"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserSetupReason enum.
+func (e AdminUserSetupReason) Valid() bool {
+	switch e {
+	case AdminUserSetupReasonEmailFailed:
+		return true
+	case AdminUserSetupReasonLocalSignInOff:
+		return true
+	case AdminUserSetupReasonRootAdmin:
+		return true
+	case AdminUserSetupReasonSetupFailed:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserSetupLinkDelivery.
+const (
+	AdminUserSetupLinkResultEmail AdminUserSetupLinkDelivery = "email"
+	AdminUserSetupLinkResultLink  AdminUserSetupLinkDelivery = "link"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserSetupLinkDelivery enum.
+func (e AdminUserSetupLinkDelivery) Valid() bool {
+	switch e {
+	case AdminUserSetupLinkResultEmail:
+		return true
+	case AdminUserSetupLinkResultLink:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserSetupLinkRequestDelivery.
+const (
+	AdminUserSetupLinkDeliveryEmail AdminUserSetupLinkRequestDelivery = "email"
+	AdminUserSetupLinkDeliveryLink  AdminUserSetupLinkRequestDelivery = "link"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserSetupLinkRequestDelivery enum.
+func (e AdminUserSetupLinkRequestDelivery) Valid() bool {
+	switch e {
+	case AdminUserSetupLinkDeliveryEmail:
+		return true
+	case AdminUserSetupLinkDeliveryLink:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserTeamAssignmentRole.
+const (
+	AdminUserTeamAssignmentRoleAdmin  AdminUserTeamAssignmentRole = "admin"
+	AdminUserTeamAssignmentRoleMember AdminUserTeamAssignmentRole = "member"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserTeamAssignmentRole enum.
+func (e AdminUserTeamAssignmentRole) Valid() bool {
+	switch e {
+	case AdminUserTeamAssignmentRoleAdmin:
+		return true
+	case AdminUserTeamAssignmentRoleMember:
 		return true
 	default:
 		return false
@@ -2570,16 +2687,16 @@ func (e UpdateTeamAISummarySettingsRequestStyle) Valid() bool {
 
 // Defines values for UpdateTeamMemberRoleRequestRole.
 const (
-	Admin  UpdateTeamMemberRoleRequestRole = "admin"
-	Member UpdateTeamMemberRoleRequestRole = "member"
+	UpdateTeamMemberRoleRequestRoleAdmin  UpdateTeamMemberRoleRequestRole = "admin"
+	UpdateTeamMemberRoleRequestRoleMember UpdateTeamMemberRoleRequestRole = "member"
 )
 
 // Valid indicates whether the value is a known member of the UpdateTeamMemberRoleRequestRole enum.
 func (e UpdateTeamMemberRoleRequestRole) Valid() bool {
 	switch e {
-	case Admin:
+	case UpdateTeamMemberRoleRequestRoleAdmin:
 		return true
-	case Member:
+	case UpdateTeamMemberRoleRequestRoleMember:
 		return true
 	default:
 		return false
@@ -3353,19 +3470,19 @@ func (e GetTeamTopAccessedResourcesParamsSource) Valid() bool {
 
 // Defines values for ListAgentsParamsStatus.
 const (
-	ListAgentsParamsStatusActive ListAgentsParamsStatus = "active"
-	ListAgentsParamsStatusError  ListAgentsParamsStatus = "error"
-	ListAgentsParamsStatusPaused ListAgentsParamsStatus = "paused"
+	Active ListAgentsParamsStatus = "active"
+	Error  ListAgentsParamsStatus = "error"
+	Paused ListAgentsParamsStatus = "paused"
 )
 
 // Valid indicates whether the value is a known member of the ListAgentsParamsStatus enum.
 func (e ListAgentsParamsStatus) Valid() bool {
 	switch e {
-	case ListAgentsParamsStatusActive:
+	case Active:
 		return true
-	case ListAgentsParamsStatusError:
+	case Error:
 		return true
-	case ListAgentsParamsStatusPaused:
+	case Paused:
 		return true
 	default:
 		return false
@@ -6233,9 +6350,10 @@ type AdminUserAccessMetrics struct {
 // AdminUserAccessMetricsGranularity Bucket size actually used.
 type AdminUserAccessMetricsGranularity string
 
-// AdminUserCreateRequest A user to create directly, without waiting for them to complete an
-// identity-provider sign-in. No password is set: VibeXP has no password
-// provider, and the account's owner still signs in through the configured IdP.
+// AdminUserCreateRequest A user to create directly, without waiting for them to sign in. With
+// password sign-in on, the account is created without a password and its
+// owner gets a setup link (see `setup` in the response); otherwise the owner
+// signs in through an identity provider.
 type AdminUserCreateRequest struct {
 	// Email Must be unique across the instance; a duplicate is a 409.
 	Email openapi_types.Email `json:"email"`
@@ -6244,8 +6362,61 @@ type AdminUserCreateRequest struct {
 	// to sign in with (e.g. "google", "oidc"). Informational only — it does not
 	// pre-link an IdP identity, which is established on first sign-in.
 	IdpProvider *string `json:"idp_provider,omitempty"`
-	Name        string  `json:"name"`
+
+	// Name Optional display name. The owner can set or change it later.
+	Name *string `json:"name,omitempty"`
+
+	// Teams Existing teams to add the user to, each with a role. Personal workspaces
+	// cannot be listed. The user still gets their own private workspace.
+	Teams *[]AdminUserTeamAssignment `json:"teams,omitempty"`
 }
+
+// AdminUserCreated defines model for AdminUserCreated.
+type AdminUserCreated struct {
+	CreatedAt time.Time           `json:"created_at"`
+	Email     openapi_types.Email `json:"email"`
+
+	// HasPassword Whether the account has a password.
+	HasPassword bool               `json:"has_password"`
+	Id          openapi_types.UUID `json:"id"`
+
+	// IdpProvider Identity provider name (e.g. "google", "oidc"); null for accounts without one.
+	IdpProvider *string `json:"idp_provider,omitempty"`
+
+	// Memberships Teams the user belongs to.
+	Memberships []AdminTeamMembership `json:"memberships"`
+	Name        string                `json:"name"`
+
+	// PasswordDisabled Whether an administrator disabled the account's password.
+	PasswordDisabled bool `json:"password_disabled"`
+
+	// PendingSetup The account has no way to sign in yet: no password and no linked
+	// identity. Derived from the account's sign-in methods, not a status.
+	PendingSetup bool `json:"pending_setup"`
+
+	// Setup How the new account's owner will set a password. `email`: a setup link was
+	// emailed to them. `link`: no email provider is stored, so the setup link is
+	// returned here, ONCE; hand it to them yourself. `none`: no link was made,
+	// for the reason in `reason`.
+	Setup AdminUserSetup `json:"setup"`
+
+	// SignInMethods The account's sign-in methods: `password` when it has a password
+	// (disabled or not), then each identity provider it is linked to, sorted.
+	// Internal bookkeeping identities are not listed.
+	SignInMethods []string `json:"sign_in_methods"`
+
+	// Status Account lifecycle. A suspended account is rejected at every
+	// authentication entry point — existing sessions, API keys and MCP/OAuth
+	// tokens stop working immediately, not at expiry. Instance-local: it does
+	// not disable the account at the upstream identity provider.
+	Status AdminUserCreatedStatus `json:"status"`
+}
+
+// AdminUserCreatedStatus Account lifecycle. A suspended account is rejected at every
+// authentication entry point — existing sessions, API keys and MCP/OAuth
+// tokens stop working immediately, not at expiry. Instance-local: it does
+// not disable the account at the upstream identity provider.
+type AdminUserCreatedStatus string
 
 // AdminUserCreationPoint How many resources of each type the user created within one time bucket.
 type AdminUserCreationPoint struct {
@@ -6277,7 +6448,10 @@ type AdminUserDeleteBlockedResponse struct {
 type AdminUserDetail struct {
 	CreatedAt time.Time           `json:"created_at"`
 	Email     openapi_types.Email `json:"email"`
-	Id        openapi_types.UUID  `json:"id"`
+
+	// HasPassword Whether the account has a password.
+	HasPassword bool               `json:"has_password"`
+	Id          openapi_types.UUID `json:"id"`
 
 	// IdpProvider Identity provider name (e.g. "google", "oidc"); null for accounts without one.
 	IdpProvider *string `json:"idp_provider,omitempty"`
@@ -6285,6 +6459,18 @@ type AdminUserDetail struct {
 	// Memberships Teams the user belongs to.
 	Memberships []AdminTeamMembership `json:"memberships"`
 	Name        string                `json:"name"`
+
+	// PasswordDisabled Whether an administrator disabled the account's password.
+	PasswordDisabled bool `json:"password_disabled"`
+
+	// PendingSetup The account has no way to sign in yet: no password and no linked
+	// identity. Derived from the account's sign-in methods, not a status.
+	PendingSetup bool `json:"pending_setup"`
+
+	// SignInMethods The account's sign-in methods: `password` when it has a password
+	// (disabled or not), then each identity provider it is linked to, sorted.
+	// Internal bookkeeping identities are not listed.
+	SignInMethods []string `json:"sign_in_methods"`
 
 	// Status Account lifecycle. A suspended account is rejected at every
 	// authentication entry point — existing sessions, API keys and MCP/OAuth
@@ -6320,7 +6506,10 @@ type AdminUserInsights struct {
 type AdminUserListItem struct {
 	CreatedAt time.Time           `json:"created_at"`
 	Email     openapi_types.Email `json:"email"`
-	Id        openapi_types.UUID  `json:"id"`
+
+	// HasPassword Whether the account has a password.
+	HasPassword bool               `json:"has_password"`
+	Id          openapi_types.UUID `json:"id"`
 
 	// IdpProvider Identity provider name (e.g. "google", "oidc"); null for accounts without one.
 	IdpProvider *string `json:"idp_provider,omitempty"`
@@ -6329,6 +6518,13 @@ type AdminUserListItem struct {
 	// resource_counts) was created; null for a user who has authored none.
 	LastResourceCreatedAt *time.Time `json:"last_resource_created_at,omitempty"`
 	Name                  string     `json:"name"`
+
+	// PasswordDisabled Whether an administrator disabled the account's password.
+	PasswordDisabled bool `json:"password_disabled"`
+
+	// PendingSetup The account has no way to sign in yet: no password and no linked
+	// identity. Derived from the account's sign-in methods, not a status.
+	PendingSetup bool `json:"pending_setup"`
 
 	// ProjectCount Number of projects the user created.
 	ProjectCount int64 `json:"project_count"`
@@ -6339,6 +6535,11 @@ type AdminUserListItem struct {
 	// the resources in the team, counted by team_id. Every row counts regardless
 	// of its status or archive state. `total` is the sum of the nine types.
 	ResourceCounts AdminResourceCounts `json:"resource_counts"`
+
+	// SignInMethods The account's sign-in methods: `password` when it has a password
+	// (disabled or not), then each identity provider it is linked to, sorted.
+	// Internal bookkeeping identities are not listed.
+	SignInMethods []string `json:"sign_in_methods"`
 
 	// Status Account lifecycle. A suspended account is rejected at every
 	// authentication entry point — existing sessions, API keys and MCP/OAuth
@@ -6429,6 +6630,78 @@ type AdminUserResourceCreationMetrics struct {
 
 // AdminUserResourceCreationMetricsGranularity Bucket size actually used.
 type AdminUserResourceCreationMetricsGranularity string
+
+// AdminUserSetup How the new account's owner will set a password. `email`: a setup link was
+// emailed to them. `link`: no email provider is stored, so the setup link is
+// returned here, ONCE; hand it to them yourself. `none`: no link was made,
+// for the reason in `reason`.
+type AdminUserSetup struct {
+	Delivery AdminUserSetupDelivery `json:"delivery"`
+
+	// ExpiresAt When the link stops working; absent for `none`.
+	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+
+	// LinkUrl The one-time setup link, only when `delivery` is `link`. It is shown
+	// here once and never returned again.
+	LinkUrl *string `json:"link_url,omitempty"`
+
+	// Reason Why `delivery` is `none`. `password_login_disabled`: password sign-in is
+	// off, the owner signs in through a provider. `root_admin_link_refused`:
+	// the address is a root instance admin's and no email provider is stored;
+	// no shareable link is issued for such an address, so its owner uses the
+	// setup page or the recovery CLI. `email_failed`: the email could not be
+	// sent; get a setup link from the user's page. `setup_failed`: the link
+	// could not be made for another reason (logged on the server); try again
+	// from the user's page.
+	Reason *AdminUserSetupReason `json:"reason,omitempty"`
+}
+
+// AdminUserSetupDelivery defines model for AdminUserSetup.Delivery.
+type AdminUserSetupDelivery string
+
+// AdminUserSetupReason Why `delivery` is `none`. `password_login_disabled`: password sign-in is
+// off, the owner signs in through a provider. `root_admin_link_refused`:
+// the address is a root instance admin's and no email provider is stored;
+// no shareable link is issued for such an address, so its owner uses the
+// setup page or the recovery CLI. `email_failed`: the email could not be
+// sent; get a setup link from the user's page. `setup_failed`: the link
+// could not be made for another reason (logged on the server); try again
+// from the user's page.
+type AdminUserSetupReason string
+
+// AdminUserSetupLink defines model for AdminUserSetupLink.
+type AdminUserSetupLink struct {
+	Delivery AdminUserSetupLinkDelivery `json:"delivery"`
+
+	// ExpiresAt When the link stops working (7 days).
+	ExpiresAt time.Time `json:"expires_at"`
+
+	// LinkUrl The one-time setup link, only for `link`. Shown here once.
+	LinkUrl *string `json:"link_url,omitempty"`
+}
+
+// AdminUserSetupLinkDelivery defines model for AdminUserSetupLink.Delivery.
+type AdminUserSetupLinkDelivery string
+
+// AdminUserSetupLinkRequest defines model for AdminUserSetupLinkRequest.
+type AdminUserSetupLinkRequest struct {
+	// Delivery `email` sends a setup link to the account's address. `link` returns one
+	// here, once, to hand over yourself.
+	Delivery AdminUserSetupLinkRequestDelivery `json:"delivery"`
+}
+
+// AdminUserSetupLinkRequestDelivery `email` sends a setup link to the account's address. `link` returns one
+// here, once, to hand over yourself.
+type AdminUserSetupLinkRequestDelivery string
+
+// AdminUserTeamAssignment defines model for AdminUserTeamAssignment.
+type AdminUserTeamAssignment struct {
+	Role   AdminUserTeamAssignmentRole `json:"role"`
+	TeamId openapi_types.UUID          `json:"team_id"`
+}
+
+// AdminUserTeamAssignmentRole defines model for AdminUserTeamAssignment.Role.
+type AdminUserTeamAssignmentRole string
 
 // AdminUserTeamResourceCounts How many resources the user authored in one team, with the per-project breakdown.
 type AdminUserTeamResourceCounts struct {
@@ -11996,6 +12269,10 @@ type ListAdminUsersParams struct {
 	// CreatedTo Only users created at or before this instant (inclusive).
 	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
 
+	// PendingSetup Narrow to accounts that have no way to sign in yet (`true`), or to
+	// those that do (`false`).
+	PendingSetup *bool `form:"pending_setup,omitempty" json:"pending_setup,omitempty"`
+
 	// Status Narrow to accounts in this lifecycle state.
 	Status *ListAdminUsersParamsStatus `form:"status,omitempty" json:"status,omitempty"`
 
@@ -12110,6 +12387,10 @@ type ExportAdminUsersParams struct {
 
 	// CreatedTo Only users created at or before this instant (inclusive).
 	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// PendingSetup Narrow to accounts that have no way to sign in yet (`true`), or to
+	// those that do (`false`).
+	PendingSetup *bool `form:"pending_setup,omitempty" json:"pending_setup,omitempty"`
 
 	// Status Narrow to accounts in this lifecycle state.
 	Status *ExportAdminUsersParamsStatus `form:"status,omitempty" json:"status,omitempty"`
@@ -13119,6 +13400,9 @@ type CreateAdminUserJSONRequestBody = AdminUserCreateRequest
 
 // UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
 type UpdateAdminUserJSONRequestBody = AdminUserUpdateRequest
+
+// IssueAdminUserSetupLinkJSONRequestBody defines body for IssueAdminUserSetupLink for application/json ContentType.
+type IssueAdminUserSetupLinkJSONRequestBody = AdminUserSetupLinkRequest
 
 // CreateAPIKeyJSONRequestBody defines body for CreateAPIKey for application/json ContentType.
 type CreateAPIKeyJSONRequestBody = CreateAPIKeyRequest
