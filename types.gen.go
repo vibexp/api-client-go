@@ -1386,6 +1386,24 @@ func (e GitHubRepositoryOwnerType) Valid() bool {
 	}
 }
 
+// Defines values for InvitationPreviewRole.
+const (
+	InvitationPreviewRoleAdmin  InvitationPreviewRole = "admin"
+	InvitationPreviewRoleMember InvitationPreviewRole = "member"
+)
+
+// Valid indicates whether the value is a known member of the InvitationPreviewRole enum.
+func (e InvitationPreviewRole) Valid() bool {
+	switch e {
+	case InvitationPreviewRoleAdmin:
+		return true
+	case InvitationPreviewRoleMember:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for InvitationResponseRole.
 const (
 	InvitationResponseRoleAdmin  InvitationResponseRole = "admin"
@@ -2537,16 +2555,16 @@ func (e UpdateTeamAISummarySettingsRequestStyle) Valid() bool {
 
 // Defines values for UpdateTeamMemberRoleRequestRole.
 const (
-	UpdateTeamMemberRoleRequestRoleAdmin  UpdateTeamMemberRoleRequestRole = "admin"
-	UpdateTeamMemberRoleRequestRoleMember UpdateTeamMemberRoleRequestRole = "member"
+	Admin  UpdateTeamMemberRoleRequestRole = "admin"
+	Member UpdateTeamMemberRoleRequestRole = "member"
 )
 
 // Valid indicates whether the value is a known member of the UpdateTeamMemberRoleRequestRole enum.
 func (e UpdateTeamMemberRoleRequestRole) Valid() bool {
 	switch e {
-	case UpdateTeamMemberRoleRequestRoleAdmin:
+	case Admin:
 		return true
-	case UpdateTeamMemberRoleRequestRoleMember:
+	case Member:
 		return true
 	default:
 		return false
@@ -8693,6 +8711,63 @@ type InvitationDuplicateMembersError struct {
 	Type            *string                `json:"type,omitempty"`
 }
 
+// InvitationPreview What the holder of an invitation link may see before signing in. It
+// carries no identifier and no inviter email.
+type InvitationPreview struct {
+	// AccountExists Whether an account already has the invited email. When true the person
+	// signs in and accepts the invitation; registration is refused.
+	AccountExists bool `json:"account_exists"`
+
+	// Email The invited email address. An account that joins through this link has this address.
+	Email openapi_types.Email `json:"email"`
+
+	// ExpiresAt When the invitation stops working.
+	ExpiresAt time.Time `json:"expires_at"`
+
+	// InviterName Display name of the person who sent the invitation. Null when that account no longer exists or has no name.
+	InviterName *string `json:"inviter_name"`
+
+	// PasswordRegistration Whether `POST /api/v1/invitations/{token}/register` can create an
+	// account right now: email and password sign-in is switched on, no
+	// account has the invited email, and the address is not a root instance
+	// admin.
+	PasswordRegistration bool `json:"password_registration"`
+
+	// Role The role the invitation grants in the team.
+	Role InvitationPreviewRole `json:"role"`
+
+	// TeamName Name of the team the invitation is for.
+	TeamName string `json:"team_name"`
+}
+
+// InvitationPreviewRole The role the invitation grants in the team.
+type InvitationPreviewRole string
+
+// InvitationRegisterRequest Request body for POST /api/v1/invitations/{token}/register.
+type InvitationRegisterRequest struct {
+	// Name Display name for the new account. Surrounding spaces are removed. When
+	// omitted or blank, the part of the email before the `@` is used.
+	Name *string `json:"name,omitempty"`
+
+	// Password The password for the new account, exactly as typed: it is not trimmed.
+	// It must satisfy the password policy (at least 12 characters, not a
+	// common password, not the email address).
+	Password string `json:"password"`
+}
+
+// InvitationRegistration The account created through an invitation link. The session cookie is set on the same response.
+type InvitationRegistration struct {
+	// InvitationAccepted Whether the account joined the team. False in the rare case that the
+	// account was created but joining failed (for example the invitation was
+	// revoked at that moment): the person is signed in, the invitation is
+	// still pending when it can be, and they accept it in the app.
+	InvitationAccepted bool `json:"invitation_accepted"`
+
+	// TeamId The team the invitation is for.
+	TeamId openapi_types.UUID `json:"team_id"`
+	User   User               `json:"user"`
+}
+
 // InvitationResponse Team invitation enriched with team and inviter details
 type InvitationResponse struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
@@ -13031,6 +13106,9 @@ type CompleteAccountSetupJSONRequestBody = CompleteAccountSetupRequest
 
 // PreviewAccountLinkJSONRequestBody defines body for PreviewAccountLink for application/json ContentType.
 type PreviewAccountLinkJSONRequestBody = AccountLinkPreviewRequest
+
+// RegisterWithInvitationJSONRequestBody defines body for RegisterWithInvitation for application/json ContentType.
+type RegisterWithInvitationJSONRequestBody = InvitationRegisterRequest
 
 // UpdatePreferencesJSONRequestBody defines body for UpdatePreferences for application/json ContentType.
 type UpdatePreferencesJSONRequestBody = UpdatePreferencesRequest

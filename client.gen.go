@@ -434,6 +434,14 @@ type ClientInterface interface {
 	// AcceptInvitation request
 	AcceptInvitation(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PreviewInvitation request
+	PreviewInvitation(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RegisterWithInvitationWithBody request with any body
+	RegisterWithInvitationWithBody(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RegisterWithInvitation(ctx context.Context, token string, body RegisterWithInvitationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// RejectInvitation request
 	RejectInvitation(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2792,6 +2800,42 @@ func (c *Client) GetInvitationByToken(ctx context.Context, token string, reqEdit
 
 func (c *Client) AcceptInvitation(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAcceptInvitationRequest(c.Server, token)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PreviewInvitation(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPreviewInvitationRequest(c.Server, token)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RegisterWithInvitationWithBody(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRegisterWithInvitationRequestWithBody(c.Server, token, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RegisterWithInvitation(ctx context.Context, token string, body RegisterWithInvitationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRegisterWithInvitationRequest(c.Server, token, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13276,6 +13320,87 @@ func NewAcceptInvitationRequest(server string, token string) (*http.Request, err
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPreviewInvitationRequest generates requests for PreviewInvitation
+func NewPreviewInvitationRequest(server string, token string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "token", token, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/invitations/%s/preview", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRegisterWithInvitationRequest calls the generic RegisterWithInvitation builder with application/json body
+func NewRegisterWithInvitationRequest(server string, token string, body RegisterWithInvitationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRegisterWithInvitationRequestWithBody(server, token, "application/json", bodyReader)
+}
+
+// NewRegisterWithInvitationRequestWithBody generates requests for RegisterWithInvitation with any type of body
+func NewRegisterWithInvitationRequestWithBody(server string, token string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "token", token, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/invitations/%s/register", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -26357,6 +26482,14 @@ type ClientWithResponsesInterface interface {
 	// AcceptInvitationWithResponse request
 	AcceptInvitationWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*AcceptInvitationHTTPResponse, error)
 
+	// PreviewInvitationWithResponse request
+	PreviewInvitationWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*PreviewInvitationHTTPResponse, error)
+
+	// RegisterWithInvitationWithBodyWithResponse request with any body
+	RegisterWithInvitationWithBodyWithResponse(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RegisterWithInvitationHTTPResponse, error)
+
+	RegisterWithInvitationWithResponse(ctx context.Context, token string, body RegisterWithInvitationJSONRequestBody, reqEditors ...RequestEditorFn) (*RegisterWithInvitationHTTPResponse, error)
+
 	// RejectInvitationWithResponse request
 	RejectInvitationWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*RejectInvitationHTTPResponse, error)
 
@@ -30478,6 +30611,77 @@ func (r AcceptInvitationHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r AcceptInvitationHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PreviewInvitationHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *InvitationPreview
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON429 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PreviewInvitationHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PreviewInvitationHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PreviewInvitationHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RegisterWithInvitationHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *InvitationRegistration
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON429 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+	ApplicationproblemJSON503 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r RegisterWithInvitationHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RegisterWithInvitationHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RegisterWithInvitationHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -39819,6 +40023,32 @@ func (c *ClientWithResponses) AcceptInvitationWithResponse(ctx context.Context, 
 	return ParseAcceptInvitationHTTPResponse(rsp)
 }
 
+// PreviewInvitationWithResponse request returning *PreviewInvitationHTTPResponse
+func (c *ClientWithResponses) PreviewInvitationWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*PreviewInvitationHTTPResponse, error) {
+	rsp, err := c.PreviewInvitation(ctx, token, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePreviewInvitationHTTPResponse(rsp)
+}
+
+// RegisterWithInvitationWithBodyWithResponse request with arbitrary body returning *RegisterWithInvitationHTTPResponse
+func (c *ClientWithResponses) RegisterWithInvitationWithBodyWithResponse(ctx context.Context, token string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RegisterWithInvitationHTTPResponse, error) {
+	rsp, err := c.RegisterWithInvitationWithBody(ctx, token, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRegisterWithInvitationHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) RegisterWithInvitationWithResponse(ctx context.Context, token string, body RegisterWithInvitationJSONRequestBody, reqEditors ...RequestEditorFn) (*RegisterWithInvitationHTTPResponse, error) {
+	rsp, err := c.RegisterWithInvitation(ctx, token, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRegisterWithInvitationHTTPResponse(rsp)
+}
+
 // RejectInvitationWithResponse request returning *RejectInvitationHTTPResponse
 func (c *ClientWithResponses) RejectInvitationWithResponse(ctx context.Context, token string, reqEditors ...RequestEditorFn) (*RejectInvitationHTTPResponse, error) {
 	rsp, err := c.RejectInvitation(ctx, token, reqEditors...)
@@ -47255,6 +47485,135 @@ func ParseAcceptInvitationHTTPResponse(rsp *http.Response) (*AcceptInvitationHTT
 			return nil, err
 		}
 		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePreviewInvitationHTTPResponse parses an HTTP response from a PreviewInvitationWithResponse call
+func ParsePreviewInvitationHTTPResponse(rsp *http.Response) (*PreviewInvitationHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PreviewInvitationHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest InvitationPreview
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRegisterWithInvitationHTTPResponse parses an HTTP response from a RegisterWithInvitationWithResponse call
+func ParseRegisterWithInvitationHTTPResponse(rsp *http.Response) (*RegisterWithInvitationHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RegisterWithInvitationHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest InvitationRegistration
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
 
 	}
 
