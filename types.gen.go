@@ -603,6 +603,42 @@ func (e AdminUserListItemStatus) Valid() bool {
 	}
 }
 
+// Defines values for AdminUserResetLinkDelivery.
+const (
+	AdminUserResetLinkResultEmail AdminUserResetLinkDelivery = "email"
+	AdminUserResetLinkResultLink  AdminUserResetLinkDelivery = "link"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserResetLinkDelivery enum.
+func (e AdminUserResetLinkDelivery) Valid() bool {
+	switch e {
+	case AdminUserResetLinkResultEmail:
+		return true
+	case AdminUserResetLinkResultLink:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AdminUserResetLinkRequestDelivery.
+const (
+	AdminUserResetLinkDeliveryEmail AdminUserResetLinkRequestDelivery = "email"
+	AdminUserResetLinkDeliveryLink  AdminUserResetLinkRequestDelivery = "link"
+)
+
+// Valid indicates whether the value is a known member of the AdminUserResetLinkRequestDelivery enum.
+func (e AdminUserResetLinkRequestDelivery) Valid() bool {
+	switch e {
+	case AdminUserResetLinkDeliveryEmail:
+		return true
+	case AdminUserResetLinkDeliveryLink:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminUserResourceCreationMetricsGranularity.
 const (
 	AdminUserResourceCreationMetricsGranularityDay   AdminUserResourceCreationMetricsGranularity = "day"
@@ -4309,6 +4345,12 @@ type AccountPassword struct {
 	// ChangedAt When the password was last set or changed. Null when there is none.
 	ChangedAt *time.Time `json:"changed_at"`
 
+	// Disabled Whether an administrator disabled the password. A disabled password
+	// does not sign in, and its owner can neither change nor remove it (409
+	// `password_disabled`); completing a link from an administrator sets a new
+	// one and clears this.
+	Disabled bool `json:"disabled"`
+
 	// LoginEnabled Whether password sign-in is switched on for this instance. While it is
 	// off a password cannot be set or changed (409 `password_login_disabled`)
 	// and an existing one cannot be used to sign in; it can still be removed.
@@ -6609,6 +6651,41 @@ type AdminUserProjectResourceCounts struct {
 	ProjectId   openapi_types.UUID         `json:"project_id"`
 	ProjectName string                     `json:"project_name"`
 }
+
+// AdminUserResetLink defines model for AdminUserResetLink.
+type AdminUserResetLink struct {
+	Delivery AdminUserResetLinkDelivery `json:"delivery"`
+
+	// ExpiresAt When the link stops working (1 hour emailed, 24 hours shared).
+	ExpiresAt time.Time `json:"expires_at"`
+
+	// Invalidated Whether the current password, sessions and links were stopped (`invalidate_now`).
+	Invalidated bool `json:"invalidated"`
+
+	// LinkUrl The one-time reset link, only for `link`. Shown here once.
+	LinkUrl *string `json:"link_url,omitempty"`
+}
+
+// AdminUserResetLinkDelivery defines model for AdminUserResetLink.Delivery.
+type AdminUserResetLinkDelivery string
+
+// AdminUserResetLinkRequest defines model for AdminUserResetLinkRequest.
+type AdminUserResetLinkRequest struct {
+	// Delivery `email` sends the reset link to the account's address; `link` returns it
+	// here once.
+	Delivery AdminUserResetLinkRequestDelivery `json:"delivery"`
+
+	// InvalidateNow Stop the current password now: it is disabled, every session of the
+	// user ends, and every live link of the user stops working, before the
+	// new link is issued. Completing the new link sets a new password and
+	// lifts the disable. Without it the current password and sessions keep
+	// working until the link is used.
+	InvalidateNow *bool `json:"invalidate_now,omitempty"`
+}
+
+// AdminUserResetLinkRequestDelivery `email` sends the reset link to the account's address; `link` returns it
+// here once.
+type AdminUserResetLinkRequestDelivery string
 
 // AdminUserResourceCreationMetrics Resources the user created per bucket, stacked by type
 // (GET /api/v1/admin/users/{id}/resource-creation-metrics). Every bucket in
@@ -12493,6 +12570,12 @@ type ExportAdminUsersParamsSortBy string
 // ExportAdminUsersParamsSortOrder defines parameters for ExportAdminUsers.
 type ExportAdminUsersParamsSortOrder string
 
+// DeleteAdminUserPasswordParams defines parameters for DeleteAdminUserPassword.
+type DeleteAdminUserPasswordParams struct {
+	// ConfirmLastMethod Remove the password even when it is the last way in.
+	ConfirmLastMethod *bool `form:"confirm_last_method,omitempty" json:"confirm_last_method,omitempty"`
+}
+
 // GetAdminUserResourceAccessMetricsParams defines parameters for GetAdminUserResourceAccessMetrics.
 type GetAdminUserResourceAccessMetricsParams struct {
 	// From Inclusive start of the range. Defaults to 30 days before `to`.
@@ -13400,6 +13483,9 @@ type CreateAdminUserJSONRequestBody = AdminUserCreateRequest
 
 // UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
 type UpdateAdminUserJSONRequestBody = AdminUserUpdateRequest
+
+// IssueAdminUserResetLinkJSONRequestBody defines body for IssueAdminUserResetLink for application/json ContentType.
+type IssueAdminUserResetLinkJSONRequestBody = AdminUserResetLinkRequest
 
 // IssueAdminUserSetupLinkJSONRequestBody defines body for IssueAdminUserSetupLink for application/json ContentType.
 type IssueAdminUserSetupLinkJSONRequestBody = AdminUserSetupLinkRequest

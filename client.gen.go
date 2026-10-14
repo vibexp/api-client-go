@@ -356,8 +356,16 @@ type ClientInterface interface {
 	// GetAdminUserNotificationPreferences request
 	GetAdminUserNotificationPreferences(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteAdminUserPassword request
+	DeleteAdminUserPassword(ctx context.Context, id openapi_types.UUID, params *DeleteAdminUserPasswordParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ReactivateAdminUser request
 	ReactivateAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// IssueAdminUserResetLinkWithBody request with any body
+	IssueAdminUserResetLinkWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	IssueAdminUserResetLink(ctx context.Context, id openapi_types.UUID, body IssueAdminUserResetLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAdminUserResourceAccessMetrics request
 	GetAdminUserResourceAccessMetrics(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2484,8 +2492,44 @@ func (c *Client) GetAdminUserNotificationPreferences(ctx context.Context, id ope
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteAdminUserPassword(ctx context.Context, id openapi_types.UUID, params *DeleteAdminUserPasswordParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAdminUserPasswordRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ReactivateAdminUser(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReactivateAdminUserRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IssueAdminUserResetLinkWithBody(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIssueAdminUserResetLinkRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IssueAdminUserResetLink(ctx context.Context, id openapi_types.UUID, body IssueAdminUserResetLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIssueAdminUserResetLinkRequest(c.Server, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12378,6 +12422,67 @@ func NewGetAdminUserNotificationPreferencesRequest(server string, id openapi_typ
 	return req, nil
 }
 
+// NewDeleteAdminUserPasswordRequest generates requests for DeleteAdminUserPassword
+func NewDeleteAdminUserPasswordRequest(server string, id openapi_types.UUID, params *DeleteAdminUserPasswordParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/password", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.ConfirmLastMethod != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "confirm_last_method", *params.ConfirmLastMethod, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewReactivateAdminUserRequest generates requests for ReactivateAdminUser
 func NewReactivateAdminUserRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -12408,6 +12513,53 @@ func NewReactivateAdminUserRequest(server string, id openapi_types.UUID) (*http.
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewIssueAdminUserResetLinkRequest calls the generic IssueAdminUserResetLink builder with application/json body
+func NewIssueAdminUserResetLinkRequest(server string, id openapi_types.UUID, body IssueAdminUserResetLinkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewIssueAdminUserResetLinkRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewIssueAdminUserResetLinkRequestWithBody generates requests for IssueAdminUserResetLink with any type of body
+func NewIssueAdminUserResetLinkRequestWithBody(server string, id openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/users/%s/reset-link", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -26573,8 +26725,16 @@ type ClientWithResponsesInterface interface {
 	// GetAdminUserNotificationPreferencesWithResponse request
 	GetAdminUserNotificationPreferencesWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetAdminUserNotificationPreferencesHTTPResponse, error)
 
+	// DeleteAdminUserPasswordWithResponse request
+	DeleteAdminUserPasswordWithResponse(ctx context.Context, id openapi_types.UUID, params *DeleteAdminUserPasswordParams, reqEditors ...RequestEditorFn) (*DeleteAdminUserPasswordHTTPResponse, error)
+
 	// ReactivateAdminUserWithResponse request
 	ReactivateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReactivateAdminUserHTTPResponse, error)
+
+	// IssueAdminUserResetLinkWithBodyWithResponse request with any body
+	IssueAdminUserResetLinkWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*IssueAdminUserResetLinkHTTPResponse, error)
+
+	IssueAdminUserResetLinkWithResponse(ctx context.Context, id openapi_types.UUID, body IssueAdminUserResetLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*IssueAdminUserResetLinkHTTPResponse, error)
 
 	// GetAdminUserResourceAccessMetricsWithResponse request
 	GetAdminUserResourceAccessMetricsWithResponse(ctx context.Context, id openapi_types.UUID, params *GetAdminUserResourceAccessMetricsParams, reqEditors ...RequestEditorFn) (*GetAdminUserResourceAccessMetricsHTTPResponse, error)
@@ -30056,6 +30216,39 @@ func (r GetAdminUserNotificationPreferencesHTTPResponse) ContentType() string {
 	return ""
 }
 
+type DeleteAdminUserPasswordHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAdminUserPasswordHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAdminUserPasswordHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteAdminUserPasswordHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ReactivateAdminUserHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -30083,6 +30276,40 @@ func (r ReactivateAdminUserHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ReactivateAdminUserHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type IssueAdminUserResetLinkHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminUserResetLink
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r IssueAdminUserResetLinkHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r IssueAdminUserResetLinkHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r IssueAdminUserResetLinkHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -40024,6 +40251,15 @@ func (c *ClientWithResponses) GetAdminUserNotificationPreferencesWithResponse(ct
 	return ParseGetAdminUserNotificationPreferencesHTTPResponse(rsp)
 }
 
+// DeleteAdminUserPasswordWithResponse request returning *DeleteAdminUserPasswordHTTPResponse
+func (c *ClientWithResponses) DeleteAdminUserPasswordWithResponse(ctx context.Context, id openapi_types.UUID, params *DeleteAdminUserPasswordParams, reqEditors ...RequestEditorFn) (*DeleteAdminUserPasswordHTTPResponse, error) {
+	rsp, err := c.DeleteAdminUserPassword(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAdminUserPasswordHTTPResponse(rsp)
+}
+
 // ReactivateAdminUserWithResponse request returning *ReactivateAdminUserHTTPResponse
 func (c *ClientWithResponses) ReactivateAdminUserWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*ReactivateAdminUserHTTPResponse, error) {
 	rsp, err := c.ReactivateAdminUser(ctx, id, reqEditors...)
@@ -40031,6 +40267,23 @@ func (c *ClientWithResponses) ReactivateAdminUserWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseReactivateAdminUserHTTPResponse(rsp)
+}
+
+// IssueAdminUserResetLinkWithBodyWithResponse request with arbitrary body returning *IssueAdminUserResetLinkHTTPResponse
+func (c *ClientWithResponses) IssueAdminUserResetLinkWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*IssueAdminUserResetLinkHTTPResponse, error) {
+	rsp, err := c.IssueAdminUserResetLinkWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIssueAdminUserResetLinkHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) IssueAdminUserResetLinkWithResponse(ctx context.Context, id openapi_types.UUID, body IssueAdminUserResetLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*IssueAdminUserResetLinkHTTPResponse, error) {
+	rsp, err := c.IssueAdminUserResetLink(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIssueAdminUserResetLinkHTTPResponse(rsp)
 }
 
 // GetAdminUserResourceAccessMetricsWithResponse request returning *GetAdminUserResourceAccessMetricsHTTPResponse
@@ -46640,6 +46893,53 @@ func ParseGetAdminUserNotificationPreferencesHTTPResponse(rsp *http.Response) (*
 	return response, nil
 }
 
+// ParseDeleteAdminUserPasswordHTTPResponse parses an HTTP response from a DeleteAdminUserPasswordWithResponse call
+func ParseDeleteAdminUserPasswordHTTPResponse(rsp *http.Response) (*DeleteAdminUserPasswordHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteAdminUserPasswordHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseReactivateAdminUserHTTPResponse parses an HTTP response from a ReactivateAdminUserWithResponse call
 func ParseReactivateAdminUserHTTPResponse(rsp *http.Response) (*ReactivateAdminUserHTTPResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -46674,6 +46974,60 @@ func ParseReactivateAdminUserHTTPResponse(rsp *http.Response) (*ReactivateAdminU
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseIssueAdminUserResetLinkHTTPResponse parses an HTTP response from a IssueAdminUserResetLinkWithResponse call
+func ParseIssueAdminUserResetLinkHTTPResponse(rsp *http.Response) (*IssueAdminUserResetLinkHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &IssueAdminUserResetLinkHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminUserResetLink
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
