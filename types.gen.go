@@ -57,6 +57,24 @@ func (e APIKeyUsageType) Valid() bool {
 	}
 }
 
+// Defines values for AccountLinkPreviewPurpose.
+const (
+	AccountLinkPurposeReset AccountLinkPreviewPurpose = "reset"
+	AccountLinkPurposeSetup AccountLinkPreviewPurpose = "setup"
+)
+
+// Valid indicates whether the value is a known member of the AccountLinkPreviewPurpose enum.
+func (e AccountLinkPreviewPurpose) Valid() bool {
+	switch e {
+	case AccountLinkPurposeReset:
+		return true
+	case AccountLinkPurposeSetup:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminAISummaryValuesStyle.
 const (
 	AdminAISummaryValuesStyleBalanced AdminAISummaryValuesStyle = "balanced"
@@ -4103,6 +4121,39 @@ type AccountIdentity struct {
 	Provider string `json:"provider"`
 }
 
+// AccountLinkPreview What a one-time account link does and whose account it acts on.
+type AccountLinkPreview struct {
+	// Email The email address of the account, which is what the person signs in with.
+	Email openapi_types.Email `json:"email"`
+
+	// ExpiresAt When the link stops working.
+	ExpiresAt time.Time `json:"expires_at"`
+
+	// Name The account's display name; empty when none has been set.
+	Name string `json:"name"`
+
+	// Purpose What completing the link does: `setup` sets the first password of an
+	// account (`POST /api/v1/auth/password/setup`), `reset` replaces a
+	// forgotten one (`POST /api/v1/auth/password/reset`).
+	Purpose AccountLinkPreviewPurpose `json:"purpose"`
+}
+
+// AccountLinkPreviewPurpose What completing the link does: `setup` sets the first password of an
+// account (`POST /api/v1/auth/password/setup`), `reset` replaces a
+// forgotten one (`POST /api/v1/auth/password/reset`).
+type AccountLinkPreviewPurpose string
+
+// AccountLinkPreviewRequest Request body for POST /api/v1/auth/password/token/preview.
+type AccountLinkPreviewRequest struct {
+	// Token The token of a one-time account link: the part after `#token=` in the link.
+	// It is sent in request bodies only, never in a path or a query string.
+	Token AccountLinkToken `json:"token"`
+}
+
+// AccountLinkToken The token of a one-time account link: the part after `#token=` in the link.
+// It is sent in request bodies only, never in a path or a query string.
+type AccountLinkToken = string
+
 // AccountPassword The account's password sign-in method.
 type AccountPassword struct {
 	// ChangedAt When the password was last set or changed. Null when there is none.
@@ -7164,6 +7215,38 @@ type CommentListResponse struct {
 
 	// TotalPages Total number of pages
 	TotalPages int `json:"total_pages"`
+}
+
+// CompleteAccountResetRequest Request body for POST /api/v1/auth/password/reset.
+type CompleteAccountResetRequest struct {
+	// Password The new password, exactly as typed: it is not trimmed. It must meet the
+	// password policy (at least 12 characters, at most 128, not a commonly
+	// used password, not the account's email address).
+	Password string `json:"password"`
+
+	// RevokeApiAccess Also delete the account's API keys and its MCP and OAuth grants. The
+	// account's other browser sessions are ended either way.
+	RevokeApiAccess *bool `json:"revoke_api_access,omitempty"`
+
+	// Token The token of a one-time account link: the part after `#token=` in the link.
+	// It is sent in request bodies only, never in a path or a query string.
+	Token AccountLinkToken `json:"token"`
+}
+
+// CompleteAccountSetupRequest Request body for POST /api/v1/auth/password/setup.
+type CompleteAccountSetupRequest struct {
+	// Name The display name to set on the account. Optional; surrounding spaces
+	// are removed, and an empty value leaves the name as it is.
+	Name *string `json:"name,omitempty"`
+
+	// Password The password to set, exactly as typed: it is not trimmed. It must meet
+	// the password policy (at least 12 characters, at most 128, not a
+	// commonly used password, not the account's email address).
+	Password string `json:"password"`
+
+	// Token The token of a one-time account link: the part after `#token=` in the link.
+	// It is sent in request bodies only, never in a path or a query string.
+	Token AccountLinkToken `json:"token"`
 }
 
 // ContentVersion defines model for ContentVersion.
@@ -12920,6 +13003,15 @@ type DevLoginJSONRequestBody = DevLoginRequest
 
 // PasswordLoginJSONRequestBody defines body for PasswordLogin for application/json ContentType.
 type PasswordLoginJSONRequestBody = PasswordLoginRequest
+
+// CompleteAccountResetJSONRequestBody defines body for CompleteAccountReset for application/json ContentType.
+type CompleteAccountResetJSONRequestBody = CompleteAccountResetRequest
+
+// CompleteAccountSetupJSONRequestBody defines body for CompleteAccountSetup for application/json ContentType.
+type CompleteAccountSetupJSONRequestBody = CompleteAccountSetupRequest
+
+// PreviewAccountLinkJSONRequestBody defines body for PreviewAccountLink for application/json ContentType.
+type PreviewAccountLinkJSONRequestBody = AccountLinkPreviewRequest
 
 // UpdatePreferencesJSONRequestBody defines body for UpdatePreferences for application/json ContentType.
 type UpdatePreferencesJSONRequestBody = UpdatePreferencesRequest
