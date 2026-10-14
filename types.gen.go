@@ -4410,6 +4410,9 @@ type AdminAuthPolicy struct {
 //   - a positive value: the save is rejected with 409 unless it equals the
 //     stored policy's `version`, and also when nothing is stored.
 type AdminAuthPolicyUpdate struct {
+	// ConfirmLockoutRisk Set to true to apply a change that was rejected with `lockout_risk`.
+	ConfirmLockoutRisk *bool `json:"confirm_lockout_risk,omitempty"`
+
 	// ExpectedVersion The `version` the caller last read. Send `0` when that `version` was
 	// null, to save only while nothing is stored. Omit it or send null for
 	// last-write-wins. A negative value matches nothing and is a 409.
@@ -4598,7 +4601,8 @@ type AdminAuthProviderType string
 // string is rejected. It cannot be omitted when `issuer_url` changes: the
 // stored secret is only ever kept for the issuer it was saved with.
 //
-// A change that disables the last enabled provider, or the provider the
+// A change that disables the last enabled provider (while password sign-in is
+// not a working way in), or the provider the
 // calling admin signed in with, is rejected with 409 `lockout_risk` unless
 // `confirm_lockout_risk` is true.
 type AdminAuthProviderUpdate struct {
@@ -4628,6 +4632,18 @@ type AdminAuthRegistrationMode string
 
 // AdminAuthSettingsAuditSetting Which authentication setting's audit log to read.
 type AdminAuthSettingsAuditSetting string
+
+// AdminBootstrapPasswordRequest The root instance admin to give a password to, on a setup session. The
+// email must be listed in `auth.instance_admins`.
+type AdminBootstrapPasswordRequest struct {
+	// Email A root instance admin's email address. Letter case is ignored.
+	Email openapi_types.Email `json:"email"`
+
+	// Password The password, exactly as typed: it is not trimmed. It must satisfy the
+	// password policy (at least 12 characters, not a common password, not the
+	// email address).
+	Password string `json:"password"`
+}
 
 // AdminBreakdownBucket One value of a grouped column plus how many rows carry it.
 type AdminBreakdownBucket struct {
@@ -12964,6 +12980,9 @@ type UpdateAdminAuthAllowlistJSONRequestBody = AdminAuthAllowlistUpdate
 
 // PreviewAdminAuthAllowlistJSONRequestBody defines body for PreviewAdminAuthAllowlist for application/json ContentType.
 type PreviewAdminAuthAllowlistJSONRequestBody = AdminAuthAllowlistPreviewRequest
+
+// BootstrapAdminPasswordJSONRequestBody defines body for BootstrapAdminPassword for application/json ContentType.
+type BootstrapAdminPasswordJSONRequestBody = AdminBootstrapPasswordRequest
 
 // UpdateAdminAuthPolicyJSONRequestBody defines body for UpdateAdminAuthPolicy for application/json ContentType.
 type UpdateAdminAuthPolicyJSONRequestBody = AdminAuthPolicyUpdate

@@ -208,6 +208,11 @@ type ClientInterface interface {
 	// ListAdminAuthSettingsAudit request
 	ListAdminAuthSettingsAudit(ctx context.Context, params *ListAdminAuthSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// BootstrapAdminPasswordWithBody request with any body
+	BootstrapAdminPasswordWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	BootstrapAdminPassword(ctx context.Context, body BootstrapAdminPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAdminAuthPolicy request
 	GetAdminAuthPolicy(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1815,6 +1820,30 @@ func (c *Client) PreviewAdminAuthAllowlist(ctx context.Context, body PreviewAdmi
 
 func (c *Client) ListAdminAuthSettingsAudit(ctx context.Context, params *ListAdminAuthSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAdminAuthSettingsAuditRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) BootstrapAdminPasswordWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewBootstrapAdminPasswordRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) BootstrapAdminPassword(ctx context.Context, body BootstrapAdminPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewBootstrapAdminPasswordRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -8720,6 +8749,46 @@ func NewListAdminAuthSettingsAuditRequest(server string, params *ListAdminAuthSe
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewBootstrapAdminPasswordRequest calls the generic BootstrapAdminPassword builder with application/json body
+func NewBootstrapAdminPasswordRequest(server string, body BootstrapAdminPasswordJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewBootstrapAdminPasswordRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewBootstrapAdminPasswordRequestWithBody generates requests for BootstrapAdminPassword with any type of body
+func NewBootstrapAdminPasswordRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/auth/bootstrap-admin")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -26062,6 +26131,11 @@ type ClientWithResponsesInterface interface {
 	// ListAdminAuthSettingsAuditWithResponse request
 	ListAdminAuthSettingsAuditWithResponse(ctx context.Context, params *ListAdminAuthSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAuthSettingsAuditHTTPResponse, error)
 
+	// BootstrapAdminPasswordWithBodyWithResponse request with any body
+	BootstrapAdminPasswordWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*BootstrapAdminPasswordHTTPResponse, error)
+
+	BootstrapAdminPasswordWithResponse(ctx context.Context, body BootstrapAdminPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*BootstrapAdminPasswordHTTPResponse, error)
+
 	// GetAdminAuthPolicyWithResponse request
 	GetAdminAuthPolicyWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAuthPolicyHTTPResponse, error)
 
@@ -28286,6 +28360,40 @@ func (r ListAdminAuthSettingsAuditHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListAdminAuthSettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type BootstrapAdminPasswordHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r BootstrapAdminPasswordHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r BootstrapAdminPasswordHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r BootstrapAdminPasswordHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -38999,6 +39107,23 @@ func (c *ClientWithResponses) ListAdminAuthSettingsAuditWithResponse(ctx context
 	return ParseListAdminAuthSettingsAuditHTTPResponse(rsp)
 }
 
+// BootstrapAdminPasswordWithBodyWithResponse request with arbitrary body returning *BootstrapAdminPasswordHTTPResponse
+func (c *ClientWithResponses) BootstrapAdminPasswordWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*BootstrapAdminPasswordHTTPResponse, error) {
+	rsp, err := c.BootstrapAdminPasswordWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBootstrapAdminPasswordHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) BootstrapAdminPasswordWithResponse(ctx context.Context, body BootstrapAdminPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*BootstrapAdminPasswordHTTPResponse, error) {
+	rsp, err := c.BootstrapAdminPassword(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBootstrapAdminPasswordHTTPResponse(rsp)
+}
+
 // GetAdminAuthPolicyWithResponse request returning *GetAdminAuthPolicyHTTPResponse
 func (c *ClientWithResponses) GetAdminAuthPolicyWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAuthPolicyHTTPResponse, error) {
 	rsp, err := c.GetAdminAuthPolicy(ctx, reqEditors...)
@@ -44073,6 +44198,60 @@ func ParseListAdminAuthSettingsAuditHTTPResponse(rsp *http.Response) (*ListAdmin
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseBootstrapAdminPasswordHTTPResponse parses an HTTP response from a BootstrapAdminPasswordWithResponse call
+func ParseBootstrapAdminPasswordHTTPResponse(rsp *http.Response) (*BootstrapAdminPasswordHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &BootstrapAdminPasswordHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse
