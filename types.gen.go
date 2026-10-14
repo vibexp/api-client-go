@@ -75,6 +75,21 @@ func (e AccountLinkPreviewPurpose) Valid() bool {
 	}
 }
 
+// Defines values for AccountResetEmailAcceptedStatus.
+const (
+	AccountResetEmailStatusAccepted AccountResetEmailAcceptedStatus = "accepted"
+)
+
+// Valid indicates whether the value is a known member of the AccountResetEmailAcceptedStatus enum.
+func (e AccountResetEmailAcceptedStatus) Valid() bool {
+	switch e {
+	case AccountResetEmailStatusAccepted:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AdminAISummaryValuesStyle.
 const (
 	AdminAISummaryValuesStyleBalanced AdminAISummaryValuesStyle = "balanced"
@@ -4200,6 +4215,22 @@ type AccountPasswordRequest struct {
 	// RevokeApiAccess Also delete the account's API keys and disconnect its MCP and CLI
 	// tools. Other browser sessions are always ended, whatever this is.
 	RevokeApiAccess *bool `json:"revoke_api_access,omitempty"`
+}
+
+// AccountResetEmailAccepted The one answer to every forgot-password request. It says the request was
+// taken, and nothing about the address.
+type AccountResetEmailAccepted struct {
+	// Status Always `accepted`.
+	Status AccountResetEmailAcceptedStatus `json:"status"`
+}
+
+// AccountResetEmailAcceptedStatus Always `accepted`.
+type AccountResetEmailAcceptedStatus string
+
+// AccountResetEmailRequest Request body for POST /api/v1/auth/password/forgot.
+type AccountResetEmailRequest struct {
+	// Email The address of the account. Letter case and surrounding spaces are ignored.
+	Email openapi_types.Email `json:"email"`
 }
 
 // AccountUpdateRequest Request body for PATCH /api/v1/account.
@@ -13094,6 +13125,9 @@ type CreateAPIKeyJSONRequestBody = CreateAPIKeyRequest
 
 // DevLoginJSONRequestBody defines body for DevLogin for application/json ContentType.
 type DevLoginJSONRequestBody = DevLoginRequest
+
+// RequestPasswordResetJSONRequestBody defines body for RequestPasswordReset for application/json ContentType.
+type RequestPasswordResetJSONRequestBody = AccountResetEmailRequest
 
 // PasswordLoginJSONRequestBody defines body for PasswordLogin for application/json ContentType.
 type PasswordLoginJSONRequestBody = PasswordLoginRequest
