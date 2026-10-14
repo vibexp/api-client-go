@@ -98,6 +98,9 @@ type ClientInterface interface {
 
 	UpdateAccount(ctx context.Context, body UpdateAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteAccountDisconnectedIdentity request
+	DeleteAccountDisconnectedIdentity(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteAccountIdentity request
 	DeleteAccountIdentity(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1378,6 +1381,18 @@ func (c *Client) UpdateAccountWithBody(ctx context.Context, contentType string, 
 
 func (c *Client) UpdateAccount(ctx context.Context, body UpdateAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateAccountRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteAccountDisconnectedIdentity(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAccountDisconnectedIdentityRequest(c.Server, id)
 	if err != nil {
 		return nil, err
 	}
@@ -6887,6 +6902,40 @@ func NewUpdateAccountRequestWithBody(server string, contentType string, body io.
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteAccountDisconnectedIdentityRequest generates requests for DeleteAccountDisconnectedIdentity
+func NewDeleteAccountDisconnectedIdentityRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/account/disconnected-identities/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -26467,6 +26516,9 @@ type ClientWithResponsesInterface interface {
 
 	UpdateAccountWithResponse(ctx context.Context, body UpdateAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAccountHTTPResponse, error)
 
+	// DeleteAccountDisconnectedIdentityWithResponse request
+	DeleteAccountDisconnectedIdentityWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAccountDisconnectedIdentityHTTPResponse, error)
+
 	// DeleteAccountIdentityWithResponse request
 	DeleteAccountIdentityWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAccountIdentityHTTPResponse, error)
 
@@ -27780,6 +27832,40 @@ func (r UpdateAccountHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateAccountHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteAccountDisconnectedIdentityHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAccountDisconnectedIdentityHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAccountDisconnectedIdentityHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteAccountDisconnectedIdentityHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -39441,6 +39527,15 @@ func (c *ClientWithResponses) UpdateAccountWithResponse(ctx context.Context, bod
 	return ParseUpdateAccountHTTPResponse(rsp)
 }
 
+// DeleteAccountDisconnectedIdentityWithResponse request returning *DeleteAccountDisconnectedIdentityHTTPResponse
+func (c *ClientWithResponses) DeleteAccountDisconnectedIdentityWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAccountDisconnectedIdentityHTTPResponse, error) {
+	rsp, err := c.DeleteAccountDisconnectedIdentity(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAccountDisconnectedIdentityHTTPResponse(rsp)
+}
+
 // DeleteAccountIdentityWithResponse request returning *DeleteAccountIdentityHTTPResponse
 func (c *ClientWithResponses) DeleteAccountIdentityWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteAccountIdentityHTTPResponse, error) {
 	rsp, err := c.DeleteAccountIdentity(ctx, id, reqEditors...)
@@ -43486,6 +43581,60 @@ func ParseUpdateAccountHTTPResponse(rsp *http.Response) (*UpdateAccountHTTPRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteAccountDisconnectedIdentityHTTPResponse parses an HTTP response from a DeleteAccountDisconnectedIdentityWithResponse call
+func ParseDeleteAccountDisconnectedIdentityHTTPResponse(rsp *http.Response) (*DeleteAccountDisconnectedIdentityHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteAccountDisconnectedIdentityHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
 		var dest ErrorResponse

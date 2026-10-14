@@ -4263,6 +4263,12 @@ type AcceptInvitationResponse struct {
 
 // Account The signed-in user's own account and its sign-in methods.
 type Account struct {
+	// DisconnectedIdentities Provider accounts the user disconnected and has not allowed again,
+	// newest first (#1460). Signing in through one of them does not link it
+	// to this account by email; `DELETE
+	// /api/v1/account/disconnected-identities/{id}` allows it again.
+	DisconnectedIdentities []AccountDisconnectedIdentity `json:"disconnected_identities"`
+
 	// Email The account's email address. It cannot be changed here.
 	Email openapi_types.Email `json:"email"`
 	Id    openapi_types.UUID  `json:"id"`
@@ -4284,6 +4290,20 @@ type Account struct {
 	// authenticated by an API key or a bearer token. Refreshing or extending a
 	// session does not make it recent again; signing in does.
 	RecentSignIn bool `json:"recent_sign_in"`
+}
+
+// AccountDisconnectedIdentity A provider account the user disconnected from this account.
+type AccountDisconnectedIdentity struct {
+	DisconnectedAt time.Time `json:"disconnected_at"`
+
+	// DisplayName The provider's name as shown on the sign-in page; its slug when the provider is not enabled.
+	DisplayName string `json:"display_name"`
+
+	// Id Identifier to pass to `DELETE /api/v1/account/disconnected-identities/{id}`.
+	Id openapi_types.UUID `json:"id"`
+
+	// Provider The provider's slug.
+	Provider string `json:"provider"`
 }
 
 // AccountIdentity One identity provider the account can sign in with.
