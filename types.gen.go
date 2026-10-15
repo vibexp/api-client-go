@@ -8335,12 +8335,20 @@ type CurrentUser struct {
 	// unverified account is not a root admin. Only root admins may grant
 	// or revoke other instance admins. UI convenience
 	// only; grant/revoke is authorized server-side.
-	IsRootInstanceAdmin   bool       `json:"is_root_instance_admin"`
-	Name                  string     `json:"name"`
-	OnboardingCompleted   bool       `json:"onboarding_completed"`
-	OnboardingCompletedAt *time.Time `json:"onboarding_completed_at,omitempty"`
-	UpdatedAt             time.Time  `json:"updated_at"`
-	Version               int64      `json:"version"`
+	IsRootInstanceAdmin bool `json:"is_root_instance_admin"`
+
+	// KnowledgeLoop Whether the user's AI tools are running the knowledge loop: the first time
+	// one of them read a resource from VibeXP, and the first time one wrote a
+	// resource back. Only reads and writes through an AI tool count (the CLI,
+	// MCP, or the REST API with an API key); using the web app does not. Null
+	// until it has happened. The SPA uses it to retire its setup prompts once
+	// the loop is running.
+	KnowledgeLoop         KnowledgeLoop `json:"knowledge_loop"`
+	Name                  string        `json:"name"`
+	OnboardingCompleted   bool          `json:"onboarding_completed"`
+	OnboardingCompletedAt *time.Time    `json:"onboarding_completed_at,omitempty"`
+	UpdatedAt             time.Time     `json:"updated_at"`
+	Version               int64         `json:"version"`
 }
 
 // DeleteStatusResponse The outcome of deleting a custom status
@@ -9203,6 +9211,20 @@ type InviterInfo struct {
 	Email *openapi_types.Email `json:"email,omitempty"`
 	Id    *string              `json:"id,omitempty"`
 	Name  *string              `json:"name,omitempty"`
+}
+
+// KnowledgeLoop Whether the user's AI tools are running the knowledge loop: the first time
+// one of them read a resource from VibeXP, and the first time one wrote a
+// resource back. Only reads and writes through an AI tool count (the CLI,
+// MCP, or the REST API with an API key); using the web app does not. Null
+// until it has happened. The SPA uses it to retire its setup prompts once
+// the loop is running.
+type KnowledgeLoop struct {
+	// FirstReadAt When an AI tool first read one of the user's team resources on the user's behalf.
+	FirstReadAt *time.Time `json:"first_read_at"`
+
+	// FirstWriteAt When an AI tool first created or updated a prompt, artifact, blueprint or memory on the user's behalf.
+	FirstWriteAt *time.Time `json:"first_write_at"`
 }
 
 // ListProviderModelsRequest Inline connection details for the provider whose models to list. The provider does not have to be saved yet: this is what lets a model be picked while the base URL and key are still being entered.
