@@ -181,6 +181,20 @@ type ClientInterface interface {
 	// ListAdminAISummarySettingsAudit request
 	ListAdminAISummarySettingsAudit(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ResetAdminAuditLogSettings request
+	ResetAdminAuditLogSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAdminAuditLogSettings request
+	GetAdminAuditLogSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAdminAuditLogSettingsWithBody request with any body
+	UpdateAdminAuditLogSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateAdminAuditLogSettings(ctx context.Context, body UpdateAdminAuditLogSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAdminAuditLogSettingsAudit request
+	ListAdminAuditLogSettingsAudit(ctx context.Context, params *ListAdminAuditLogSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListAdminInstanceAdmins request
 	ListAdminInstanceAdmins(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1729,6 +1743,66 @@ func (c *Client) UpdateAdminAISummarySettings(ctx context.Context, body UpdateAd
 
 func (c *Client) ListAdminAISummarySettingsAudit(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAdminAISummarySettingsAuditRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResetAdminAuditLogSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResetAdminAuditLogSettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAdminAuditLogSettings(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAdminAuditLogSettingsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminAuditLogSettingsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminAuditLogSettingsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateAdminAuditLogSettings(ctx context.Context, body UpdateAdminAuditLogSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAdminAuditLogSettingsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAdminAuditLogSettingsAudit(ctx context.Context, params *ListAdminAuditLogSettingsAuditParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAdminAuditLogSettingsAuditRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -8583,6 +8657,166 @@ func NewListAdminAISummarySettingsAuditRequest(server string, params *ListAdminA
 	}
 
 	operationPath := fmt.Sprintf("/api/v1/admin/settings/ai-summary/audit")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewResetAdminAuditLogSettingsRequest generates requests for ResetAdminAuditLogSettings
+func NewResetAdminAuditLogSettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/audit-log")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetAdminAuditLogSettingsRequest generates requests for GetAdminAuditLogSettings
+func NewGetAdminAuditLogSettingsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/audit-log")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAdminAuditLogSettingsRequest calls the generic UpdateAdminAuditLogSettings builder with application/json body
+func NewUpdateAdminAuditLogSettingsRequest(server string, body UpdateAdminAuditLogSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAdminAuditLogSettingsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpdateAdminAuditLogSettingsRequestWithBody generates requests for UpdateAdminAuditLogSettings with any type of body
+func NewUpdateAdminAuditLogSettingsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/audit-log")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAdminAuditLogSettingsAuditRequest generates requests for ListAdminAuditLogSettingsAudit
+func NewListAdminAuditLogSettingsAuditRequest(server string, params *ListAdminAuditLogSettingsAuditParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/admin/settings/audit-log/audit")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -26599,6 +26833,20 @@ type ClientWithResponsesInterface interface {
 	// ListAdminAISummarySettingsAuditWithResponse request
 	ListAdminAISummarySettingsAuditWithResponse(ctx context.Context, params *ListAdminAISummarySettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAISummarySettingsAuditHTTPResponse, error)
 
+	// ResetAdminAuditLogSettingsWithResponse request
+	ResetAdminAuditLogSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminAuditLogSettingsHTTPResponse, error)
+
+	// GetAdminAuditLogSettingsWithResponse request
+	GetAdminAuditLogSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAuditLogSettingsHTTPResponse, error)
+
+	// UpdateAdminAuditLogSettingsWithBodyWithResponse request with any body
+	UpdateAdminAuditLogSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminAuditLogSettingsHTTPResponse, error)
+
+	UpdateAdminAuditLogSettingsWithResponse(ctx context.Context, body UpdateAdminAuditLogSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminAuditLogSettingsHTTPResponse, error)
+
+	// ListAdminAuditLogSettingsAuditWithResponse request
+	ListAdminAuditLogSettingsAuditWithResponse(ctx context.Context, params *ListAdminAuditLogSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAuditLogSettingsAuditHTTPResponse, error)
+
 	// ListAdminInstanceAdminsWithResponse request
 	ListAdminInstanceAdminsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAdminInstanceAdminsHTTPResponse, error)
 
@@ -28654,6 +28902,136 @@ func (r ListAdminAISummarySettingsAuditHTTPResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListAdminAISummarySettingsAuditHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ResetAdminAuditLogSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ResetAdminAuditLogSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResetAdminAuditLogSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ResetAdminAuditLogSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAdminAuditLogSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminAuditLogSettings
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAdminAuditLogSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAdminAuditLogSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAdminAuditLogSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAdminAuditLogSettingsHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminAuditLogSettings
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON409 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAdminAuditLogSettingsHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAdminAuditLogSettingsHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAdminAuditLogSettingsHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAdminAuditLogSettingsAuditHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AdminInstanceSettingsAuditPage
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON404 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAdminAuditLogSettingsAuditHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAdminAuditLogSettingsAuditHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAdminAuditLogSettingsAuditHTTPResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -39784,6 +40162,50 @@ func (c *ClientWithResponses) ListAdminAISummarySettingsAuditWithResponse(ctx co
 	return ParseListAdminAISummarySettingsAuditHTTPResponse(rsp)
 }
 
+// ResetAdminAuditLogSettingsWithResponse request returning *ResetAdminAuditLogSettingsHTTPResponse
+func (c *ClientWithResponses) ResetAdminAuditLogSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ResetAdminAuditLogSettingsHTTPResponse, error) {
+	rsp, err := c.ResetAdminAuditLogSettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResetAdminAuditLogSettingsHTTPResponse(rsp)
+}
+
+// GetAdminAuditLogSettingsWithResponse request returning *GetAdminAuditLogSettingsHTTPResponse
+func (c *ClientWithResponses) GetAdminAuditLogSettingsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetAdminAuditLogSettingsHTTPResponse, error) {
+	rsp, err := c.GetAdminAuditLogSettings(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAdminAuditLogSettingsHTTPResponse(rsp)
+}
+
+// UpdateAdminAuditLogSettingsWithBodyWithResponse request with arbitrary body returning *UpdateAdminAuditLogSettingsHTTPResponse
+func (c *ClientWithResponses) UpdateAdminAuditLogSettingsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAdminAuditLogSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateAdminAuditLogSettingsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminAuditLogSettingsHTTPResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateAdminAuditLogSettingsWithResponse(ctx context.Context, body UpdateAdminAuditLogSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAdminAuditLogSettingsHTTPResponse, error) {
+	rsp, err := c.UpdateAdminAuditLogSettings(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAdminAuditLogSettingsHTTPResponse(rsp)
+}
+
+// ListAdminAuditLogSettingsAuditWithResponse request returning *ListAdminAuditLogSettingsAuditHTTPResponse
+func (c *ClientWithResponses) ListAdminAuditLogSettingsAuditWithResponse(ctx context.Context, params *ListAdminAuditLogSettingsAuditParams, reqEditors ...RequestEditorFn) (*ListAdminAuditLogSettingsAuditHTTPResponse, error) {
+	rsp, err := c.ListAdminAuditLogSettingsAudit(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAdminAuditLogSettingsAuditHTTPResponse(rsp)
+}
+
 // ListAdminInstanceAdminsWithResponse request returning *ListAdminInstanceAdminsHTTPResponse
 func (c *ClientWithResponses) ListAdminInstanceAdminsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAdminInstanceAdminsHTTPResponse, error) {
 	rsp, err := c.ListAdminInstanceAdmins(ctx, reqEditors...)
@@ -44710,6 +45132,180 @@ func ParseListAdminAISummarySettingsAuditHTTPResponse(rsp *http.Response) (*List
 	}
 
 	response := &ListAdminAISummarySettingsAuditHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminInstanceSettingsAuditPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseResetAdminAuditLogSettingsHTTPResponse parses an HTTP response from a ResetAdminAuditLogSettingsWithResponse call
+func ParseResetAdminAuditLogSettingsHTTPResponse(rsp *http.Response) (*ResetAdminAuditLogSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResetAdminAuditLogSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAdminAuditLogSettingsHTTPResponse parses an HTTP response from a GetAdminAuditLogSettingsWithResponse call
+func ParseGetAdminAuditLogSettingsHTTPResponse(rsp *http.Response) (*GetAdminAuditLogSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAdminAuditLogSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminAuditLogSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAdminAuditLogSettingsHTTPResponse parses an HTTP response from a UpdateAdminAuditLogSettingsWithResponse call
+func ParseUpdateAdminAuditLogSettingsHTTPResponse(rsp *http.Response) (*UpdateAdminAuditLogSettingsHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAdminAuditLogSettingsHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AdminAuditLogSettings
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAdminAuditLogSettingsAuditHTTPResponse parses an HTTP response from a ListAdminAuditLogSettingsAuditWithResponse call
+func ParseListAdminAuditLogSettingsAuditHTTPResponse(rsp *http.Response) (*ListAdminAuditLogSettingsAuditHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAdminAuditLogSettingsAuditHTTPResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

@@ -297,6 +297,7 @@ func (e AdminInstanceSettingsAuditEntryAction) Valid() bool {
 // Defines values for AdminInstanceSettingsAuditEntrySetting.
 const (
 	AdminInstanceSettingsAuditEntrySettingAiSummary      AdminInstanceSettingsAuditEntrySetting = "ai_summary"
+	AdminInstanceSettingsAuditEntrySettingAuditLog       AdminInstanceSettingsAuditEntrySetting = "audit_log"
 	AdminInstanceSettingsAuditEntrySettingAuthAllowlist  AdminInstanceSettingsAuditEntrySetting = "auth_allowlist"
 	AdminInstanceSettingsAuditEntrySettingAuthPolicy     AdminInstanceSettingsAuditEntrySetting = "auth_policy"
 	AdminInstanceSettingsAuditEntrySettingAuthProviders  AdminInstanceSettingsAuditEntrySetting = "auth_providers"
@@ -311,6 +312,8 @@ const (
 func (e AdminInstanceSettingsAuditEntrySetting) Valid() bool {
 	switch e {
 	case AdminInstanceSettingsAuditEntrySettingAiSummary:
+		return true
+	case AdminInstanceSettingsAuditEntrySettingAuditLog:
 		return true
 	case AdminInstanceSettingsAuditEntrySettingAuthAllowlist:
 		return true
@@ -4533,6 +4536,80 @@ type AdminArtifactType struct {
 	Name      string    `json:"name"`
 	Slug      string    `json:"slug"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// AdminAuditLogSettings The instance audit-log settings in effect, where they come from, the
+// built-in defaults, the bounds and the stored row's metadata. With nothing
+// stored the built-in defaults apply, `source` is `default` and the metadata
+// fields are null.
+type AdminAuditLogSettings struct {
+	// BuiltInDefaults The instance audit-log settings.
+	BuiltInDefaults AdminAuditLogSettingsValues `json:"built_in_defaults"`
+
+	// Limits The bounds `retention_weeks` must respect, for form validation.
+	Limits AdminAuditLogSettingsLimits `json:"limits"`
+
+	// Source Where the instance values come from: `instance` when an instance admin (or
+	// the boot-time config import) stored them, `default` when nothing is stored
+	// and the built-in defaults apply.
+	Source AdminInstanceSettingsSource `json:"source"`
+
+	// UpdatedAt When the settings were last stored; null when `source` is `default`.
+	UpdatedAt *time.Time `json:"updated_at"`
+
+	// UpdatedByName That admin's display name (or email), when it could be resolved.
+	UpdatedByName *string `json:"updated_by_name"`
+
+	// UpdatedByUserId The admin who last stored the settings. Null when `source` is
+	// `default`, or once that user has been deleted.
+	UpdatedByUserId *openapi_types.UUID `json:"updated_by_user_id"`
+
+	// Values The instance audit-log settings.
+	Values AdminAuditLogSettingsValues `json:"values"`
+
+	// Version The stored row's optimistic-lock version; null when nothing is stored.
+	// Send it back as `expected_version` (`0` when it is null) to reject a
+	// save that would overwrite someone else's change.
+	Version *int64 `json:"version"`
+}
+
+// AdminAuditLogSettingsLimits The bounds `retention_weeks` must respect, for form validation.
+type AdminAuditLogSettingsLimits struct {
+	RetentionWeeksMax int `json:"retention_weeks_max"`
+	RetentionWeeksMin int `json:"retention_weeks_min"`
+}
+
+// AdminAuditLogSettingsUpdate A whole replacement of the instance audit-log settings. Both settings are
+// required. `expected_version` is optional and makes the save a
+// compare-and-set:
+//
+//   - omitted or null: last-write-wins, never a conflict.
+//   - `0`: nothing may be stored yet; the save is rejected with 409 when a row
+//     is stored. Send it when the `version` last read was null.
+//   - a positive value: the save is rejected with 409 unless it equals the
+//     stored `version`, and also when nothing is stored.
+type AdminAuditLogSettingsUpdate struct {
+	// CaptureIpUa Whether a newly recorded audit event stores the client IP address and user agent.
+	CaptureIpUa bool `json:"capture_ip_ua"`
+
+	// ExpectedVersion The `version` the caller last read. Send `0` when that `version` was
+	// null, to save only while nothing is stored. Omit it or send null for
+	// last-write-wins. A negative value matches nothing and is a 409.
+	ExpectedVersion *int64 `json:"expected_version,omitempty"`
+
+	// RetentionWeeks How many weeks an audit event is kept, 1 to 52.
+	RetentionWeeks int `json:"retention_weeks"`
+}
+
+// AdminAuditLogSettingsValues The instance audit-log settings.
+type AdminAuditLogSettingsValues struct {
+	// CaptureIpUa Whether a newly recorded audit event stores the client IP address and
+	// user agent. Events already stored keep theirs.
+	CaptureIpUa bool `json:"capture_ip_ua"`
+
+	// RetentionWeeks How many weeks an audit event is kept. A daily purge deletes events
+	// older than that.
+	RetentionWeeks int `json:"retention_weeks"`
 }
 
 // AdminAuthAllowlist The instance's sign-in access allowlist. A user may sign in when their
@@ -12037,6 +12114,15 @@ type ListAdminAISummarySettingsAuditParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListAdminAuditLogSettingsAuditParams defines parameters for ListAdminAuditLogSettingsAudit.
+type ListAdminAuditLogSettingsAuditParams struct {
+	// Cursor Opaque cursor from a previous page's `next_cursor`.
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // ListAdminAuthSettingsAuditParams defines parameters for ListAdminAuthSettingsAudit.
 type ListAdminAuthSettingsAuditParams struct {
 	// Setting Which authentication setting's audit log to read.
@@ -13485,6 +13571,9 @@ type ReplaceAdminSavedFiltersJSONRequestBody = AdminSavedFiltersReplaceRequest
 
 // UpdateAdminAISummarySettingsJSONRequestBody defines body for UpdateAdminAISummarySettings for application/json ContentType.
 type UpdateAdminAISummarySettingsJSONRequestBody = AdminInstanceAISummarySettingsUpdate
+
+// UpdateAdminAuditLogSettingsJSONRequestBody defines body for UpdateAdminAuditLogSettings for application/json ContentType.
+type UpdateAdminAuditLogSettingsJSONRequestBody = AdminAuditLogSettingsUpdate
 
 // GrantAdminInstanceAdminJSONRequestBody defines body for GrantAdminInstanceAdmin for application/json ContentType.
 type GrantAdminInstanceAdminJSONRequestBody = AdminInstanceAdminGrant
