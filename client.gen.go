@@ -997,6 +997,9 @@ type ClientInterface interface {
 	// GetGitHubStatus request
 	GetGitHubStatus(ctx context.Context, teamId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetKnowledgePulse request
+	GetKnowledgePulse(ctx context.Context, teamId openapi_types.UUID, params *GetKnowledgePulseParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListMemories request
 	ListMemories(ctx context.Context, teamId openapi_types.UUID, params *ListMemoriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -5277,6 +5280,18 @@ func (c *Client) ImportGitHubProject(ctx context.Context, teamId string, repoId 
 
 func (c *Client) GetGitHubStatus(ctx context.Context, teamId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetGitHubStatusRequest(c.Server, teamId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetKnowledgePulse(ctx context.Context, teamId openapi_types.UUID, params *GetKnowledgePulseParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetKnowledgePulseRequest(c.Server, teamId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -22122,6 +22137,91 @@ func NewGetGitHubStatusRequest(server string, teamId string) (*http.Request, err
 	return req, nil
 }
 
+// NewGetKnowledgePulseRequest generates requests for GetKnowledgePulse
+func NewGetKnowledgePulseRequest(server string, teamId openapi_types.UUID, params *GetKnowledgePulseParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "team_id", teamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/v1/%s/knowledge-pulse", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Since != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "since", *params.Since, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Snapshot != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "snapshot", *params.Snapshot, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListMemoriesRequest generates requests for ListMemories
 func NewListMemoriesRequest(server string, teamId openapi_types.UUID, params *ListMemoriesParams) (*http.Request, error) {
 	var err error
@@ -28026,6 +28126,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetGitHubStatusWithResponse request
 	GetGitHubStatusWithResponse(ctx context.Context, teamId string, reqEditors ...RequestEditorFn) (*GetGitHubStatusHTTPResponse, error)
+
+	// GetKnowledgePulseWithResponse request
+	GetKnowledgePulseWithResponse(ctx context.Context, teamId openapi_types.UUID, params *GetKnowledgePulseParams, reqEditors ...RequestEditorFn) (*GetKnowledgePulseHTTPResponse, error)
 
 	// ListMemoriesWithResponse request
 	ListMemoriesWithResponse(ctx context.Context, teamId openapi_types.UUID, params *ListMemoriesParams, reqEditors ...RequestEditorFn) (*ListMemoriesHTTPResponse, error)
@@ -36917,6 +37020,40 @@ func (r GetGitHubStatusHTTPResponse) ContentType() string {
 	return ""
 }
 
+type GetKnowledgePulseHTTPResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *KnowledgePulseResponse
+	ApplicationproblemJSON400 *ErrorResponse
+	ApplicationproblemJSON401 *ErrorResponse
+	ApplicationproblemJSON403 *ErrorResponse
+	ApplicationproblemJSON500 *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetKnowledgePulseHTTPResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetKnowledgePulseHTTPResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetKnowledgePulseHTTPResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListMemoriesHTTPResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -43189,6 +43326,15 @@ func (c *ClientWithResponses) GetGitHubStatusWithResponse(ctx context.Context, t
 		return nil, err
 	}
 	return ParseGetGitHubStatusHTTPResponse(rsp)
+}
+
+// GetKnowledgePulseWithResponse request returning *GetKnowledgePulseHTTPResponse
+func (c *ClientWithResponses) GetKnowledgePulseWithResponse(ctx context.Context, teamId openapi_types.UUID, params *GetKnowledgePulseParams, reqEditors ...RequestEditorFn) (*GetKnowledgePulseHTTPResponse, error) {
+	rsp, err := c.GetKnowledgePulse(ctx, teamId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetKnowledgePulseHTTPResponse(rsp)
 }
 
 // ListMemoriesWithResponse request returning *ListMemoriesHTTPResponse
@@ -57033,6 +57179,60 @@ func ParseGetGitHubStatusHTTPResponse(rsp *http.Response) (*GetGitHubStatusHTTPR
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetKnowledgePulseHTTPResponse parses an HTTP response from a GetKnowledgePulseWithResponse call
+func ParseGetKnowledgePulseHTTPResponse(rsp *http.Response) (*GetKnowledgePulseHTTPResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetKnowledgePulseHTTPResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KnowledgePulseResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest ErrorResponse

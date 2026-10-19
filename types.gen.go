@@ -1920,6 +1920,117 @@ func (e InvitationResponseStatus) Valid() bool {
 	}
 }
 
+// Defines values for KnowledgePulseActorType.
+const (
+	KnowledgePulseActorTypeAgent KnowledgePulseActorType = "agent"
+	KnowledgePulseActorTypeUser  KnowledgePulseActorType = "user"
+)
+
+// Valid indicates whether the value is a known member of the KnowledgePulseActorType enum.
+func (e KnowledgePulseActorType) Valid() bool {
+	switch e {
+	case KnowledgePulseActorTypeAgent:
+		return true
+	case KnowledgePulseActorTypeUser:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for KnowledgePulseEventDetailAction.
+const (
+	Create KnowledgePulseEventDetailAction = "create"
+	Update KnowledgePulseEventDetailAction = "update"
+)
+
+// Valid indicates whether the value is a known member of the KnowledgePulseEventDetailAction enum.
+func (e KnowledgePulseEventDetailAction) Valid() bool {
+	switch e {
+	case Create:
+		return true
+	case Update:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for KnowledgePulseEventKind.
+const (
+	FeedPost KnowledgePulseEventKind = "feed_post"
+	Link     KnowledgePulseEventKind = "link"
+	Read     KnowledgePulseEventKind = "read"
+	Write    KnowledgePulseEventKind = "write"
+)
+
+// Valid indicates whether the value is a known member of the KnowledgePulseEventKind enum.
+func (e KnowledgePulseEventKind) Valid() bool {
+	switch e {
+	case FeedPost:
+		return true
+	case Link:
+		return true
+	case Read:
+		return true
+	case Write:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for KnowledgePulseResourceType.
+const (
+	KnowledgePulseResourceTypeArtifact  KnowledgePulseResourceType = "artifact"
+	KnowledgePulseResourceTypeBlueprint KnowledgePulseResourceType = "blueprint"
+	KnowledgePulseResourceTypeFeedItem  KnowledgePulseResourceType = "feed_item"
+	KnowledgePulseResourceTypeMemory    KnowledgePulseResourceType = "memory"
+	KnowledgePulseResourceTypePrompt    KnowledgePulseResourceType = "prompt"
+)
+
+// Valid indicates whether the value is a known member of the KnowledgePulseResourceType enum.
+func (e KnowledgePulseResourceType) Valid() bool {
+	switch e {
+	case KnowledgePulseResourceTypeArtifact:
+		return true
+	case KnowledgePulseResourceTypeBlueprint:
+		return true
+	case KnowledgePulseResourceTypeFeedItem:
+		return true
+	case KnowledgePulseResourceTypeMemory:
+		return true
+	case KnowledgePulseResourceTypePrompt:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for KnowledgePulseSource.
+const (
+	KnowledgePulseSourceApi KnowledgePulseSource = "api"
+	KnowledgePulseSourceCli KnowledgePulseSource = "cli"
+	KnowledgePulseSourceMcp KnowledgePulseSource = "mcp"
+	KnowledgePulseSourceWeb KnowledgePulseSource = "web"
+)
+
+// Valid indicates whether the value is a known member of the KnowledgePulseSource enum.
+func (e KnowledgePulseSource) Valid() bool {
+	switch e {
+	case KnowledgePulseSourceApi:
+		return true
+	case KnowledgePulseSourceCli:
+		return true
+	case KnowledgePulseSourceMcp:
+		return true
+	case KnowledgePulseSourceWeb:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for LockedResourceRefResourceType.
 const (
 	LockedResourceRefResourceTypeArtifact  LockedResourceRefResourceType = "artifact"
@@ -4256,19 +4367,19 @@ func (e ListFeedItemsParamsArchived) Valid() bool {
 
 // Defines values for ListFeedItemsByFeedParamsArchived.
 const (
-	All   ListFeedItemsByFeedParamsArchived = "all"
-	False ListFeedItemsByFeedParamsArchived = "false"
-	True  ListFeedItemsByFeedParamsArchived = "true"
+	ListFeedItemsByFeedParamsArchivedAll   ListFeedItemsByFeedParamsArchived = "all"
+	ListFeedItemsByFeedParamsArchivedFalse ListFeedItemsByFeedParamsArchived = "false"
+	ListFeedItemsByFeedParamsArchivedTrue  ListFeedItemsByFeedParamsArchived = "true"
 )
 
 // Valid indicates whether the value is a known member of the ListFeedItemsByFeedParamsArchived enum.
 func (e ListFeedItemsByFeedParamsArchived) Valid() bool {
 	switch e {
-	case All:
+	case ListFeedItemsByFeedParamsArchivedAll:
 		return true
-	case False:
+	case ListFeedItemsByFeedParamsArchivedFalse:
 		return true
-	case True:
+	case ListFeedItemsByFeedParamsArchivedTrue:
 		return true
 	default:
 		return false
@@ -9707,6 +9818,132 @@ type KnowledgeLoop struct {
 	FirstWriteAt *time.Time `json:"first_write_at"`
 }
 
+// KnowledgePulseActor defines model for KnowledgePulseActor.
+type KnowledgePulseActor struct {
+	// Id A user's UUID, or a stable `agent:<name>` key for an agent, so the same tool used by different people is one actor.
+	Id     string                  `json:"id"`
+	Name   string                  `json:"name"`
+	Source KnowledgePulseSource    `json:"source"`
+	Type   KnowledgePulseActorType `json:"type"`
+}
+
+// KnowledgePulseActorType defines model for KnowledgePulseActorType.
+type KnowledgePulseActorType string
+
+// KnowledgePulseEdge defines model for KnowledgePulseEdge.
+type KnowledgePulseEdge struct {
+	From         string `json:"from"`
+	RelationType string `json:"relation_type"`
+	To           string `json:"to"`
+}
+
+// KnowledgePulseEvent defines model for KnowledgePulseEvent.
+type KnowledgePulseEvent struct {
+	Actor  KnowledgePulseActor        `json:"actor"`
+	At     time.Time                  `json:"at"`
+	Detail *KnowledgePulseEventDetail `json:"detail,omitempty"`
+
+	// Id Event id, unique across sources (prefixed with the kind).
+	Id       string                    `json:"id"`
+	Kind     KnowledgePulseEventKind   `json:"kind"`
+	Resource KnowledgePulseResourceRef `json:"resource"`
+}
+
+// KnowledgePulseEventDetail defines model for KnowledgePulseEventDetail.
+type KnowledgePulseEventDetail struct {
+	// Action Set on write events.
+	Action *KnowledgePulseEventDetailAction `json:"action,omitempty"`
+
+	// RelationType Set on link events, e.g. `supersedes`.
+	RelationType *string                   `json:"relation_type,omitempty"`
+	To           *KnowledgePulseRelatedRef `json:"to,omitempty"`
+}
+
+// KnowledgePulseEventDetailAction Set on write events.
+type KnowledgePulseEventDetailAction string
+
+// KnowledgePulseEventKind defines model for KnowledgePulseEventKind.
+type KnowledgePulseEventKind string
+
+// KnowledgePulseNode defines model for KnowledgePulseNode.
+type KnowledgePulseNode struct {
+	// Degree Number of relations the resource takes part in.
+	Degree    int                        `json:"degree"`
+	Id        string                     `json:"id"`
+	ProjectId *string                    `json:"project_id,omitempty"`
+	Slug      *string                    `json:"slug,omitempty"`
+	Title     string                     `json:"title"`
+	Type      KnowledgePulseResourceType `json:"type"`
+}
+
+// KnowledgePulseRelatedRef defines model for KnowledgePulseRelatedRef.
+type KnowledgePulseRelatedRef struct {
+	Id    string                     `json:"id"`
+	Slug  *string                    `json:"slug,omitempty"`
+	Title *string                    `json:"title,omitempty"`
+	Type  KnowledgePulseResourceType `json:"type"`
+}
+
+// KnowledgePulseResourceRef defines model for KnowledgePulseResourceRef.
+type KnowledgePulseResourceRef struct {
+	Id        string  `json:"id"`
+	ProjectId *string `json:"project_id,omitempty"`
+
+	// Slug Slug for prompts, artifacts and blueprints (used to deep-link).
+	Slug *string `json:"slug,omitempty"`
+
+	// Title Display title; empty when the resource no longer exists.
+	Title string                     `json:"title"`
+	Type  KnowledgePulseResourceType `json:"type"`
+}
+
+// KnowledgePulseResourceType defines model for KnowledgePulseResourceType.
+type KnowledgePulseResourceType string
+
+// KnowledgePulseResponse defines model for KnowledgePulseResponse.
+type KnowledgePulseResponse struct {
+	// Cursor RFC 3339 timestamp (nanosecond precision) of the newest event returned, or of the window start when no event was returned. Pass it back as `since` on the next poll to receive only newer events.
+	Cursor string `json:"cursor"`
+
+	// Events Events after `since` (or in the last 15 minutes when `since` is omitted), merged across all sources and sorted by `at`, oldest first.
+	Events   []KnowledgePulseEvent   `json:"events"`
+	Snapshot *KnowledgePulseSnapshot `json:"snapshot,omitempty"`
+
+	// StatsToday Counts since 00:00 UTC today.
+	StatsToday KnowledgePulseStats `json:"stats_today"`
+}
+
+// KnowledgePulseSnapshot defines model for KnowledgePulseSnapshot.
+type KnowledgePulseSnapshot struct {
+	// Actors People and agents active in the last 24 hours.
+	Actors []KnowledgePulseSnapshotActor `json:"actors"`
+
+	// Edges Relations whose two endpoints are both in `nodes`.
+	Edges []KnowledgePulseEdge `json:"edges"`
+
+	// Nodes The team's most connected and most recently active resources, at most 150, ordered by degree then recent activity.
+	Nodes []KnowledgePulseNode `json:"nodes"`
+}
+
+// KnowledgePulseSnapshotActor defines model for KnowledgePulseSnapshotActor.
+type KnowledgePulseSnapshotActor struct {
+	Id   string                  `json:"id"`
+	Name string                  `json:"name"`
+	Type KnowledgePulseActorType `json:"type"`
+}
+
+// KnowledgePulseSource defines model for KnowledgePulseSource.
+type KnowledgePulseSource string
+
+// KnowledgePulseStats Counts since 00:00 UTC today.
+type KnowledgePulseStats struct {
+	// CompoundingScore New links + new `supersedes` links + updates to resources that already take part in a relation.
+	CompoundingScore int `json:"compounding_score"`
+	Links            int `json:"links"`
+	Reads            int `json:"reads"`
+	Writes           int `json:"writes"`
+}
+
 // ListProviderModelsRequest Inline connection details for the provider whose models to list. The provider does not have to be saved yet: this is what lets a model be picked while the base URL and key are still being entered.
 type ListProviderModelsRequest struct {
 	// ApiKey Bearer key for the provider. Leave it blank together with `provider_id` to reuse that saved provider's stored key — the same rule an update applies to a blank key.
@@ -13816,6 +14053,18 @@ type ImportGitHubBlueprintsJSONBody struct {
 type ListGitHubRepositoriesParams struct {
 	// Page Page number for pagination (1-based)
 	Page *int `form:"page,omitempty" json:"page,omitempty"`
+}
+
+// GetKnowledgePulseParams defines parameters for GetKnowledgePulse.
+type GetKnowledgePulseParams struct {
+	// Since The `cursor` of the previous response (RFC 3339).
+	Since *string `form:"since,omitempty" json:"since,omitempty"`
+
+	// Limit Maximum events to return. Defaults to 200; values above 500 are capped.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Snapshot Include the snapshot even when `since` is given.
+	Snapshot *bool `form:"snapshot,omitempty" json:"snapshot,omitempty"`
 }
 
 // ListMemoriesParams defines parameters for ListMemories.
